@@ -1,0 +1,68 @@
+.analyses-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  
+    .menu-buttons {
+      nz-button-group {
+        margin-right: 10px;
+      }
+    }
+  
+    .right-actions {
+      display: flex;
+      align-items: center;
+  
+      .yellow-button {
+        background-color: #ffc107;
+        border: none;
+        color: #000;
+        font-weight: bold;
+        margin-right: 10px;
+      }
+  
+      nz-button {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .filter-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  
+    .date-toggle {
+      margin-right: 20px;
+    }
+  
+    .info-box {
+      background-color: #ffc107;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #000;
+      flex-grow: 1;
+      margin: 0 20px;
+      text-align: center;
+    }
+  
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+  
+      span {
+        margin-right: 10px;
+      }
+  
+      nz-button-group {
+        margin-right: 10px;
+      }
+  
+      button {
+        margin-left: 5px;
+      }
+    }
+  }

@@ -1,0 +1,99 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null">
+
+    <div class="sidebar-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/en/3/33/Hiscox_%28logo%29.svg" alt="logo">
+      <h1>Hiscox</h1>
+    </div>
+
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <!-- Analyses Menu -->
+      <li nz-submenu nzTitle="Analyses" nzIcon="search">
+        <ul>
+          <li nz-menu-item>
+            <a routerLink="/analyses">My Analyses</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/analyses/recent">Recent</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Events Menu -->
+      <li nz-submenu nzTitle="Events" nzIcon="calendar">
+        <ul>
+          <li nz-menu-item>
+            <a routerLink="/events/sets">Sets</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/events/catalog">Catalog</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Losses Menu -->
+      <li nz-submenu nzTitle="Losses" nzIcon="dollar">
+        <ul>
+          <li nz-menu-item>
+            <a routerLink="/losses/sets">Sets</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/losses/uploads">Uploads</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Reinsurance Menu -->
+      <li nz-submenu nzTitle="Reinsurance" nzIcon="function">
+        <ul>
+          <li nz-menu-item>
+            <a routerLink="/reinsurance/sets">Sets</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Reference Menu -->
+      <li nz-submenu nzTitle="Reference" nzIcon="database">
+        <ul>
+          <li nz-menu-item>
+            <a routerLink="/reference/loss-classes">Loss Classes</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/reference/aggregations">Aggregations</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/reference/region-perils">Region-Perils</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/reference/currencies">Currencies</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/reference/fx">FX</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="app-header">
+      <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+        <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+        <span class="netting-title">Netting Down</span>
+        <span class="prod-version">PROD Version 1.2 Build 1234</span>
+        <span class="username">Etso Bela</span>
+    </span>
+    </nz-header>
+
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

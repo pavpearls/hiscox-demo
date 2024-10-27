@@ -1,0 +1,137 @@
+<!-- <div class="dashboard">
+  <h1>{{ title }}</h1>
+</div> -->
+
+<section id="analyses-dashboard">
+  <div *ngIf="analyses$ | async as remoteData">
+
+    <!-- Not Asked -->
+    <ng-container *ngIf="remoteData | isNotAsked">
+      <p>Request not made yet.</p>
+    </ng-container>
+
+    <!-- In Progress -->
+    <ng-container *ngIf="remoteData | isInProgress">
+      <nz-spin></nz-spin>
+      <p>Loading data...</p>
+    </ng-container>
+
+    <div class="analyses-menu">
+      <h2 class="analyses-title">Analyses</h2>
+
+      <nz-dropdown-menu #newMenu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item (click)="onSelect('Event Response')">Event Response</li>
+          <li nz-menu-item (click)="onSelect('Post Event')">Post Event</li>
+          <li nz-menu-item (click)="onSelect('RDS')">RDS</li>
+          <li nz-menu-item (click)="onSelect('Scenario')">Scenario</li>
+          <li nz-menu-item (click)="onSelect('Specific')">Specific</li>
+        </ul>
+      </nz-dropdown-menu>
+
+      <div class="right-actions">
+        <button nz-button nzType="link"><i nz-icon nzType="fullscreen" nzTheme="outline"></i></button>
+        <button nz-button nzType="link"><i nz-icon nzType="calculator" nzTheme="outline"></i></button>
+      </div>
+    </div>
+
+    <div class="filter-toolbar">
+      <!-- Button Group for Prior, Current, All -->
+      <div class="date-toggle">
+        <nz-button-group>
+          <button nz-button nzType="default">Prior</button>
+          <button nz-button nzType="primary">Current</button>
+          <button nz-button nzType="default">All</button>
+        </nz-button-group>
+      </div>
+    
+      <nz-button-group>
+        <button nz-button nzType="primary" nz-dropdown nzDropdownTrigger [nzDropdownMenu]="newMenu">
+          New <i nz-icon nzType="down"></i>
+        </button>
+        <button nz-button nzType="default">Copy</button>
+        <button nz-button nzType="default">Delete</button>
+        <button nz-button nzType="default">Archive</button>
+      </nz-button-group>
+    
+      <!-- Pagination Controls -->
+      <div class="pagination-controls">
+        <span>{{ total }} Records</span>
+        <nz-button-group>
+          <button nz-button nzType="default" (click)="onPageSizeChange(10)">10</button>
+          <button nz-button nzType="default" (click)="onPageSizeChange(25)">25</button>
+          <button nz-button nzType="default" (click)="onPageSizeChange(50)">50</button>
+          <button nz-button nzType="default" (click)="onPageSizeChange(100)">100</button>
+          <button nz-button nzType="primary" (click)="onPageSizeChange('All')">All</button>
+        </nz-button-group>
+      </div>
+    </div>
+
+
+    <!-- Success -->
+    <ng-container *ngIf="analysesData.length > 0">
+      <div class="table-container">
+        <nz-table
+        #filterTable
+        [nzData]="filteredData"
+        nzTableLayout="fixed"
+        [nzFrontPagination]="false"
+        [nzTotal]="total"
+        [nzPageIndex]="pageIndex"
+        [nzPageSize]="pageSize"
+        (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+        (nzPageIndexChange)="onPageIndexChange($event)"
+        (nzPageSizeChange)="onPageSizeChange($event)"
+      >
+        <thead>
+          <tr>
+            <!-- Select All Checkbox -->
+            <th
+              [nzChecked]="checked"
+              [nzIndeterminate]="indeterminate"
+              nzLabel="Select all"
+              (nzCheckedChange)="onAllChecked($event)"
+            ></th>
+            <!-- Columns with sorting and filtering -->
+            <ng-container *ngFor="let column of listOfColumns">
+              <th
+              [nzSortOrder]="column.sortOrder"
+              (nzSortChange)="applySorting(column.name, $event)"
+              [nzSortDirections]="column.sortDirections"
+                [nzFilters]="column.listOfFilter || []"
+                [nzFilterFn]="column.filterFn"
+              >
+                {{ column.name }}
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let analysis of filteredData">
+            <!-- Row Checkbox -->
+            <td
+              [nzChecked]="setOfCheckedId.has(analysis.id)"
+              (nzCheckedChange)="onItemChecked(analysis.id, $event)"
+            ></td>
+            <td>{{ analysis.id }}</td>
+            <td>{{ analysis.state }}</td>
+            <td>{{ analysis.name }}</td>
+            <td>{{ analysis.type }}</td>
+            <td>{{ analysis.eventSetId }}</td>
+            <td>{{ analysis.lossSetId }}</td>
+            <td>{{ analysis.riSetId }}</td>
+            <td>{{ analysis.owner }}</td>
+            <td>{{ analysis.asOfDate }}</td>
+            <td>{{ analysis.lastUpdate }}</td>
+            <td>{{ analysis.inUse }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      </div>
+    </ng-container>
+    <!-- Failure -->
+    <ng-container *ngIf="remoteData | isFailure">
+      <h4 style="color: red">{{ remoteData | failureError }}</h4>
+    </ng-container>
+  </div>
+</section>
