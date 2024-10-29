@@ -1,5 +1,11 @@
 export * from './event.service';
 import { EventService } from './event.service';
+export * from './eventSet.service';
+import { EventSetService } from './eventSet.service';
+export * from './eventType.service';
+import { EventTypeService } from './eventType.service';
 export * from './nDSBackendApi.service';
 import { NDSBackendApiService } from './nDSBackendApi.service';
-export const APIS = [EventService, NDSBackendApiService];
+export * from './regionPeril.service';
+import { RegionPerilService } from './regionPeril.service';
+export const APIS = [EventService, EventSetService, EventTypeService, NDSBackendApiService, RegionPerilService];
