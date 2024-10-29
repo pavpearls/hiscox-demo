@@ -8,7 +8,9 @@ import { NzSelectModule } from 'ng-zorro-antd/select'; // Import ng-zorro select
 import { NzTableModule } from 'ng-zorro-antd/table'; // Import ng-zorro table module
 import { EventsDashboardComponent } from './pages/events-dashboard/events-dashboard.component';
 import { EventsRoutingModule } from './events-routing.module';
-
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { FormsModule } from '@angular/forms';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
     declarations: [
@@ -21,8 +23,14 @@ import { EventsRoutingModule } from './events-routing.module';
         NzButtonModule,   // Import Ng-Zorro Button for actions like New, Copy, Delete
         NzInputModule,    // Import Ng-Zorro Input for search functionality
         NzSelectModule,   // Import Ng-Zorro Select for filters
-        NzFormModule,     // Import Ng-Zorro Form for creating filters
-        NzPageHeaderModule // For the header section
+        NzFormModule,
+        NzDatePickerModule ,     // Import Ng-Zorro Form for creating filters
+        NzPageHeaderModule,
+        FormsModule,
+    NzSpinModule,
+        
+        
+        // For the header section
     ],
 })
 export class EventsModule { }
