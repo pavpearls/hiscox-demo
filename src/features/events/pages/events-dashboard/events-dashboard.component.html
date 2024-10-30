@@ -1,93 +1,53 @@
-<section id="event-catalog-dashboard">
-    <div *ngIf="events$ | async as remoteData">
-      
-      <!-- Loading Indicator -->
-      <ng-container *ngIf="loading">
-        <nz-spin></nz-spin>
-        <p>Loading data...</p>
-      </ng-container>
-  
-      <div class="event-input">
-        <h2>Event</h2>
-        <div class="event-form">
-          <input nz-input placeholder="Event Name" [(ngModel)]="eventName" />
-  
-          <!-- Industry Loss Dropdown -->
-          <nz-select [(ngModel)]="selectedIndustryLoss" nzPlaceHolder="Industry Loss">
-            <nz-option *ngFor="let loss of industryLossOptions" [nzValue]="loss" [nzLabel]="loss"></nz-option>
-          </nz-select>
-  
-          <!-- Hiscox Impact Dropdown -->
-          <nz-select [(ngModel)]="selectedHiscoxImpact" nzPlaceHolder="Hiscox Impact" [nzMode]="'multiple'">
-            <nz-option *ngFor="let impact of hiscoxImpactOptions" [nzValue]="impact" [nzLabel]="impact"></nz-option>
-          </nz-select>
-  
-          <!-- Region Dropdown -->
-          <nz-select [(ngModel)]="selectedRegion" nzPlaceHolder="Region">
-            <nz-option *ngFor="let region of regionOptions" [nzValue]="region" [nzLabel]="region"></nz-option>
-          </nz-select>
-  
-          <!-- Event Date Picker -->
-          <nz-date-picker [(ngModel)]="eventDate" nzPlaceHolder="Select Date"></nz-date-picker>
-  
-          <button nz-button nzType="primary" (click)="addToCatalog()">Add to Catalog</button>
-        </div>
-      </div>
-  
-      <div class="event-set">
-        <h2>Event Set</h2>
-        <div class="event-actions">
-          <button nz-button nzType="default">Edit</button>
-          <button nz-button nzType="default">Copy</button>
-          <button nz-button nzType="default">Delete</button>
-          <button nz-button nzType="default">Archive</button>
-        </div>
-  
-        <!-- Table with Sorting, Filtering, and Pagination -->
-        <nz-table
-          #eventTable
-          [nzData]="filteredData"
-          [nzFrontPagination]="false"
-          [nzPageSize]="pageSize"
-          (nzPageIndexChange)="onPageIndexChange($event)"
-          (nzPageSizeChange)="onPageSizeChange($event)"
-        >
-          <thead>
-            <tr>
-              <th nzCheckbox [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
-              <th nzColumn>Event ID</th>
-              <th nzColumn>Event Type</th>
-              <th nzColumn>Event Name</th>
-              <th nzColumn>Region-Peril</th>
-              <th nzColumn>Event Date</th>
-              <th nzColumn>Industry Loss (Billion USD)</th>
-              <th nzColumn>Hiscox Loss Impact</th>
-              <th nzColumn>Loss Pick</th>
-              <th nzColumn>Created by</th>
-              <th nzColumn>Created Date</th>
-              <th nzColumn>Restricted</th>
-              <th nzColumn>Archived</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let event of filteredData">
-              <td nzCheckbox [(nzChecked)]="event.checked" (nzCheckedChange)="onItemChecked(event.id, $event)"></td>
-              <td>{{ event.id }}</td>
-              <td>{{ event.type }}</td>
-              <td>{{ event.name }}</td>
-              <td>{{ event.regionPeril }}</td>
-              <td>{{ event.date | date }}</td>
-              <td>{{ event.industryLoss }}</td>
-              <td>{{ event.hiscoxImpact }}</td>
-              <td>{{ event.lossPick }}</td>
-              <td>{{ event.createdBy }}</td>
-              <td>{{ event.createdDate | date }}</td>
-              <td>{{ event.restricted ? 'Yes' : 'No' }}</td>
-              <td>{{ event.archived ? 'Yes' : 'No' }}</td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </div>
-    </div>
-  </section>
+<div class="event-catalog">
+  <h3>Event Catalog</h3>
+  <nz-divider nzType="vertical"></nz-divider>
+  <div class="tab-buttons">
+    <button 
+      nz-button 
+      nzType="default" 
+      [ngClass]="{ 'active-tab': selectedTab === 'rds' }"
+      (click)="setActiveTab('rds')">
+      RDS
+    </button>
+
+    <button 
+      nz-button 
+      nzType="default" 
+      [ngClass]="{ 'active-tab': selectedTab === 'postEvent' }"
+      (click)="setActiveTab('postEvent')">
+      Post Event
+    </button>
+
+    <button 
+      nz-button 
+      nzType="default" 
+      [ngClass]="{ 'active-tab': selectedTab === 'eventResponse' }"
+      (click)="setActiveTab('eventResponse')">
+      Event Response
+    </button>
+  </div>
+</div>
+
+<div class="tab-content">
+  <ng-container *ngTemplateOutlet="currentTemplate"></ng-container>
+</div>
+
+<div class="templates">
+  <ng-template #rdsTemplate>
+  <app-rds-event></app-rds-event>
+  </ng-template>
+
+  <ng-template #postEventTemplate>
+   <app-post-event></app-post-event>
+  </ng-template>
+
+  <ng-template #eventResponseTemplate>
+    <app-event-response></app-event-response>
+  </ng-template>
+</div>
+
+
+
+
+
   

@@ -5,9 +5,8 @@ api.module.ts
 api/api.ts
 api/event.service.ts
 api/eventSet.service.ts
-api/eventType.service.ts
 api/nDSBackendApi.service.ts
-api/regionPeril.service.ts
+api/parameter.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
