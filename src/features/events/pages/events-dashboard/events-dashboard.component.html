@@ -1,6 +1,29 @@
+<!-- Main Template -->
+
 <div class="event-catalog">
   <h3>Event Catalog</h3>
   <nz-divider nzType="vertical"></nz-divider>
+
+  <!-- Loading or Error States -->
+  <ng-container *ngIf="isInProgress(eventsTypeList$ | async) || isInProgress(regionPerilList$ | async); else checkError">
+    <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="isFailure(eventsTypeList$ | async) || isFailure(regionPerilList$ | async); else checkSuccess">
+    <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
+  </ng-container>
+
+  <!-- Success State: Display Buttons and Tab Content -->
+  <ng-container *ngIf="isSuccess(eventsTypeList$ | async) && isSuccess(regionPerilList$ | async)">
+    <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
+    <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
+  </ng-container>
+</div>
+
+<!-- Individual Templates -->
+
+<!-- Buttons Template -->
+<ng-template #buttonsTemplate>
   <div class="tab-buttons">
     <button 
       nz-button 
@@ -26,28 +49,30 @@
       Event Response
     </button>
   </div>
-</div>
+</ng-template>
 
-<div class="tab-content">
-  <ng-container *ngTemplateOutlet="currentTemplate"></ng-container>
-</div>
+<!-- Tab Content Template -->
+<ng-template #tabContentTemplate>
+  <ng-container *ngIf="selectedTab === 'rds'">
+    <app-rds-event></app-rds-event>
+  </ng-container>
 
-<div class="templates">
-  <ng-template #rdsTemplate>
-  <app-rds-event></app-rds-event>
-  </ng-template>
+  <ng-container *ngIf="selectedTab === 'postEvent'">
+    <app-post-event></app-post-event>
+  </ng-container>
 
-  <ng-template #postEventTemplate>
-   <app-post-event></app-post-event>
-  </ng-template>
-
-  <ng-template #eventResponseTemplate>
+  <ng-container *ngIf="selectedTab === 'eventResponse'">
     <app-event-response></app-event-response>
-  </ng-template>
-</div>
+  </ng-container>
+</ng-template>
 
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <nz-spin></nz-spin>
+  <p>Loading data...</p>
+</ng-template>
 
-
-
-
-  
+<!-- Error Template -->
+<ng-template #errorTemplate>
+  <p>Error loading data. Please try again later.</p>
+</ng-template>
