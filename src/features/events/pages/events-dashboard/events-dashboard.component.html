@@ -1,24 +1,25 @@
-<!-- Main Template -->
+<section id="events-dashboard">
+  <div *ngIf="eventsTypeList$ | async as eventsTypeData; else loadingTemplate">
+    <div *ngIf="regionPerilList$ | async as regionPerilData">
+      <!-- Check for Error State -->
+      <ng-container *ngIf="eventsTypeData | isFailure || regionPerilData | isFailure">
+        <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
+      </ng-container>
 
-<div class="event-catalog">
-  <h3>Event Catalog</h3>
-  <nz-divider nzType="vertical"></nz-divider>
+      <!-- Check for Loading State -->
+      <ng-container *ngIf="eventsTypeData | isInProgress || regionPerilData | isInProgress">
+        <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
+      </ng-container>
 
-  <!-- Loading or Error States -->
-  <ng-container *ngIf="isInProgress(eventsTypeList$ | async) || isInProgress(regionPerilList$ | async); else checkError">
-    <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
-  </ng-container>
-
-  <ng-container *ngIf="isFailure(eventsTypeList$ | async) || isFailure(regionPerilList$ | async); else checkSuccess">
-    <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
-  </ng-container>
-
-  <!-- Success State: Display Buttons and Tab Content -->
-  <ng-container *ngIf="isSuccess(eventsTypeList$ | async) && isSuccess(regionPerilList$ | async)">
-    <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
-    <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
-  </ng-container>
-</div>
+      <!-- Check for Success State -->
+      <ng-container *ngIf="eventsTypeData | isSuccess && regionPerilData | isSuccess">
+        <!-- Buttons and Tab Content Templates -->
+        <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
+        <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
+      </ng-container>
+    </div>
+  </div>
+</section>
 
 <!-- Individual Templates -->
 
@@ -32,7 +33,6 @@
       (click)="setActiveTab('rds')">
       RDS
     </button>
-
     <button 
       nz-button 
       nzType="default" 
@@ -40,7 +40,6 @@
       (click)="setActiveTab('postEvent')">
       Post Event
     </button>
-
     <button 
       nz-button 
       nzType="default" 
@@ -53,17 +52,17 @@
 
 <!-- Tab Content Template -->
 <ng-template #tabContentTemplate>
-  <ng-container *ngIf="selectedTab === 'rds'">
-    <app-rds-event></app-rds-event>
-  </ng-container>
-
-  <ng-container *ngIf="selectedTab === 'postEvent'">
-    <app-post-event></app-post-event>
-  </ng-container>
-
-  <ng-container *ngIf="selectedTab === 'eventResponse'">
-    <app-event-response></app-event-response>
-  </ng-container>
+  <div class="tab-content">
+    <ng-container *ngIf="selectedTab === 'rds'">
+      <app-rds-event></app-rds-event>
+    </ng-container>
+    <ng-container *ngIf="selectedTab === 'postEvent'">
+      <app-post-event></app-post-event>
+    </ng-container>
+    <ng-container *ngIf="selectedTab === 'eventResponse'">
+      <app-event-response></app-event-response>
+    </ng-container>
+  </div>
 </ng-template>
 
 <!-- Loading Template -->
