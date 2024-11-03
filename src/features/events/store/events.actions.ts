@@ -5,11 +5,11 @@ import { createAction, props } from '@ngrx/store';
 //////////////////////////////////////////////////////
 
 const getEventTypeList = createAction('[Events Dashboard] Get Event Types');
-const getEventTypeListSuccess = createAction('[Events Dashboard] Get Event Types Success', props<{ payload: any }>()););
+const getEventTypeListSuccess = createAction('[Events Dashboard] Get Event Types Success', props<{ payload: any }>());
 const getEventTypeListFailure = createAction('[Events Dashboard] Get Event Types Failure', props<{ error: any }>());
 
 const getRegionPerilList = createAction('[Events Dashboard] Get Region Peril List');
-const getRegionPerilListSuccess = createAction('[Events Dashboard] Get Region Peril List Success', props<{ payload: any }>()););
+const getRegionPerilListSuccess = createAction('[Events Dashboard] Get Region Peril List Success', props<{ payload: any }>());
 const getRegionPerilListFailure = createAction('[Events Dashboard] GGet Region Peril List Failure', props<{ error: any }>());
 
 const getEventsByEventType = createAction('[Events Dashboard] Get Events By Event Type', props<{ payload: any }>());

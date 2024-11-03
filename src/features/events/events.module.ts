@@ -11,20 +11,19 @@ import { NzSelectModule } from 'ng-zorro-antd/select'; // Import ng-zorro select
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTableModule } from 'ng-zorro-antd/table'; // Import ng-zorro table module
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { EventResponseComponent } from './components/event-response/event-response.component';
-import { PostEventComponent } from './components/post-event/post-event.component';
-import { RdsEventComponent } from './components/rds-event/rds-event.component';
 import { EventsRoutingModule } from './events-routing.module';
 import { EventsDashboardComponent } from './pages/events-dashboard/events-dashboard.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { RemoteDataModule } from 'ngx-remotedata';
+import { AddEventFormComponent } from './components/add-event-form/add-event-form.component';
+import { EventsTableComponent } from './components/events-table/events-table.component';
 
 @NgModule({
     declarations: [
         EventsDashboardComponent,
-        EventResponseComponent,
-        PostEventComponent,
-        RdsEventComponent
+
+        
     ],
     imports: [
         CommonModule,
@@ -42,7 +41,10 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
         NzDividerModule,
         NzIconModule,
         NzCollapseModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RemoteDataModule,
+        AddEventFormComponent,
+        EventsTableComponent
     ],
 })
 export class EventsModule { }

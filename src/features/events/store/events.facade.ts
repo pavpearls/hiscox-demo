@@ -26,7 +26,7 @@ export class EventsFacade {
   );
 
 
-  constructor(private store: Store<EventsState>,  private spinner: NgxSpinnerService) {}
+  constructor(private store: Store<EventsState>) {}
 
   // Dispatch actions
   loadEventTypeList(): void {
@@ -43,17 +43,5 @@ export class EventsFacade {
 
   addNewEvent(payload: any): void {
     this.store.dispatch(EventsActions.EventsSharedActions.addNewEvent({ payload }));
-  }
-
-  showLoadingSpinnerForApiResponses<T>(observables: Observable<RemoteData<T, HttpErrorResponse>>[], isComponentAlive: boolean): void {
-    combineLatest(observables)
-      .pipe(takeWhile(() => isComponentAlive))
-      .subscribe(responses => {
-        if (responses.some(response => isInProgress(response))) {
-          this.spinner.show();
-        } else {
-          this.spinner.hide();
-        }
-      });
   }
 }

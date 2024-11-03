@@ -1,49 +1,51 @@
 <section id="events-dashboard">
-  <div *ngIf="eventsTypeList$ | async as eventsTypeData; else loadingTemplate">
-    <div *ngIf="regionPerilList$ | async as regionPerilData">
-      <!-- Check for Error State -->
-      <ng-container *ngIf="eventsTypeData | isFailure || regionPerilData | isFailure">
-        <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
-      </ng-container>
+  <!-- Resolve the observables first with async and aliases -->
+  <ng-container *ngIf="eventsTypeList$ | async as eventsTypeData">
+    <ng-container *ngIf="regionPerilList$ | async as regionPerilData">
 
-      <!-- Check for Loading State -->
-      <ng-container *ngIf="eventsTypeData | isInProgress || regionPerilData | isInProgress">
-        <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
-      </ng-container>
+      <!-- Wrap everything in nz-spin and set the loading state based on inProgress status -->
+      <div class="example">
+      <nz-spin nzSimple nzTip="Loading..." [nzSize]="'large'" [nzSpinning]="(eventsTypeData | isInProgress) || (regionPerilData | isInProgress)">
 
-      <!-- Check for Success State -->
-      <ng-container *ngIf="eventsTypeData | isSuccess && regionPerilData | isSuccess">
-        <!-- Buttons and Tab Content Templates -->
-        <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
-        <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
-      </ng-container>
+        <!-- Error State -->
+        <ng-container *ngIf="(eventsTypeData | isFailure) || (regionPerilData | isFailure)">
+          <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
+        </ng-container>
+
+        <!-- Success State -->
+        <ng-container *ngIf="(eventsTypeData | isSuccess) && (regionPerilData | isSuccess)">
+          <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
+          <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
+        </ng-container>
+
+      </nz-spin>
     </div>
-  </div>
+    </ng-container>
+  </ng-container>
 </section>
+
+<section id="events-dashboard">
+  <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
+  <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
+</section>
+
 
 <!-- Individual Templates -->
 
 <!-- Buttons Template -->
 <ng-template #buttonsTemplate>
   <div class="tab-buttons">
-    <button 
-      nz-button 
-      nzType="default" 
-      [ngClass]="{ 'active-tab': selectedTab === 'rds' }"
+    <h2>Event Catalog</h2>
+    <nz-divider nzType="vertical"></nz-divider>
+    <button nz-button nzType="default" [ngClass]="{ 'active-tab': selectedTab === 'rds' }"
       (click)="setActiveTab('rds')">
       RDS
     </button>
-    <button 
-      nz-button 
-      nzType="default" 
-      [ngClass]="{ 'active-tab': selectedTab === 'postEvent' }"
+    <button nz-button nzType="default" [ngClass]="{ 'active-tab': selectedTab === 'postEvent' }"
       (click)="setActiveTab('postEvent')">
       Post Event
     </button>
-    <button 
-      nz-button 
-      nzType="default" 
-      [ngClass]="{ 'active-tab': selectedTab === 'eventResponse' }"
+    <button nz-button nzType="default" [ngClass]="{ 'active-tab': selectedTab === 'eventResponse' }"
       (click)="setActiveTab('eventResponse')">
       Event Response
     </button>
@@ -54,21 +56,35 @@
 <ng-template #tabContentTemplate>
   <div class="tab-content">
     <ng-container *ngIf="selectedTab === 'rds'">
-      <app-rds-event></app-rds-event>
+      @defer (when selectedTab === 'rds') {
+      <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)">
+      </app-add-event-form>
+      <nz-divider></nz-divider>
+      <app-events-table [columns]="columns" [data]="data"></app-events-table>
+      }
     </ng-container>
     <ng-container *ngIf="selectedTab === 'postEvent'">
-      <app-post-event></app-post-event>
+      @defer (when selectedTab === 'postEvent') {
+      <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)">
+      </app-add-event-form>
+      <nz-divider></nz-divider>
+      }
     </ng-container>
     <ng-container *ngIf="selectedTab === 'eventResponse'">
-      <app-event-response></app-event-response>
+      @defer (when selectedTab === 'eventResponse') {
+      <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)">
+      </app-add-event-form>
+      <nz-divider></nz-divider>
+      }
     </ng-container>
   </div>
 </ng-template>
 
 <!-- Loading Template -->
 <ng-template #loadingTemplate>
-  <nz-spin></nz-spin>
-  <p>Loading data...</p>
+  <div class="example">
+    <nz-spin nzSimple nzTip="Loading..." [nzSize]="'large'"></nz-spin>
+  </div>
 </ng-template>
 
 <!-- Error Template -->
