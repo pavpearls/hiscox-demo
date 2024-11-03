@@ -9,22 +9,24 @@
  */
 import { User } from './user';
 import { EventType } from './eventType';
+import { EventSetMember } from './eventSetMember';
 
 
 export interface Event { 
     eventId?: number;
-    eventTypeId?: number | null;
-    regionPerilId?: number | null;
+    eventTypeId?: number;
+    regionPerilId?: number;
     name?: string | null;
     description?: string | null;
-    eventDate?: string | null;
+    eventDate?: Date;
     industryLossEstimate?: number | null;
     hiscoxLossImpact?: string | null;
     isRestrictedAccess?: boolean | null;
     isArchived?: boolean | null;
     createUserId?: number | null;
-    createDate?: string | null;
+    createDate?: Date | null;
     createUser?: User;
     eventType?: EventType;
+    eventSetMembers?: Array<EventSetMember> | null;
 }
 

@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-ng-nds-api": "rimraf ./src/shared/api-services/nds-api/generated && npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-angular -o ./src/shared/api-services/nds-api/generated"
+   "generate-ng-nds-api": "rimraf ./src/shared/api-services/nds-api/generated && npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-angular -o ./src/shared/api-services/nds-api/generated --type-mappings DateTime=Date"
+
   },
   "private": true,
   "dependencies": {

@@ -7,19 +7,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Event } from './event';
-import { EventSetMember } from './eventSetMember';
 
 
-export interface EventSet { 
-    eventSetId?: number;
-    eventSetType?: number | null;
+export interface EventRequest { 
+    eventId?: number;
+    eventTypeId?: number;
+    regionPerilId?: number;
     name?: string | null;
     description?: string | null;
+    eventDate?: Date;
+    industryLossEstimate?: number | null;
+    hiscoxLossImpact?: string | null;
+    isRestrictedAccess?: boolean | null;
     isArchived?: boolean | null;
     createUserId?: number | null;
     createDate?: Date | null;
-    eventSetMembers?: Array<EventSetMember> | null;
-    events?: Array<Event> | null;
 }
 

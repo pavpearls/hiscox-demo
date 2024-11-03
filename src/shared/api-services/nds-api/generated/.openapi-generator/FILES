@@ -5,6 +5,7 @@ api.module.ts
 api/api.ts
 api/event.service.ts
 api/eventSet.service.ts
+api/eventSetMember.service.ts
 api/nDSBackendApi.service.ts
 api/parameter.service.ts
 configuration.ts
@@ -15,8 +16,11 @@ model/createResult.ts
 model/deleteResult.ts
 model/event.ts
 model/eventPagedResult.ts
+model/eventRequest.ts
 model/eventSet.ts
-model/eventSetPagedResult.ts
+model/eventSetMember.ts
+model/eventSetMemberRequest.ts
+model/eventSetRequest.ts
 model/eventType.ts
 model/models.ts
 model/problemDetails.ts

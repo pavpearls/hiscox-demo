@@ -8,10 +8,16 @@
  * Do not edit the class manually.
  */
 import { EventSet } from './eventSet';
+import { Event } from './event';
 
 
-export interface EventSetPagedResult { 
-    totalCount?: number;
-    pageOfData?: Array<EventSet> | null;
+export interface EventSetMember { 
+    memberId?: number;
+    eventId?: number;
+    eventSetId?: number;
+    simYear?: number;
+    eventOrder?: number;
+    event?: Event;
+    eventSet?: EventSet;
 }
 
