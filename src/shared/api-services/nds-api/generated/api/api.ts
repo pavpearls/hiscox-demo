@@ -1,3 +1,5 @@
+export * from './appLog.service';
+import { AppLogService } from './appLog.service';
 export * from './event.service';
 import { EventService } from './event.service';
 export * from './eventSet.service';
@@ -8,4 +10,4 @@ export * from './nDSBackendApi.service';
 import { NDSBackendApiService } from './nDSBackendApi.service';
 export * from './parameter.service';
 import { ParameterService } from './parameter.service';
-export const APIS = [EventService, EventSetService, EventSetMemberService, NDSBackendApiService, ParameterService];
+export const APIS = [AppLogService, EventService, EventSetService, EventSetMemberService, NDSBackendApiService, ParameterService];

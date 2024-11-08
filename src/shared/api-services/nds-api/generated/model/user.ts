@@ -7,12 +7,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EventSet } from './eventSet';
 import { Event } from './event';
 
 
 export interface User { 
-    userId?: number;
-    username?: string | null;
+    userID?: number;
+    userName?: string | null;
     events?: Array<Event> | null;
+    eventSets?: Array<EventSet> | null;
 }
 

@@ -3,6 +3,7 @@
 README.md
 api.module.ts
 api/api.ts
+api/appLog.service.ts
 api/event.service.ts
 api/eventSet.service.ts
 api/eventSetMember.service.ts
@@ -12,6 +13,8 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/appLog.ts
+model/appLogPagedResult.ts
 model/createResult.ts
 model/deleteResult.ts
 model/event.ts
@@ -25,6 +28,7 @@ model/eventType.ts
 model/models.ts
 model/problemDetails.ts
 model/regionPeril.ts
+model/regionPerilType.ts
 model/updateResult.ts
 model/user.ts
 param.ts

@@ -7,11 +7,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Event } from './event';
+import { RegionPerilType } from './regionPerilType';
 
 
 export interface RegionPeril { 
-    regionPerilId?: number;
+    regionPerilID?: number;
+    regionPerilTypeID?: number | null;
     regionPerilName?: string | null;
-    description?: string | null;
+    regionPerilType?: RegionPerilType;
+    events?: Array<Event> | null;
 }
 

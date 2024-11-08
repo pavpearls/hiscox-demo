@@ -10,12 +10,12 @@
 
 
 export interface EventSetRequest { 
-    eventSetId?: number;
-    eventSetType?: number | null;
-    name?: string | null;
-    description?: string | null;
+    eventSetID?: number;
+    eventTypeID?: number | null;
+    eventSetName?: string | null;
+    eventSetDescription?: string | null;
     isArchived?: boolean | null;
-    createUserId?: number | null;
+    createUserID?: number | null;
     createDate?: Date | null;
 }
 

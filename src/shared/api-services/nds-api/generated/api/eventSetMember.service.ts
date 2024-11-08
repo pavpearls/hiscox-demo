@@ -178,14 +178,14 @@ export class EventSetMemberService {
     }
 
     /**
-     * @param eventSetMember 
+     * @param eventSetMemberRequest 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createEventSetMember(eventSetMember?: EventSetMember, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<EventSetMember>;
-    public createEventSetMember(eventSetMember?: EventSetMember, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventSetMember>>;
-    public createEventSetMember(eventSetMember?: EventSetMember, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventSetMember>>;
-    public createEventSetMember(eventSetMember?: EventSetMember, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public createEventSetMember(eventSetMemberRequest?: EventSetMemberRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<EventSetMemberRequest>;
+    public createEventSetMember(eventSetMemberRequest?: EventSetMemberRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventSetMemberRequest>>;
+    public createEventSetMember(eventSetMemberRequest?: EventSetMemberRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventSetMemberRequest>>;
+    public createEventSetMember(eventSetMemberRequest?: EventSetMemberRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -235,10 +235,10 @@ export class EventSetMemberService {
         }
 
         let localVarPath = `/api/EventSetMember`;
-        return this.httpClient.request<EventSetMember>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<EventSetMemberRequest>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: eventSetMember,
+                body: eventSetMemberRequest,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -315,14 +315,18 @@ export class EventSetMemberService {
     }
 
     /**
-     * @param eventSetMemberRequest 
+     * @param eventSetID 
+     * @param requestBody 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteEventsFromEventSet(eventSetMemberRequest?: Array<EventSetMemberRequest>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<EventSet>;
-    public deleteEventsFromEventSet(eventSetMemberRequest?: Array<EventSetMemberRequest>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventSet>>;
-    public deleteEventsFromEventSet(eventSetMemberRequest?: Array<EventSetMemberRequest>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventSet>>;
-    public deleteEventsFromEventSet(eventSetMemberRequest?: Array<EventSetMemberRequest>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public deleteEventsFromEventSet(eventSetID: number, requestBody?: Array<number>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<EventSet>;
+    public deleteEventsFromEventSet(eventSetID: number, requestBody?: Array<number>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventSet>>;
+    public deleteEventsFromEventSet(eventSetID: number, requestBody?: Array<number>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventSet>>;
+    public deleteEventsFromEventSet(eventSetID: number, requestBody?: Array<number>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (eventSetID === null || eventSetID === undefined) {
+            throw new Error('Required parameter eventSetID was null or undefined when calling deleteEventsFromEventSet.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -374,11 +378,11 @@ export class EventSetMemberService {
             }
         }
 
-        let localVarPath = `/api/EventSetMember/Events`;
+        let localVarPath = `/api/EventSetMember/Events/${this.configuration.encodeParam({name: "eventSetID", value: eventSetID, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int32"})}`;
         return this.httpClient.request<EventSet>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: eventSetMemberRequest,
+                body: requestBody,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -1,3 +1,5 @@
+export * from './appLog';
+export * from './appLogPagedResult';
 export * from './createResult';
 export * from './deleteResult';
 export * from './event';
@@ -10,5 +12,6 @@ export * from './eventSetRequest';
 export * from './eventType';
 export * from './problemDetails';
 export * from './regionPeril';
+export * from './regionPerilType';
 export * from './updateResult';
 export * from './user';

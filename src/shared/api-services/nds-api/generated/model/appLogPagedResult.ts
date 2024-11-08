@@ -7,13 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AppLog } from './appLog';
 
 
-export interface EventSetMemberRequest { 
-    eventSetMemberID?: number;
-    eventID?: number;
-    eventSetID?: number;
-    simYear?: number;
-    eventOrder?: number;
+export interface AppLogPagedResult { 
+    totalCount?: number;
+    pageOfData?: Array<AppLog> | null;
 }
 

@@ -5,6 +5,353 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/AppLog/{id}": {
+            "get": {
+                "tags": [
+                    "AppLog"
+                ],
+                "operationId": "GetAppLogById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "AppLog"
+                ],
+                "operationId": "DeleteAppLog",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/AppLog": {
+            "get": {
+                "tags": [
+                    "AppLog"
+                ],
+                "operationId": "GetAppLogList",
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "take",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 25
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLogPagedResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLogPagedResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLogPagedResult"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "AppLog"
+                ],
+                "operationId": "CreateAppLog",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AppLog"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "AppLog"
+                ],
+                "operationId": "UpdateAppLog",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AppLog"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppLog"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/Event/{id}": {
             "get": {
                 "tags": [
@@ -968,7 +1315,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/EventSetMember"
+                                "$ref": "#/components/schemas/EventSetMemberRequest"
                             }
                         }
                     }
@@ -979,17 +1326,17 @@
                         "content": {
                             "text/plain": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EventSetMember"
+                                    "$ref": "#/components/schemas/EventSetMemberRequest"
                                 }
                             },
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EventSetMember"
+                                    "$ref": "#/components/schemas/EventSetMemberRequest"
                                 }
                             },
                             "text/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EventSetMember"
+                                    "$ref": "#/components/schemas/EventSetMemberRequest"
                                 }
                             }
                         }
@@ -1198,19 +1545,33 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/EventSetMember/Events/{eventSetID}": {
             "delete": {
                 "tags": [
                     "EventSetMember"
                 ],
                 "operationId": "DeleteEventsFromEventSet",
+                "parameters": [
+                    {
+                        "name": "eventSetID",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json-patch+json": {
                             "schema": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/EventSetMemberRequest"
+                                    "type": "integer",
+                                    "format": "int32"
                                 }
                             }
                         },
@@ -1218,7 +1579,8 @@
                             "schema": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/EventSetMemberRequest"
+                                    "type": "integer",
+                                    "format": "int32"
                                 }
                             }
                         },
@@ -1226,7 +1588,8 @@
                             "schema": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/EventSetMemberRequest"
+                                    "type": "integer",
+                                    "format": "int32"
                                 }
                             }
                         },
@@ -1234,7 +1597,8 @@
                             "schema": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/EventSetMemberRequest"
+                                    "type": "integer",
+                                    "format": "int32"
                                 }
                             }
                         }
@@ -1382,6 +1746,65 @@
                 }
             }
         },
+        "/api/Parameter/RegionPerilType": {
+            "get": {
+                "tags": [
+                    "Parameter"
+                ],
+                "operationId": "GetRegionPerilTypeList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RegionPerilType"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RegionPerilType"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RegionPerilType"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/Parameter/RegionPeril": {
             "get": {
                 "tags": [
@@ -1441,12 +1864,12 @@
                 }
             }
         },
-        "/api/Parameter/IndustryLoss": {
+        "/api/Parameter/IndustryLossEstimate": {
             "get": {
                 "tags": [
                     "Parameter"
                 ],
-                "operationId": "GetIndustryLossList",
+                "operationId": "GetIndustryLossEstimateList",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1565,6 +1988,58 @@
     },
     "components": {
         "schemas": {
+            "AppLog": {
+                "type": "object",
+                "properties": {
+                    "appLogID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createdOn": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "level": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "stackTrace": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "exception": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "logger": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AppLogPagedResult": {
+                "type": "object",
+                "properties": {
+                    "totalCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageOfData": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AppLog"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
             "CreateResult": {
                 "type": "object",
                 "properties": {
@@ -1610,23 +2085,23 @@
             "Event": {
                 "type": "object",
                 "properties": {
-                    "eventId": {
+                    "eventID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventTypeId": {
+                    "eventTypeID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "regionPerilId": {
+                    "regionPerilID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "name": {
+                    "eventNameShort": {
                         "type": "string",
                         "nullable": true
                     },
-                    "description": {
+                    "eventNameLong": {
                         "type": "string",
                         "nullable": true
                     },
@@ -1635,12 +2110,26 @@
                         "format": "date-time"
                     },
                     "industryLossEstimate": {
+                        "type": "number",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "hiscoxLossImpactRating": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "createUserID": {
                         "type": "integer",
                         "format": "int32",
                         "nullable": true
                     },
-                    "hiscoxLossImpact": {
+                    "createDate": {
                         "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "isLossPick": {
+                        "type": "boolean",
                         "nullable": true
                     },
                     "isRestrictedAccess": {
@@ -1651,21 +2140,14 @@
                         "type": "boolean",
                         "nullable": true
                     },
-                    "createUserId": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "createDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "nullable": true
-                    },
                     "createUser": {
                         "$ref": "#/components/schemas/User"
                     },
                     "eventType": {
                         "$ref": "#/components/schemas/EventType"
+                    },
+                    "regionPeril": {
+                        "$ref": "#/components/schemas/RegionPeril"
                     },
                     "eventSetMembers": {
                         "type": "array",
@@ -1697,23 +2179,23 @@
             "EventRequest": {
                 "type": "object",
                 "properties": {
-                    "eventId": {
+                    "eventID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventTypeId": {
+                    "eventTypeID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "regionPerilId": {
+                    "regionPerilID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "name": {
+                    "eventNameShort": {
                         "type": "string",
                         "nullable": true
                     },
-                    "description": {
+                    "eventNameLong": {
                         "type": "string",
                         "nullable": true
                     },
@@ -1722,12 +2204,26 @@
                         "format": "date-time"
                     },
                     "industryLossEstimate": {
+                        "type": "number",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "hiscoxLossImpactRating": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "createUserID": {
                         "type": "integer",
                         "format": "int32",
                         "nullable": true
                     },
-                    "hiscoxLossImpact": {
+                    "createDate": {
                         "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "isLossPick": {
+                        "type": "boolean",
                         "nullable": true
                     },
                     "isRestrictedAccess": {
@@ -1737,16 +2233,6 @@
                     "isArchived": {
                         "type": "boolean",
                         "nullable": true
-                    },
-                    "createUserId": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "createDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "nullable": true
                     }
                 },
                 "additionalProperties": false
@@ -1754,20 +2240,20 @@
             "EventSet": {
                 "type": "object",
                 "properties": {
-                    "eventSetId": {
+                    "eventSetID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventSetType": {
+                    "eventTypeID": {
                         "type": "integer",
                         "format": "int32",
                         "nullable": true
                     },
-                    "name": {
+                    "eventSetName": {
                         "type": "string",
                         "nullable": true
                     },
-                    "description": {
+                    "eventSetDescription": {
                         "type": "string",
                         "nullable": true
                     },
@@ -1775,7 +2261,7 @@
                         "type": "boolean",
                         "nullable": true
                     },
-                    "createUserId": {
+                    "createUserID": {
                         "type": "integer",
                         "format": "int32",
                         "nullable": true
@@ -1784,6 +2270,12 @@
                         "type": "string",
                         "format": "date-time",
                         "nullable": true
+                    },
+                    "createUser": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "eventType": {
+                        "$ref": "#/components/schemas/EventType"
                     },
                     "eventSetMembers": {
                         "type": "array",
@@ -1805,15 +2297,15 @@
             "EventSetMember": {
                 "type": "object",
                 "properties": {
-                    "memberId": {
+                    "eventSetMemberID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventId": {
+                    "eventID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventSetId": {
+                    "eventSetID": {
                         "type": "integer",
                         "format": "int32"
                     },
@@ -1837,15 +2329,15 @@
             "EventSetMemberRequest": {
                 "type": "object",
                 "properties": {
-                    "memberId": {
+                    "eventSetMemberID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventId": {
+                    "eventID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventSetId": {
+                    "eventSetID": {
                         "type": "integer",
                         "format": "int32"
                     },
@@ -1863,20 +2355,20 @@
             "EventSetRequest": {
                 "type": "object",
                 "properties": {
-                    "eventSetId": {
+                    "eventSetID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "eventSetType": {
+                    "eventTypeID": {
                         "type": "integer",
                         "format": "int32",
                         "nullable": true
                     },
-                    "name": {
+                    "eventSetName": {
                         "type": "string",
                         "nullable": true
                     },
-                    "description": {
+                    "eventSetDescription": {
                         "type": "string",
                         "nullable": true
                     },
@@ -1884,7 +2376,7 @@
                         "type": "boolean",
                         "nullable": true
                     },
-                    "createUserId": {
+                    "createUserID": {
                         "type": "integer",
                         "format": "int32",
                         "nullable": true
@@ -1900,15 +2392,15 @@
             "EventType": {
                 "type": "object",
                 "properties": {
-                    "eventTypeId": {
+                    "eventTypeID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "name": {
+                    "eventTypeName": {
                         "type": "string",
                         "nullable": true
                     },
-                    "description": {
+                    "eventTypeAltName": {
                         "type": "string",
                         "nullable": true
                     },
@@ -1916,6 +2408,13 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Event"
+                        },
+                        "nullable": true
+                    },
+                    "eventSets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EventSet"
                         },
                         "nullable": true
                     }
@@ -1952,16 +2451,48 @@
             "RegionPeril": {
                 "type": "object",
                 "properties": {
-                    "regionPerilId": {
+                    "regionPerilID": {
                         "type": "integer",
                         "format": "int32"
+                    },
+                    "regionPerilTypeID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
                     },
                     "regionPerilName": {
                         "type": "string",
                         "nullable": true
                     },
-                    "description": {
+                    "regionPerilType": {
+                        "$ref": "#/components/schemas/RegionPerilType"
+                    },
+                    "events": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Event"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "RegionPerilType": {
+                "type": "object",
+                "properties": {
+                    "regionPerilTypeID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "regionPerilTypeName": {
                         "type": "string",
+                        "nullable": true
+                    },
+                    "regionPerils": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RegionPeril"
+                        },
                         "nullable": true
                     }
                 },
@@ -1989,11 +2520,11 @@
             "User": {
                 "type": "object",
                 "properties": {
-                    "userId": {
+                    "userID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "username": {
+                    "userName": {
                         "type": "string",
                         "nullable": true
                     },
@@ -2001,6 +2532,13 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Event"
+                        },
+                        "nullable": true
+                    },
+                    "eventSets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EventSet"
                         },
                         "nullable": true
                     }

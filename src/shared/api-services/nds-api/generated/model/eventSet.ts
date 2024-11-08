@@ -7,18 +7,22 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { User } from './user';
+import { EventType } from './eventType';
 import { Event } from './event';
 import { EventSetMember } from './eventSetMember';
 
 
 export interface EventSet { 
-    eventSetId?: number;
-    eventSetType?: number | null;
-    name?: string | null;
-    description?: string | null;
+    eventSetID?: number;
+    eventTypeID?: number | null;
+    eventSetName?: string | null;
+    eventSetDescription?: string | null;
     isArchived?: boolean | null;
-    createUserId?: number | null;
+    createUserID?: number | null;
     createDate?: Date | null;
+    createUser?: User;
+    eventType?: EventType;
     eventSetMembers?: Array<EventSetMember> | null;
     events?: Array<Event> | null;
 }

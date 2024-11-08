@@ -7,26 +7,29 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { RegionPeril } from './regionPeril';
 import { User } from './user';
 import { EventType } from './eventType';
 import { EventSetMember } from './eventSetMember';
 
 
 export interface Event { 
-    eventId?: number;
-    eventTypeId?: number;
-    regionPerilId?: number;
-    name?: string | null;
-    description?: string | null;
+    eventID?: number;
+    eventTypeID?: number;
+    regionPerilID?: number;
+    eventNameShort?: string | null;
+    eventNameLong?: string | null;
     eventDate?: Date;
     industryLossEstimate?: number | null;
-    hiscoxLossImpact?: string | null;
+    hiscoxLossImpactRating?: string | null;
+    createUserID?: number | null;
+    createDate?: Date | null;
+    isLossPick?: boolean | null;
     isRestrictedAccess?: boolean | null;
     isArchived?: boolean | null;
-    createUserId?: number | null;
-    createDate?: Date | null;
     createUser?: User;
     eventType?: EventType;
+    regionPeril?: RegionPeril;
     eventSetMembers?: Array<EventSetMember> | null;
 }
 

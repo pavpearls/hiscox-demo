@@ -12,9 +12,9 @@ import { Event } from './event';
 
 
 export interface EventSetMember { 
-    memberId?: number;
-    eventId?: number;
-    eventSetId?: number;
+    eventSetMemberID?: number;
+    eventID?: number;
+    eventSetID?: number;
     simYear?: number;
     eventOrder?: number;
     event?: Event;

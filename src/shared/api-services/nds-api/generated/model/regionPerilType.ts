@@ -7,13 +7,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { RegionPeril } from './regionPeril';
 
 
-export interface EventSetMemberRequest { 
-    eventSetMemberID?: number;
-    eventID?: number;
-    eventSetID?: number;
-    simYear?: number;
-    eventOrder?: number;
+export interface RegionPerilType { 
+    regionPerilTypeID?: number;
+    regionPerilTypeName?: string | null;
+    regionPerils?: Array<RegionPeril> | null;
 }
 
