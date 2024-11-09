@@ -25,6 +25,7 @@ export class TestApiComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // For testing purpose only 
     // Fetch dependent data first and then perform CRUD operations
     this.fetchDependentData().subscribe(
       (data) => {
