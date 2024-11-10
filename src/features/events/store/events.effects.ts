@@ -81,7 +81,7 @@ export class EventsEffects {
     this.actions$.pipe(
       ofType(EventsActions.EventsSharedActions.getIndustryLossList),
       mergeMap(() =>
-        this.ndsApiServiceWrapper.parameterService.getIndustryLossList().pipe(
+        this.ndsApiServiceWrapper.parameterService.getIndustryLossEstimateList().pipe(
           map((payload) =>
             EventsActions.EventsSharedActions.getIndustryLossListSuccess({
               payload,

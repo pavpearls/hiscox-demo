@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { filterSuccess } from 'ngx-remotedata';
 import { combineLatest, take } from 'rxjs';
-import { ADD_EVENT_CONFIG } from '../../config/add-event.config';
+import { ADD_EVENT_CONFIG } from '../../config/events-catalog-dashboard-page.config';
 import {
   EventColumnItem,
   EventDataItem,
@@ -14,10 +14,10 @@ import { EventsFacade } from '../../store/events.facade';
 import{ Event } from '../../../../shared/api-services/nds-api/generated/model/event';
 @Component({
   selector: 'app-events-dashboard',
-  templateUrl: './events-dashboard.component.html',
-  styleUrls: ['./events-dashboard.component.scss'],
+  templateUrl: './events-set-dashboard.component.html',
+  styleUrls: ['./events-set-dashboard.component.scss'],
 })
-export class EventsDashboardComponent implements OnInit {
+export class EventsSetDashboardComponent implements OnInit {
   eventsTypeList$ = this.eventsFacade.eventsTypeList$;
   regionPerilList$ = this.eventsFacade.regionPerilList$;
   industryLossList$ = this.eventsFacade.industryLossList$;
@@ -146,18 +146,17 @@ export class EventsDashboardComponent implements OnInit {
   handleEventAdded($event: any): void {
     const  {eventDate, eventName, eventTypeId, events, regionPeril} = $event;
     
-
     const newEvent: Event = {
-      eventTypeID,
-      regionPerilId: regionPeril,
-      name: eventName,
-      description: '',
+      eventTypeID: eventTypeId,
+      regionPerilID: regionPeril,
+      eventNameShort: eventName,
+      eventNameLong: '',
       eventDate,
       industryLossEstimate: null,
-      hiscoxLossImpact: null,
+      hiscoxLossImpactRating: null,
       isRestrictedAccess: false,
       isArchived: false,
-      createUserId: null,
+      createUserID: null,
       createDate: new Date(),
       createUser: undefined
     };

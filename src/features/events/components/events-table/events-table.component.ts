@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { EventColumnItem, EventDataItem } from '../../interfaces/events.interfaces';
-import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-events-table',
@@ -17,9 +17,9 @@ export class EventsTableComponent {
     @Input() columns: EventColumnItem[] = [];
     @Input() data: EventDataItem[] = [];
 
-    pageSize: number = 10; // Default page size
+    pageSize: number = 10;
 
     setPageSize(size: number): void {
         this.pageSize = size;
-      }
+    }
 }

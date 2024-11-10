@@ -6,28 +6,29 @@ import { combineLatest, Observable, takeWhile } from 'rxjs';
 import { EventsActions } from './events.actions';
 import { EventsState } from './events.reducer';
 import { EventsSelectors } from './events.selectors';
+import { Event, EventType, RegionPeril } from '@shared/api-services/models';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EventsFacade {
 
-    eventsTypeList$: Observable<RemoteData<any[], HttpErrorResponse>> = this.store.pipe(
+    eventsTypeList$: Observable<RemoteData<EventType[], HttpErrorResponse>> = this.store.pipe(
         select(EventsSelectors.selectEventTypeList)
     );
-    regionPerilList$: Observable<RemoteData<any[], HttpErrorResponse>> = this.store.pipe(
+    regionPerilList$: Observable<RemoteData<RegionPeril[], HttpErrorResponse>> = this.store.pipe(
         select(EventsSelectors.selectRegionPerilList)
     );
-    eventsByEventType$: Observable<RemoteData<any[], HttpErrorResponse>> = this.store.pipe(
+    eventsByEventType$: Observable<RemoteData<Event[], HttpErrorResponse>> = this.store.pipe(
         select(EventsSelectors.selectEventsByEventType)
     );
-    addEvent$: Observable<RemoteData<any, HttpErrorResponse>> = this.store.pipe(
+    addEvent$: Observable<RemoteData<Event, HttpErrorResponse>> = this.store.pipe(
         select(EventsSelectors.selectAddEvent)
     );
-    industryLossList$: Observable<RemoteData<any, HttpErrorResponse>> = this.store.pipe(
+    industryLossList$: Observable<RemoteData<number[], HttpErrorResponse>> = this.store.pipe(
         select(EventsSelectors.selectIndustryLossList)
     );
-    hiscoxImpactList$: Observable<RemoteData<any, HttpErrorResponse>> = this.store.pipe(
+    hiscoxImpactList$: Observable<RemoteData<string[], HttpErrorResponse>> = this.store.pipe(
         select(EventsSelectors.selectHiscoxImpactList)
     );
 
@@ -41,8 +42,8 @@ export class EventsFacade {
         this.store.dispatch(EventsActions.EventsSharedActions.getRegionPerilList());
     }
 
-    loadEventsByEventType(payload: any): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.getEventsByEventType(payload));
+    loadEventsByEventType(payload: { eventTypeId: string }): void {
+        this.store.dispatch(EventsActions.EventsSharedActions.getEventsByEventType({payload}));
     }
 
     loadIndustryLossList(): void {
@@ -53,7 +54,7 @@ export class EventsFacade {
         this.store.dispatch(EventsActions.EventsSharedActions.getHiscoxImpactList());
     }
 
-    addNewEvent(payload: any): void {
+    addNewEvent(payload: Event): void {
         this.store.dispatch(EventsActions.EventsSharedActions.addNewEvent({ payload }));
     }
 
@@ -62,9 +63,9 @@ export class EventsFacade {
             .pipe(takeWhile(() => isComponentAlive))
             .subscribe(responses => {
                 if (responses.some(response => isInProgress(response))) {
-                    //   this.spinner.show();
+                    // this.spinner.show();
                 } else {
-                    //   this.spinner.hide();
+                    // this.spinner.hide();
                 }
             });
     }

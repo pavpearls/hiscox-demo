@@ -2,13 +2,14 @@ import { Injectable } from "@angular/core";
 import { AppLogService, EventService, EventSetMemberService, EventSetService, ParameterService } from "../generated";
 import { EventTypeService } from "../generated/api/eventType.service";
 import { RegionPerilService } from "../generated/api/regionPeril.service";
+import { environment } from "@env/environment";
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class NdsApiServiceWrapper {
-    private baseUrl: string = 'https://localhost:7224';
+    private baseUrl: string = environment.baseUrl;
     constructor(
         public eventService: EventService,
         public eventSetService: EventSetService,

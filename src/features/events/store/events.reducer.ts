@@ -2,15 +2,14 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { createReducer, on } from "@ngrx/store";
 import { notAsked, RemoteData, success, failure, inProgress } from "ngx-remotedata";
 import { EventsActions } from "./events.actions";
-import { EventType } from "@angular/router";
-import { RegionPeril } from "../../../shared/api-services/nds-api/generated";
+import { Event, EventType, RegionPeril } from '@shared/api-services/models';
 
 export interface EventsState {
-    eventsTypeList: RemoteData<Array<EventType>[], HttpErrorResponse>;
-    regionPerilList: RemoteData<Array<RegionPeril>[], HttpErrorResponse>;
-    eventsByEventType: RemoteData<Array<Event>[], HttpErrorResponse>;
-    hiscoxImpactList: RemoteData<Array<string>[], HttpErrorResponse>;
-    industryLossList: RemoteData<Array<number>[], HttpErrorResponse>;
+    eventsTypeList: RemoteData<EventType[], HttpErrorResponse>;
+    regionPerilList: RemoteData<RegionPeril[], HttpErrorResponse>;
+    eventsByEventType: RemoteData<Event[], HttpErrorResponse>;
+    hiscoxImpactList: RemoteData<string[], HttpErrorResponse>;
+    industryLossList: RemoteData<number[], HttpErrorResponse>;
     addEvent: RemoteData<Event, HttpErrorResponse>;
 }
 

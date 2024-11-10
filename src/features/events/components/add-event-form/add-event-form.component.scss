@@ -8,13 +8,6 @@
   margin-top: 4px;
 }
 
-.ant-advanced-search-form {
-  // padding: 24px;
-  // background: #fbfbfb;
-  // border: 1px solid #d9d9d9;
-  // border-radius: 6px;
-}
-
 .search-area {
   text-align: right;
 }
@@ -29,14 +22,14 @@
 
 .add-icon,
 .remove-icon {
-  font-size: 24px; /* Make the icons slightly larger */
+  font-size: 24px;
   cursor: pointer;
 }
 
 .add-icon {
-  color: #52c41a; /* Green color for Add icon */
+  color: #52c41a;
 }
 
 .remove-icon {
-  color: #f5222d; /* Red color for Delete icon */
+  color: #f5222d;
 }

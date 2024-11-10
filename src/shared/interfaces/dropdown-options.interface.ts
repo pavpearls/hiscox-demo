@@ -1,4 +1,4 @@
 export interface DropdownOption {
-    displayValue: string;
+    displayValue: string | null | undefined;
     actualValue: any;
 }
