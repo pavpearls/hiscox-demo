@@ -2,33 +2,53 @@
   <!-- Resolve the observables first with async and aliases -->
   <ng-container *ngIf="eventsTypeList$ | async as eventsTypeData">
     <ng-container *ngIf="regionPerilList$ | async as regionPerilData">
+      <ng-container *ngIf="industryLossList$ | async as industryLossList">
+        <ng-container *ngIf="hiscoxImpactList$ | async as hiscoxImpactList">
+          <!-- Wrap everything in nz-spin and set the loading state based on inProgress status -->
+          <div class="example">
+            <nz-spin
+              [nzSpinning]="
+                (eventsTypeData | isInProgress) ||
+                (regionPerilData | isInProgress) ||
+                (industryLossList | isInProgress) ||
+                (hiscoxImpactList | isInProgress)
+              "
+            >
+              <!-- Error State -->
+              <ng-container
+                *ngIf="
+                  (eventsTypeData | isFailure) ||
+                  (regionPerilData | isFailure) ||
+                  (industryLossList | isFailure) ||
+                  (hiscoxImpactList | isFailure)
+                "
+              >
+                <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
+              </ng-container>
 
-      <!-- Wrap everything in nz-spin and set the loading state based on inProgress status -->
-      <div class="example">
-      <nz-spin nzSimple nzTip="Loading..." [nzSize]="'large'" [nzSpinning]="(eventsTypeData | isInProgress) || (regionPerilData | isInProgress)">
-
-        <!-- Error State -->
-        <ng-container *ngIf="(eventsTypeData | isFailure) || (regionPerilData | isFailure)">
-          <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
+              <!-- Success State -->
+              <ng-container
+                *ngIf="
+                  (eventsTypeData | isSuccess) &&
+                  (regionPerilData | isSuccess) &&
+                  (industryLossList | isSuccess) &&
+                  (hiscoxImpactList | isSuccess)
+                "
+              >
+                <ng-container
+                  *ngTemplateOutlet="buttonsTemplate"
+                ></ng-container>
+                <ng-container
+                  *ngTemplateOutlet="tabContentTemplate"
+                ></ng-container>
+              </ng-container>
+            </nz-spin>
+          </div>
         </ng-container>
-
-        <!-- Success State -->
-        <ng-container *ngIf="(eventsTypeData | isSuccess) && (regionPerilData | isSuccess)">
-          <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
-          <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
-        </ng-container>
-
-      </nz-spin>
-    </div>
+      </ng-container>
     </ng-container>
   </ng-container>
 </section>
-
-<section id="events-dashboard">
-  <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
-  <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
-</section>
-
 
 <!-- Individual Templates -->
 
@@ -37,16 +57,28 @@
   <div class="tab-buttons">
     <h2>Event Catalog</h2>
     <nz-divider nzType="vertical"></nz-divider>
-    <button nz-button nzType="default" [ngClass]="{ 'active-tab': selectedTab === 'rds' }"
-      (click)="setActiveTab('rds')">
+    <button
+      nz-button
+      nzType="default"
+      [ngClass]="{ 'active-tab': selectedTab === 'rds' }"
+      (click)="setActiveTab('rds')"
+    >
       RDS
     </button>
-    <button nz-button nzType="default" [ngClass]="{ 'active-tab': selectedTab === 'postEvent' }"
-      (click)="setActiveTab('postEvent')">
+    <button
+      nz-button
+      nzType="default"
+      [ngClass]="{ 'active-tab': selectedTab === 'postEvent' }"
+      (click)="setActiveTab('postEvent')"
+    >
       Post Event
     </button>
-    <button nz-button nzType="default" [ngClass]="{ 'active-tab': selectedTab === 'eventResponse' }"
-      (click)="setActiveTab('eventResponse')">
+    <button
+      nz-button
+      nzType="default"
+      [ngClass]="{ 'active-tab': selectedTab === 'eventResponse' }"
+      (click)="setActiveTab('eventResponse')"
+    >
       Event Response
     </button>
   </div>
@@ -57,24 +89,104 @@
   <div class="tab-content">
     <ng-container *ngIf="selectedTab === 'rds'">
       @defer (when selectedTab === 'rds') {
-      <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)">
-      </app-add-event-form>
+      <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+        <nz-collapse-panel
+          *ngFor="let panel of rdsPanel"
+          [nzHeader]="panel.name"
+          [nzActive]="panel.active"
+          [nzDisabled]="panel.disabled"
+        >
+          <app-add-event-form
+            [addEventConfig]="addEventConfig"
+            (onEventAdded)="handleEventAdded($event)"
+          >
+          </app-add-event-form>
+        </nz-collapse-panel>
+      </nz-collapse>
+
       <nz-divider></nz-divider>
-      <app-events-table [columns]="columns" [data]="data"></app-events-table>
+
+      <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+        <nz-collapse-panel
+          *ngFor="let panel of rdsPanelTable"
+          [nzHeader]="panel.name"
+          [nzActive]="panel.active"
+          [nzDisabled]="panel.disabled"
+        >
+          <app-events-table
+            [columns]="columns"
+            [data]="data"
+          ></app-events-table>
+        </nz-collapse-panel>
+      </nz-collapse>
       }
     </ng-container>
     <ng-container *ngIf="selectedTab === 'postEvent'">
       @defer (when selectedTab === 'postEvent') {
-      <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)">
-      </app-add-event-form>
-      <nz-divider></nz-divider>
+        <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+          <nz-collapse-panel
+            *ngFor="let panel of rdsPanel"
+            [nzHeader]="panel.name"
+            [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled"
+          >
+            <app-add-event-form
+              [addEventConfig]="addEventConfig"
+              (onEventAdded)="handleEventAdded($event)"
+            >
+            </app-add-event-form>
+          </nz-collapse-panel>
+        </nz-collapse>
+  
+        <nz-divider></nz-divider>
+  
+        <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+          <nz-collapse-panel
+            *ngFor="let panel of rdsPanelTable"
+            [nzHeader]="panel.name"
+            [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled"
+          >
+            <app-events-table
+              [columns]="columns"
+              [data]="data"
+            ></app-events-table>
+          </nz-collapse-panel>
+        </nz-collapse>
       }
     </ng-container>
     <ng-container *ngIf="selectedTab === 'eventResponse'">
       @defer (when selectedTab === 'eventResponse') {
-      <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)">
-      </app-add-event-form>
-      <nz-divider></nz-divider>
+        <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+          <nz-collapse-panel
+            *ngFor="let panel of rdsPanel"
+            [nzHeader]="panel.name"
+            [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled"
+          >
+            <app-add-event-form
+              [addEventConfig]="addEventConfig"
+              (onEventAdded)="handleEventAdded($event)"
+            >
+            </app-add-event-form>
+          </nz-collapse-panel>
+        </nz-collapse>
+  
+        <nz-divider></nz-divider>
+  
+        <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+          <nz-collapse-panel
+            *ngFor="let panel of rdsPanelTable"
+            [nzHeader]="panel.name"
+            [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled"
+          >
+            <app-events-table
+              [columns]="columns"
+              [data]="data"
+            ></app-events-table>
+          </nz-collapse-panel>
+        </nz-collapse>
       }
     </ng-container>
   </div>
@@ -82,9 +194,7 @@
 
 <!-- Loading Template -->
 <ng-template #loadingTemplate>
-  <div class="example">
-    <nz-spin nzSimple nzTip="Loading..." [nzSize]="'large'"></nz-spin>
-  </div>
+  <div class="example"></div>
 </ng-template>
 
 <!-- Error Template -->

@@ -3,10 +3,8 @@ import { EventsState } from "./events.reducer";
 import { RemoteData } from "ngx-remotedata";
 import { HttpErrorResponse } from "@angular/common/http";
 
-// Feature Selector
 export const selectEventsState = createFeatureSelector<EventsState>('events');
 
-// Selectors for each API call
 const selectEventTypeList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<any[], HttpErrorResponse> => state.eventsTypeList
@@ -27,9 +25,21 @@ const selectAddEvent = createSelector(
   (state: EventsState): RemoteData<any, HttpErrorResponse> => state.addEvent
 );
 
+const selectIndustryLossList = createSelector(
+  selectEventsState,
+  (state: EventsState): RemoteData<any, HttpErrorResponse> => state.industryLossList
+);
+
+const selectHiscoxImpactList = createSelector(
+  selectEventsState,
+  (state: EventsState): RemoteData<any, HttpErrorResponse> => state.hiscoxImpactList
+);
+
 export const EventsSelectors = {
     selectEventTypeList,
     selectRegionPerilList,
+    selectIndustryLossList,
+    selectHiscoxImpactList,
     selectEventsByEventType,
     selectAddEvent
 }

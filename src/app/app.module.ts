@@ -17,12 +17,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RemoteDataModule } from 'ngx-remotedata';
+import { TestApiComponent } from './app-api-testing.component';
 
 registerLocaleData(en);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TestApiComponent
   ],
   imports: [
     BrowserModule,

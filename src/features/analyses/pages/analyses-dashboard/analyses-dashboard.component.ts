@@ -16,7 +16,7 @@ interface AnalysisItem {
   asOfDate: string;
   lastUpdate: string;
   inUse: string;
-  disabled?: boolean; // Add this if needed for row selection
+  disabled?: boolean;
 }
 
 @Component({
@@ -45,7 +45,6 @@ export class AnalysesDashboardComponent implements OnInit {
   sortKey: string | null = null;
 sortOrder: string | null = null;
 
-  // Columns definition for sorting and filtering
   listOfColumns = [
     {
       name: 'ID',
@@ -53,7 +52,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => a.id - b.id,
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for ID
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -74,7 +73,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => a.name.localeCompare(b.name),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for Name
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -96,7 +95,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => a.eventSetId.localeCompare(b.eventSetId),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for Event Set ID
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -105,7 +104,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => a.lossSetId.localeCompare(b.lossSetId),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for Loss Set ID
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -114,7 +113,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => a.riSetId.localeCompare(b.riSetId),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for RI Set ID
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -123,7 +122,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => a.owner.localeCompare(b.owner),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for Owner
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -132,7 +131,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => new Date(a.asOfDate).getTime() - new Date(b.asOfDate).getTime(),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for As Of Date
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -141,7 +140,7 @@ sortOrder: string | null = null;
       sortFn: (a: AnalysisItem, b: AnalysisItem) => new Date(a.lastUpdate).getTime() - new Date(b.lastUpdate).getTime(),
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
-      listOfFilter: [], // No filter for Last Update
+      listOfFilter: [],
       filterFn: null
     },
     {
@@ -169,7 +168,7 @@ sortOrder: string | null = null;
         this.analysesData = remoteData.value || [];
         this.filteredData = [...this.analysesData];
         this.total = this.analysesData.length;
-        this.applyPaginationAndSorting(); // Apply sorting and pagination together
+        this.applyPaginationAndSorting();
       } else {
         this.analysesData = [];
         this.filteredData = [];
@@ -177,7 +176,6 @@ sortOrder: string | null = null;
     });
   }
 
-  // Row selection logic
   updateCheckedSet(id: number, checked: boolean): void {
     if (checked) {
       this.setOfCheckedId.add(id);
@@ -240,29 +238,22 @@ sortOrder: string | null = null;
   onSelect(action: string): void {
     this.selectedAction = action;
     console.log(`Selected Action: ${action}`);
-    // You can perform different actions based on the selected option
     switch (action) {
       case 'Event Response':
-        // Add logic for Event Response action
         break;
       case 'Post Event':
-        // Add logic for Post Event action
         break;
       case 'RDS':
-        // Add logic for RDS action
         break;
       case 'Scenario':
-        // Add logic for Scenario action
         break;
       case 'Specific':
-        // Add logic for Specific action
         break;
       default:
         break;
     }
   }
 
-  // Add logic for the other buttons (e.g. Copy, Delete, Archive)
   onCopy(): void {
     console.log('Copy action triggered');
   }
@@ -293,12 +284,10 @@ sortOrder: string | null = null;
   }
 
   applyPaginationAndSorting(): void {
-    // Sort the data first, if sortKey and sortOrder exist
     if (this.sortKey && this.sortOrder) {
       this.applySorting(this.sortKey, this.sortOrder);
     }
   
-    // Apply pagination
     const start = (this.pageIndex - 1) * this.pageSize;
     const end = this.pageIndex * this.pageSize;
     this.filteredData = this.analysesData.slice(start, end);

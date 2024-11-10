@@ -16,8 +16,8 @@
       <nz-form-item>
         <nz-form-label [nzSpan]="12">{{ addEventConfig.labels?.regionPeril || 'Region-Peril' }}</nz-form-label>
         <nz-form-control [nzSpan]="12">
-          <nz-select id="regionPeril" formControlName="regionPeril" nzPlaceHolder="Select region-peril">
-            <nz-option *ngFor="let option of addEventConfig.regionOptions" [nzValue]="option" [nzLabel]="option"></nz-option>
+          <nz-select nzShowSearch nzAllowClear id="regionPeril" formControlName="regionPeril" nzPlaceHolder="Select region-peril">
+            <nz-option *ngFor="let option of addEventConfig.regionPerilOptions" [nzValue]="option.actualValue" [nzLabel]="option.displayValue"></nz-option>
           </nz-select>
           <div *ngIf="eventForm.get('regionPeril')?.invalid && eventForm.get('regionPeril')?.touched" class="error">
             {{ addEventConfig.errorMessages?.regionPeril || 'Region-peril selection is required.' }}
@@ -46,9 +46,11 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="12">{{ addEventConfig.labels?.industryLoss || 'Industry Loss' }}</nz-form-label>
             <nz-form-control [nzSpan]="12">
-              <input nz-input formControlName="industryLoss" placeholder="Enter industry loss" />
+              <nz-select formControlName="industryLoss" nzPlaceHolder="Select industry loss">
+                <nz-option *ngFor="let option of addEventConfig.industryLossOptions" [nzValue]="option.actualValue" [nzLabel]="option.displayValue"></nz-option>
+              </nz-select>
               <div *ngIf="event.get('industryLoss')?.invalid && event.get('industryLoss')?.touched" class="error">
-                {{ addEventConfig.errorMessages?.industryLoss || 'Industry loss is required.' }}
+                {{ addEventConfig.errorMessages?.industryLoss || 'Industry loss selection is required.' }}
               </div>
             </nz-form-control>
           </nz-form-item>
@@ -59,10 +61,10 @@
             <nz-form-label [nzSpan]="12">{{ addEventConfig.labels?.hiscoxImpact || 'Hiscox Impact' }}</nz-form-label>
             <nz-form-control [nzSpan]="12">
               <nz-select formControlName="hiscoxImpact" nzPlaceHolder="Select Hiscox impact">
-                <nz-option *ngFor="let impact of addEventConfig.impactOptions" [nzValue]="impact" [nzLabel]="impact"></nz-option>
+                <nz-option *ngFor="let option of addEventConfig.hiscoxImpactOptions" [nzValue]="option.actualValue" [nzLabel]="option.displayValue"></nz-option>
               </nz-select>
               <div *ngIf="event.get('hiscoxImpact')?.invalid && event.get('hiscoxImpact')?.touched" class="error">
-                {{ addEventConfig.errorMessages?.hiscoxImpact || 'Hiscox impact is required.' }}
+                {{ addEventConfig.errorMessages?.hiscoxImpact || 'Hiscox impact selection is required.' }}
               </div>
             </nz-form-control>
           </nz-form-item>

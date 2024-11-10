@@ -7,10 +7,13 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CommonModule } from '@angular/common';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { IconsProviderModule } from '../../../../app/icons-provider.module';
+import { DropdownOption } from '../../../../shared/interfaces/dropdown-options.interface';
 
 export interface AddEventConfig {
-  regionOptions: string[];
-  impactOptions: string[];
+  eventTypeId: string;
+  regionPerilOptions: DropdownOption[];
+  hiscoxImpactOptions: DropdownOption[];
+  industryLossOptions: DropdownOption[];
   allowMultipleEvents: boolean;
   labels?: {
     eventName?: string;
@@ -68,6 +71,7 @@ export class AddEventFormComponent implements OnInit {
   @Output() onEventAdded = new EventEmitter<any>();
 
   eventForm!: FormGroup<{
+    eventTypeId: FormControl<string>;
     eventName: FormControl<string>;
     regionPeril: FormControl<string | null>;
     eventDate: FormControl<Date | null>;
@@ -96,6 +100,7 @@ export class AddEventFormComponent implements OnInit {
   initForm(): void {
     const { presetValues } = this.addEventConfig;
     this.eventForm = this.fb.group({
+      eventTypeId: this.fb.control(this.addEventConfig?.eventTypeId || '', Validators.required),
       eventName: this.fb.control(presetValues?.eventName || '', Validators.required),
       regionPeril: this.fb.control<string | null>(presetValues?.regionPeril || null, Validators.required),
       eventDate: this.fb.control<Date | null>(presetValues?.eventDate || new Date(), Validators.required),

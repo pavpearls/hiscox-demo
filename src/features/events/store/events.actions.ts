@@ -12,6 +12,14 @@ const getRegionPerilList = createAction('[Events Dashboard] Get Region Peril Lis
 const getRegionPerilListSuccess = createAction('[Events Dashboard] Get Region Peril List Success', props<{ payload: any }>());
 const getRegionPerilListFailure = createAction('[Events Dashboard] GGet Region Peril List Failure', props<{ error: any }>());
 
+const getHiscoxImpactList = createAction('[Events Dashboard] Get Hiscox Impact List');
+const getHiscoxImpactListSuccess = createAction('[Events Dashboard] Get Hiscox Impact List Success', props<{ payload: any }>());
+const getHiscoxImpactListFailure = createAction('[Events Dashboard] GGet Hiscox Impact List Failure', props<{ error: any }>());
+
+const getIndustryLossList = createAction('[Events Dashboard] Get Industry Loss List');
+const getIndustryLossListSuccess = createAction('[Events Dashboard] Get Industry Loss List Success', props<{ payload: any }>());
+const getIndustryLossListFailure = createAction('[Events Dashboard] GGet Industry Loss List Failure', props<{ error: any }>());
+
 const getEventsByEventType = createAction('[Events Dashboard] Get Events By Event Type', props<{ payload: any }>());
 const getEventsByEventTypeSuccess = createAction('[Events Dashboard] Get Events By Event Type', props<{ payload: any }>());
 const getEventsByEventTypeFailure = createAction('[Events Dashboard] Get Events By Event Type', props<{ error: any }>());
@@ -24,12 +32,23 @@ const EventsSharedActions = {
     getEventTypeList,
     getEventTypeListSuccess,
     getEventTypeListFailure,
+    
     getRegionPerilList,
     getRegionPerilListSuccess,
     getRegionPerilListFailure,
+
     getEventsByEventType,
     getEventsByEventTypeSuccess,
     getEventsByEventTypeFailure,
+
+    getHiscoxImpactList,
+    getHiscoxImpactListSuccess,
+    getHiscoxImpactListFailure,
+
+    getIndustryLossList,
+    getIndustryLossListSuccess,
+    getIndustryLossListFailure,
+
     addNewEvent,
     addNewEventSuccess,
     addNewEventFailure

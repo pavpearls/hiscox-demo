@@ -1,42 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-
-import { AppLogService } from './appLog.service';
-import { EventService } from './event.service';
-import { EventSetService } from './eventSet.service';
-import { EventSetMemberService } from './eventSetMember.service';
-import { NDSBackendApiService } from './nDSBackendApi.service';
-import { ParameterService } from './parameter.service';
-
+import { NdsApiServiceWrapper } from '../shared/api-services/nds-api/custom/nds-api-service-wrapper';
+import {Event} from '../shared/api-services/nds-api/generated/model/event';
+import { EventSetMemberRequest, EventSetRequest } from '../shared/api-services/nds-api/generated';
 @Component({
   selector: 'app-test-api',
-  templateUrl: './test-api.component.html',
-  styleUrls: ['./test-api.component.scss'],
+  templateUrl: './app-api-testing.component.html',
 })
 export class TestApiComponent implements OnInit {
   constructor(
-    private appLogService: AppLogService,
-    private eventService: EventService,
-    private eventSetService: EventSetService,
-    private eventSetMemberService: EventSetMemberService,
-    private nDSBackendApiService: NDSBackendApiService,
-    private parameterService: ParameterService
+    private ndsApiServiceWrapper: NdsApiServiceWrapper,
   ) {}
 
   ngOnInit(): void {
-    // For testing purpose only 
-    // Fetch dependent data first and then perform CRUD operations
     this.fetchDependentData().subscribe(
       (data) => {
         console.log('Dependent data fetched successfully:', data);
         
-        // Now we can use this data to perform CRUD operations
-        this.createAppLog(data);
-        this.createEvent(data);
-        this.createEventSet(data);
-        this.createEventSetMember(data);
-        this.createParameter(data);
+        debugger;
+        // this.createEvent(data);
+        debugger;
+        // this.createEventSet(data);
+        debugger;
+        // this.createEventSetMember(data);
+        debugger;
       },
       (error) => {
         console.error('Error fetching dependent data:', error);
@@ -44,73 +32,82 @@ export class TestApiComponent implements OnInit {
     );
   }
 
-  // Method to fetch dependent data
   private fetchDependentData() {
     return forkJoin({
-      appLogs: this.appLogService.getAppLogList(),
-      events: this.eventService.getEventList(),
-      eventSets: this.eventSetService.getEventSetList(),
-      eventSetMembers: this.eventSetMemberService.getEventSetMemberList(),
-      parameters: this.parameterService.getEventTypeList(),
+      appLogs: this.ndsApiServiceWrapper.appLogService.getAppLogList(),
+      events: this.ndsApiServiceWrapper.eventService.getEventList(),
+      eventsListByType:  this.ndsApiServiceWrapper.eventService.getEventByEventTypeId(2),
+      eventSets: this.ndsApiServiceWrapper.eventSetService.getEventSetList(),
+      eventSetMembers: this.ndsApiServiceWrapper.eventSetMemberService.getEventSetMemberList(),
+      getEventTypeList: this.ndsApiServiceWrapper.parameterService.getEventTypeList(),
+      getHiscoxImpactAsync: this.ndsApiServiceWrapper.parameterService.getHiscoxImpactAsync(),
+      getIndustryLossEstimateList: this.ndsApiServiceWrapper.parameterService.getIndustryLossEstimateList(),
+      getRegionPerilList: this.ndsApiServiceWrapper.parameterService.getRegionPerilList(),
+      getRegionPerilTypeList: this.ndsApiServiceWrapper.parameterService.getRegionPerilTypeList()
     });
   }
 
-  // Example CRUD Methods using dependent data
-  private createAppLog(data: any) {
-    const payload = {
-      // Use `data.appLogs` as needed to build the payload
-      /* your data here */
-    };
-    this.appLogService.createAppLog(payload).subscribe(
-      (response) => console.log('AppLog Created:', response),
-      (error) => console.error('AppLog Creation Error:', error)
-    );
-  }
-
   private createEvent(data: any) {
-    const payload = {
-      // Use `data.events` as needed to build the payload
-      /* your data here */
+    const payload: Event = {
+        eventTypeID: 2,
+        regionPerilID: 9,
+        createUserID: null,
+        eventNameShort: 'Pav Event',
+        eventNameLong: 'Pav Event Long Description',
+        eventDate: new Date(),
+        industryLossEstimate: 10,
+        hiscoxLossImpactRating: 'HIGH',
+        isLossPick: false,
+        isRestrictedAccess: false,
+        isArchived: false,
+        createUser: undefined,
+        eventSetMembers: []
     };
-    this.eventService.createEvent(payload).subscribe(
+    this.ndsApiServiceWrapper.eventService.createEvent(payload).subscribe(
       (response) => console.log('Event Created:', response),
       (error) => console.error('Event Creation Error:', error)
     );
   }
 
   private createEventSet(data: any) {
-    const payload = {
-      // Use `data.eventSets` as needed to build the payload
-      /* your data here */
+    const payload: EventSetRequest = {
+     eventTypeID: 2,
+     eventSetName: 'Pav Set Name',
+     eventSetDescription: 'Pav Test Set',
+     isArchived: false,
+     createUserID: null,
+     createDate: new Date()
     };
-    this.eventSetService.createEventSet(payload).subscribe(
+    this.ndsApiServiceWrapper.eventSetService.createEventSet(payload).subscribe(
       (response) => console.log('EventSet Created:', response),
       (error) => console.error('EventSet Creation Error:', error)
     );
   }
 
+//   private addEventToEventSet(data: any) {
+//     const payload: EventSetRequest = {
+//      eventTypeID: 2,
+//      eventSetName: 'Pav Set Name',
+//      eventSetDescription: 'Pav Test Set',
+//      isArchived: false,
+//      createUserID: null,
+//      createDate: new Date()
+//     };
+//     this.ndsApiServiceWrapper.eventService..(payload).subscribe(
+//       (response) => console.log('EventSet Created:', response),
+//       (error) => console.error('EventSet Creation Error:', error)
+//     );
+//   }
+
   private createEventSetMember(data: any) {
-    const payload = {
-      // Use `data.eventSetMembers` as needed to build the payload
-      /* your data here */
+    const payload: EventSetMemberRequest = {
+        eventID: 1,
+        eventSetID: 1,
+        eventOrder: undefined
     };
-    this.eventSetMemberService.createEventSetMember(payload).subscribe(
+    this.ndsApiServiceWrapper.eventSetMemberService.createEventSetMember(payload).subscribe(
       (response) => console.log('EventSetMember Created:', response),
       (error) => console.error('EventSetMember Creation Error:', error)
     );
   }
-
-  private createParameter(data: any) {
-    const payload = {
-      // Use `data.parameters` as needed to build the payload
-      /* your data here */
-    };
-    this.parameterService.createParameter(payload).subscribe(
-      (response) => console.log('Parameter Created:', response),
-      (error) => console.error('Parameter Creation Error:', error)
-    );
-  }
-
-  // You can similarly add methods for `update`, `get`, and `delete`
-  // operations using the `data` parameter to reference dependent data as needed.
 }

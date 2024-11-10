@@ -27,14 +27,14 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
         AnalysesDashboardComponent, AnalysesDetailViewComponent
     ],
     imports: [
-        CommonModule,  // Import CommonModule for Angular common directives
-        AnalysesRoutingModule,  // Import the routing module for this feature
-        NzTableModule,    // Import Ng-Zorro Table for the analyses table
-        NzButtonModule,   // Import Ng-Zorro Button for actions like New, Copy, Delete
-        NzInputModule,    // Import Ng-Zorro Input for search functionality
-        NzSelectModule,   // Import Ng-Zorro Select for filters
-        NzFormModule,     // Import Ng-Zorro Form for creating filters
-        NzPageHeaderModule, // For the header section
+        CommonModule,
+        AnalysesRoutingModule,
+        NzTableModule,
+        NzButtonModule,
+        NzInputModule,
+        NzSelectModule,
+        NzFormModule,
+        NzPageHeaderModule,
         NzSpinModule,
         NzPaginationModule,
         NzButtonModule,
