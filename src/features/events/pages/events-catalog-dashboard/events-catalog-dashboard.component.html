@@ -15,6 +15,8 @@
         </nz-spin>
       </div>
     </ng-container>
+
+    <app-events-table [columns]="columns" [data]="data"></app-events-table>
   </section>
   
   <!-- Buttons Template -->
@@ -62,3 +64,5 @@
     <p>Error loading data. Please try again later.</p>
   </ng-template>
   
+
+  <app-events-table [columns]="columns" [data]="data"></app-events-table>

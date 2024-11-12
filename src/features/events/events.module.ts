@@ -19,8 +19,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { RemoteDataModule } from 'ngx-remotedata';
 
-import { AddEventFormComponent } from './components/add-event-form/add-event-form.component';
-import { EventsTableComponent } from './components/events-table/events-table.component';
+import { AddEventFormComponent } from './components/forms/add-event-form/add-event-form.component';
+import { EventsTableComponent } from './components/tables/events-table/events-table.component';
 import { EventsRoutingModule } from './events-routing.module';
 import { EventsCatalogDashboardComponent } from './pages/events-catalog-dashboard/events-catalog-dashboard.component';
 import { EventsSetDashboardComponent } from './pages/events-set-dashboard/events-set-dashboard.component';

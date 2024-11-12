@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { EventColumnItem, EventDataItem } from '../../interfaces/events.interfaces';
+import { EventColumnItem } from '../../../interfaces/events.interfaces';
 
 @Component({
     selector: 'app-events-table',
@@ -15,7 +15,7 @@ import { EventColumnItem, EventDataItem } from '../../interfaces/events.interfac
 })
 export class EventsTableComponent {
     @Input() columns: EventColumnItem[] = [];
-    @Input() data: EventDataItem[] = [];
+    @Input() data: any[] = [];
 
     pageSize: number = 10;
 

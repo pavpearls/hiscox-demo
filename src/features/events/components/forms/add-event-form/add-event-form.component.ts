@@ -8,7 +8,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { IconsProviderModule } from '../../../../app/icons-provider.module';
+import { IconsProviderModule } from '../../../../../app/icons-provider.module';
 
 @Component({
   selector: 'app-add-event-form',

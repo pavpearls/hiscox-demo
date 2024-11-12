@@ -21,8 +21,7 @@
       <button nz-button [nzType]="pageSize === 25 ? 'primary' : 'default'" (click)="setPageSize(25)">25</button>
       <button nz-button [nzType]="pageSize === 50 ? 'primary' : 'default'" (click)="setPageSize(50)">50</button>
       <button nz-button [nzType]="pageSize === 100 ? 'primary' : 'default'" (click)="setPageSize(100)">100</button>
-      <button nz-button [nzType]="pageSize === data.length ? 'primary' : 'default'"
-        (click)="setPageSize(data.length)">All</button>
+      <button nz-button [nzType]="pageSize === data.length ? 'primary' : 'default'" (click)="setPageSize(data.length)">All</button>
     </div>
   </div>
 </ng-template>
@@ -32,22 +31,15 @@
     <thead>
       <tr>
         <th *ngFor="let column of columns" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
-          [nzSortDirections]="column.sortDirections" [nzFilterMultiple]="column.filterMultiple"
-          [nzFilters]="column.listOfFilter" [nzFilterFn]="column.filterFn">
+            [nzSortDirections]="column.sortDirections" [nzFilterMultiple]="column.filterMultiple"
+            [nzFilters]="column.listOfFilter" [nzFilterFn]="column.filterFn">
           {{ column.name }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of eventsTable.data">
-        <td>{{ item.eventId }}</td>
-        <td>{{ item.eventType }}</td>
-        <td>{{ item.eventName }}</td>
-        <td>{{ item.regionPeril }}</td>
-        <td>{{ item.createdBy }}</td>
-        <td>{{ item.createdDate }}</td>
-        <td>{{ item.restricted }}</td>
-        <td>{{ item.archived }}</td>
+        <td *ngFor="let column of columns">{{ item[column.name.toLowerCase().replace(' ', '')] }}</td>
       </tr>
     </tbody>
   </nz-table>
