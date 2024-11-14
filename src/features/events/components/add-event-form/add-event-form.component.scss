@@ -1,0 +1,35 @@
+.event-form {
+  margin: 0 auto;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.search-area {
+  text-align: right;
+}
+
+.icon-buttons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.add-icon,
+.remove-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.add-icon {
+  color: #52c41a;
+}
+
+.remove-icon {
+  color: #f5222d;
+}

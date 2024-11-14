@@ -19,8 +19,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { RemoteDataModule } from 'ngx-remotedata';
 
-import { AddEventFormComponent } from './components/forms/add-event-form/add-event-form.component';
-import { EventsTableComponent } from './components/tables/events-table/events-table.component';
+import { AddEventFormComponent } from './components/add-event-form/add-event-form.component';
+import { EventsTableComponent } from './components/events-table/events-table.component';
 import { EventsRoutingModule } from './events-routing.module';
 import { EventsCatalogDashboardComponent } from './pages/events-catalog-dashboard/events-catalog-dashboard.component';
 import { EventsSetDashboardComponent } from './pages/events-set-dashboard/events-set-dashboard.component';
@@ -30,6 +30,8 @@ import { eventsReducer } from './store/events.reducer';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { EventsCatalogService } from './services/events-catalog.service';
+import { NzFlexModule } from 'ng-zorro-antd/flex';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 const ANGULAR_CORE_MODULES = [
     CommonModule,
@@ -52,6 +54,8 @@ const NG_ZORRO_MODULES = [
     NzCollapseModule,
     NzBadgeModule,
     NzDropDownModule,
+    NzFlexModule, 
+    NzGridModule
 ];
 
 const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [

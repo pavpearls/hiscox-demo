@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    baseUrl: 'https://dev.api.example.com'
+    baseUrl: 'https://dev-nds-78ql.azurewebsites.net/'
 };

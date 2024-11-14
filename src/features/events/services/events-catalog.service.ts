@@ -17,22 +17,22 @@ export class EventsCatalogService {
     selectedTab: string
   ): AddEventConfig {
     config.regionPerilOptions = regionPerilList.map(item => ({
-      displayValue: item.regionPerilName,
-      actualValue: item.regionPerilID
+      displayValue: item?.regionPerilName?.toString() ?? '',
+      actualValue: item?.regionPerilID?.toString() ?? ''
     }));
     config.hiscoxImpactOptions = hiscoxImpactList.map(item => ({
-      displayValue: item,
-      actualValue: item
+      displayValue: item?.toString() ?? '',
+      actualValue: item?.toString() ?? ''
     }));
     config.industryLossOptions = industryLossList.map(item => ({
-      displayValue: item.toString(),
-      actualValue: item
+      displayValue: item?.toString() ?? '',
+      actualValue: item?.toString() ?? ''
     }));
 
     const tabConfig: any = {
       rds: { name: 'rds', allowMultiple: false },
       postEvent: { name: 'event', allowMultiple: false },
-      eventResponse: { name: 'event', allowMultiple: true }
+      eventResponse: { name: 'event response', allowMultiple: true }
     };
 
     const eventType = eventsTypeList.find(

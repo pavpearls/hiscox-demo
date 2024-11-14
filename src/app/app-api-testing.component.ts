@@ -17,14 +17,10 @@ export class TestApiComponent implements OnInit {
     this.fetchDependentData().subscribe(
       (data) => {
         console.log('Dependent data fetched successfully:', data);
-        
-        debugger;
+        // Comment out to test CRUD
         // this.createEvent(data);
-        debugger;
         // this.createEventSet(data);
-        debugger;
         // this.createEventSetMember(data);
-        debugger;
       },
       (error) => {
         console.error('Error fetching dependent data:', error);

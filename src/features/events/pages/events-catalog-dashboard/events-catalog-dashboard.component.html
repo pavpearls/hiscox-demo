@@ -49,7 +49,9 @@
   
           <nz-collapse [nzExpandIconPosition]="expandIconPosition">
             <nz-collapse-panel *ngFor="let panel of panelsTable" [nzHeader]="panel.name" [nzActive]="panel.active" [nzDisabled]="panel.disabled">
-              <app-events-table *ngIf="eventList$ | successValue as successValue" [successValue]="successValue"></app-events-table>
+              <ng-container *ngIf="eventList$ | async | isSuccess">
+                <app-events-table [events]="eventList$ | async | successValue"></app-events-table>
+              </ng-container>
             </nz-collapse-panel>
           </nz-collapse>
         }
@@ -62,5 +64,3 @@
     <p>Error loading data. Please try again later.</p>
   </ng-template>
   
-
-  <app-events-table [columns]="columns" [data]="data"></app-events-table>

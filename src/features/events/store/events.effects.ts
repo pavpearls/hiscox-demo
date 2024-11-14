@@ -81,20 +81,22 @@ export class EventsEffects {
     this.actions$.pipe(
       ofType(EventsActions.EventsSharedActions.getIndustryLossList),
       mergeMap(() =>
-        this.ndsApiServiceWrapper.parameterService.getIndustryLossEstimateList().pipe(
-          map((payload) =>
-            EventsActions.EventsSharedActions.getIndustryLossListSuccess({
-              payload,
-            })
-          ),
-          catchError((error) =>
-            of(
-              EventsActions.EventsSharedActions.getIndustryLossListFailure({
-                error,
+        this.ndsApiServiceWrapper.parameterService
+          .getIndustryLossEstimateList()
+          .pipe(
+            map((payload) =>
+              EventsActions.EventsSharedActions.getIndustryLossListSuccess({
+                payload,
               })
+            ),
+            catchError((error) =>
+              of(
+                EventsActions.EventsSharedActions.getIndustryLossListFailure({
+                  error,
+                })
+              )
             )
           )
-        )
       )
     )
   );
@@ -102,9 +104,9 @@ export class EventsEffects {
   getEventsByEventType$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EventsActions.EventsSharedActions.getEventsByEventType),
-      mergeMap((payload: any) =>
-        this.ndsApiServiceWrapper.eventService
-          .getEventByEventTypeId(payload.eventTypeId)
+      mergeMap((payload: any) => {
+        return this.ndsApiServiceWrapper.eventService
+          .getEventByEventTypeId(Number(payload?.payload?.eventTypeId))
           .pipe(
             map((response) =>
               EventsActions.EventsSharedActions.getEventsByEventTypeSuccess({
@@ -118,8 +120,8 @@ export class EventsEffects {
                 })
               )
             )
-          )
-      )
+          );
+      })
     )
   );
 
