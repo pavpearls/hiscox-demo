@@ -6,10 +6,10 @@
 
 <ng-template #tableActionButtonsTemplate>
   <div class="action-buttons">
-    <button nz-button nzType="default">Edit</button>
-    <button nz-button nzType="default">Copy</button>
-    <button nz-button nzType="default">Delete</button>
-    <button nz-button nzType="default">Archive</button>
+    <button nz-button nzType="default" (click)="onEditClick()">Edit</button>
+    <button nz-button nzType="default" (click)="onCopyClick()">Copy</button>
+    <button nz-button nzType="default" (click)="onDeleteClick()">Delete</button>
+    <button nz-button nzType="default" (click)="onArchiveClick()">Archive</button>
   </div>
 </ng-template>
 
@@ -27,19 +27,56 @@
 </ng-template>
 
 <ng-template #tableDataTemplate>
-  <nz-table #eventsTable [nzData]="data" [nzPageSize]="pageSize" nzTableLayout="fixed">
+  <nz-table #eventsTable [nzData]="data" [nzPageSize]="pageSize" nzTableLayout="fixed" (nzCurrentPageDataChange)="onCurrentPageDataChange($event)">
     <thead>
       <tr>
+        <th *ngIf="enableRowSelection" nzCheckbox [(nzChecked)]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
         <th *ngFor="let column of columns" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
             [nzSortDirections]="column.sortDirections" [nzFilterMultiple]="column.filterMultiple"
             [nzFilters]="column.listOfFilter" [nzFilterFn]="column.filterFn">
           {{ column.name }}
         </th>
+        <th *ngIf="enableEditMode">Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of eventsTable.data">
-        <td *ngFor="let column of columns">{{ item[column.name.toLowerCase().replace(' ', '')] }}</td>
+        <td *ngIf="enableRowSelection" nzCheckbox [(nzChecked)]="setOfCheckedId.has(item.eventId)" (nzCheckedChange)="onItemChecked(item.eventId, $event)"></td>
+        
+        <!-- Table cells with inline editing and validation -->
+        <td *ngFor="let column of columns">
+          <ng-container *ngIf="!enableEditMode || !editCache[item.eventId]?.edit">
+            {{ item[column.name.toLowerCase().replace(' ', '')] }}
+          </ng-container>
+          <ng-container *ngIf="enableEditMode && editCache[item.eventId]?.edit">
+            <input 
+              nz-input
+              *ngIf="column.name === 'Event Type' || column.name === 'Event Name'"
+              [formControl]="editCache[item.eventId].form.controls[column.name.toLowerCase().replace(' ', '')]" 
+            />
+            <div *ngIf="editCache[item.eventId].form.controls[column.name.toLowerCase().replace(' ', '')].invalid 
+                        && (editCache[item.eventId].form.controls[column.name.toLowerCase().replace(' ', '')].dirty 
+                        || editCache[item.eventId].form.controls[column.name.toLowerCase().replace(' ', '')].touched)">
+              <div *ngIf="editCache[item.eventId].form.controls[column.name.toLowerCase().replace(' ', '')].errors?.['required']">
+                This field is required.
+              </div>
+              <div *ngIf="editCache[item.eventId].form.controls[column.name.toLowerCase().replace(' ', '')].errors?.['maxlength']">
+                Maximum length exceeded.
+              </div>
+            </div>
+          </ng-container>
+        </td>
+        
+        <!-- Edit/Save/Cancel Actions -->
+        <td *ngIf="enableEditMode">
+          <ng-container *ngIf="!editCache[item.eventId]?.edit">
+            <a (click)="startEdit(item.eventId)">Edit</a>
+          </ng-container>
+          <ng-container *ngIf="editCache[item.eventId]?.edit">
+            <a (click)="saveEdit(item.eventId)" class="save">Save</a>
+            <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(item.eventId)">Cancel</a>
+          </ng-container>
+        </td>
       </tr>
     </tbody>
   </nz-table>

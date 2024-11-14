@@ -16,6 +16,7 @@ interface ChildrenItemData {
   name: string;
   date: string;
   upgradeNum: string;
+  status: string;
 }
 
 @Component({
@@ -25,10 +26,10 @@ interface ChildrenItemData {
 })
 export class EventsSetDashboardComponent implements OnInit {
   listOfParentData: ParentItemData[] = [];
-  listOfChildrenData: ChildrenItemData[] = [];
+  nestedChildrenData: { [key: number]: ChildrenItemData[] } = {};
 
   ngOnInit(): void {
-    // Mock data for parent event sets
+    // Mock data for parent items
     for (let i = 0; i < 3; ++i) {
       this.listOfParentData.push({
         key: i,
@@ -40,14 +41,12 @@ export class EventsSetDashboardComponent implements OnInit {
         createdAt: '2014-12-24 23:12:00',
         expand: false
       });
-    }
-    for (let i = 0; i < 3; ++i) {
-      this.listOfChildrenData.push({
-        key: i,
-        date: '2014-12-24 23:12:00',
-        name: 'This is production name',
-        upgradeNum: 'Upgraded: 56'
-      });
+
+      // Mock nested children data for each parent
+      this.nestedChildrenData[i] = [
+        { key: i * 10 + 1, date: '2014-12-24 23:12:00', name: 'Production 1', upgradeNum: 'Upgraded: 56', status: 'Finished' },
+        { key: i * 10 + 2, date: '2014-12-24 23:14:00', name: 'Production 2', upgradeNum: 'Upgraded: 42', status: 'In Progress' }
+      ];
     }
   }
 }
