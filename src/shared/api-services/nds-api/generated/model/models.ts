@@ -6,6 +6,7 @@ export * from './event';
 export * from './eventPagedResult';
 export * from './eventRequest';
 export * from './eventSet';
+export * from './eventSetAndEventsRequest';
 export * from './eventSetMember';
 export * from './eventSetMemberRequest';
 export * from './eventSetRequest';

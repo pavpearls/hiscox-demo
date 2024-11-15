@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { ColDef } from 'ag-grid-community';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EventColumnItem, EventDataItem } from '../../../interfaces/events.interfaces';
-import { Event } from '../../../../../shared/api-services/nds-api/generated/model/event';
+import { Event } from '../../../../shared/api-services/nds-api/generated/model/event';
 
 @Component({
   selector: 'app-events-table',
@@ -10,138 +17,98 @@ import { Event } from '../../../../../shared/api-services/nds-api/generated/mode
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsTableComponent implements OnInit {
-  private _successValue: Event[] | null = null;
+  private _successValue:  Event[] | null = null;
 
   @Input() set successValue(value: Event[] | null) {
     this._successValue = value;
     if (this._successValue) {
-      this.data = this._successValue.map(event => this.transformEventDataItem(event));
-      this.columns = this.generateColumns();
-      this.updateEditCache();
+      this.rowData = this._successValue.map(event => this.transformEventDataItem(event));
     }
   }
 
   @Input() enableRowSelection = false;
   @Input() enableEditMode = false;
 
-  @Output() edit = new EventEmitter<void>();
-  @Output() copy = new EventEmitter<void>();
-  @Output() delete = new EventEmitter<void>();
-  @Output() archive = new EventEmitter<void>();
+  @Output() edit = new EventEmitter<number>();
+  @Output() copy = new EventEmitter<number>();
+  @Output() delete = new EventEmitter<number>();
+  @Output() archive = new EventEmitter<number>();
 
-  columns: EventColumnItem[] = [];
-  data: EventDataItem[] = [];
-  pageSize = 10;
-  checked = false;
-  indeterminate = false;
-  listOfCurrentPageData: readonly EventDataItem[] = [];
-  setOfCheckedId = new Set<number>();
-
+  columnDefs: ColDef[] = [];
+  rowData: any[] = [];
   editCache: { [key: number]: { edit: boolean; form: FormGroup } } = {};
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    // Initialize data if necessary
+    this.columnDefs = this.generateColumns();
   }
 
-  onCurrentPageDataChange($event: readonly EventDataItem[]): void {
-    this.listOfCurrentPageData = $event;
-    this.refreshCheckedStatus();
-  }
-
-  onAllChecked(checked: boolean): void {
-    this.listOfCurrentPageData.forEach(item => this.updateCheckedSet(item.eventId, checked));
-    this.refreshCheckedStatus();
-  }
-
-  onItemChecked(id: number, checked: boolean): void {
-    this.updateCheckedSet(id, checked);
-    this.refreshCheckedStatus();
-  }
-
-  updateCheckedSet(id: number, checked: boolean): void {
-    if (checked) {
-      this.setOfCheckedId.add(id);
-    } else {
-      this.setOfCheckedId.delete(id);
-    }
-  }
-
-  refreshCheckedStatus(): void {
-    this.checked = this.listOfCurrentPageData.every(item => this.setOfCheckedId.has(item.eventId));
-    this.indeterminate = this.listOfCurrentPageData.some(item => this.setOfCheckedId.has(item.eventId)) && !this.checked;
-  }
-
-  private generateColumns(): EventColumnItem[] {
+  private generateColumns(): ColDef[] {
     return [
-      { name: 'Event ID', sortOrder: null, sortFn: (a, b) => a.eventId - b.eventId, sortDirections: ['ascend', 'descend', null], filterMultiple: false, listOfFilter: [], filterFn: null },
-      { name: 'Event Type', sortOrder: null, sortFn: (a, b) => a.eventType.localeCompare(b.eventType), sortDirections: ['ascend', 'descend', null], filterMultiple: true, listOfFilter: this.generateFilterList('eventType'), filterFn: (filter, item) => filter.includes(item.eventType) },
-      { name: 'Event Name', sortOrder: null, sortFn: (a, b) => a.eventName.localeCompare(b.eventName), sortDirections: ['ascend', 'descend', null], filterMultiple: true, listOfFilter: this.generateFilterList('eventName'), filterFn: (filter, item) => filter.includes(item.eventName) },
-      { name: 'Region-Peril', sortOrder: null, sortFn: (a, b) => a.regionPeril.localeCompare(b.regionPeril), sortDirections: ['ascend', 'descend', null], filterMultiple: true, listOfFilter: this.generateFilterList('regionPeril'), filterFn: (filter, item) => filter.includes(item.regionPeril) },
-      { name: 'Created By', sortOrder: null, sortFn: (a, b) => a.createdBy.localeCompare(b.createdBy), sortDirections: ['ascend', 'descend', null], filterMultiple: false, listOfFilter: [], filterFn: null },
-      { name: 'Created Date', sortOrder: null, sortFn: (a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(), sortDirections: ['ascend', 'descend', null], filterMultiple: false, listOfFilter: [], filterFn: null },
-      { name: 'Restricted', sortOrder: null, sortFn: null, sortDirections: [null], filterMultiple: true, listOfFilter: [{ text: 'Yes', value: 'Yes' }, { text: 'No', value: 'No' }], filterFn: (filter, item) => filter.includes(item.restricted) },
-      { name: 'Archived', sortOrder: null, sortFn: null, sortDirections: [null], filterMultiple: true, listOfFilter: [{ text: 'Yes', value: 'Yes' }, { text: 'No', value: 'No' }], filterFn: (filter, item) => filter.includes(item.archived) }
+      { field: 'eventId', headerName: 'Event ID', sortable: true, filter: 'agNumberColumnFilter' },
+      { field: 'eventType', headerName: 'Event Type', sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'eventName', headerName: 'Event Name', sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'regionPeril', headerName: 'Region-Peril', sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'createdBy', headerName: 'Created By', sortable: true, filter: 'agTextColumnFilter' },
+      {
+        field: 'createdDate',
+        headerName: 'Created Date',
+        sortable: true,
+        filter: 'agDateColumnFilter',
+        valueFormatter: params => params.value || '<No Date>',
+      },
+      {
+        field: 'restricted',
+        headerName: 'Restricted',
+        filter: true,
+        cellRenderer: (params: any) => (params.value === 'Yes' ? 'Yes' : 'No'),
+      },
+      {
+        field: 'archived',
+        headerName: 'Archived',
+        filter: true,
+        cellRenderer: (params: any) => (params.value === 'Yes' ? 'Yes' : 'No'),
+      },
+      ...(this.enableEditMode
+        ? [
+            {
+              field: 'action',
+              headerName: 'Action',
+              cellRenderer: this.actionCellRenderer.bind(this),
+            },
+          ]
+        : []),
     ];
   }
 
-  private transformEventDataItem(item: Event): EventDataItem {
+  private transformEventDataItem(event: Event): any {
     return {
-      eventId: item.eventID,
-      eventType: item.eventType?.eventTypeName || '<No Data>',
-      eventName: item.eventNameShort || '<No Data>',
-      regionPeril: item.regionPeril?.regionPerilName || '<No Data>',
-      createdBy: item.createUser?.userName || '<No Data>',
-      createdDate: item.createDate ? new Date(item.createDate).toLocaleDateString('en-GB') : '<No Date>',
-      restricted: item.isRestrictedAccess ? 'Yes' : 'No',
-      archived: item.isArchived ? 'Yes' : 'No'
+      eventId: event.eventID || '<No Data>',
+      eventType: event.eventType?.eventTypeName || '<No Data>',
+      eventName: event.eventNameShort || '<No Data>',
+      regionPeril: event.regionPeril?.regionPerilName || '<No Data>',
+      createdBy: event.createUser?.userName || '<No Data>',
+      createdDate: event.createDate ? new Date(event.createDate).toLocaleDateString('en-GB') : '<No Date>',
+      restricted: event.isRestrictedAccess ? 'Yes' : 'No',
+      archived: event.isArchived ? 'Yes' : 'No',
     };
   }
 
-  private generateFilterList(field: keyof EventDataItem): { text: string; value: string }[] {
-    const uniqueValues = [...new Set(this.data.map(item => item[field]))];
-    return uniqueValues.map(value => ({ text: String(value), value: String(value) }));
+  private actionCellRenderer(params: any): string {
+    const id = params.data.eventId;
+    return `
+      <a (click)="startEdit(${id})">Edit</a>
+      <a (click)="delete.emit(${id})">Delete</a>
+      <a (click)="archive.emit(${id})">Archive</a>
+    `;
   }
 
-  setPageSize(size: number): void {
-    this.pageSize = size;
+  onRowSelected($event: any): void {
+
   }
 
-  // Edit functionality methods with validation
-  startEdit(id: number): void {
-    this.editCache[id].edit = true;
-  }
+  onCellClicked($event: any): void {
 
-  cancelEdit(id: number): void {
-    this.editCache[id].edit = false;
-  }
-
-  saveEdit(id: number): void {
-    if (this.editCache[id].form.valid) {
-      const index = this.data.findIndex(item => item.eventId === id);
-      Object.assign(this.data[index], this.editCache[id].form.value);
-      this.editCache[id].edit = false;
-    } else {
-      this.editCache[id].form.markAllAsTouched();
-    }
-  }
-
-  private updateEditCache(): void {
-    this.data.forEach(item => {
-      this.editCache[item.eventId] = {
-        edit: false,
-        form: this.fb.group({
-          eventId: [item.eventId],
-          eventType: [item.eventType, [Validators.required, Validators.maxLength(50)]],
-          eventName: [item.eventName, [Validators.required, Validators.maxLength(100)]],
-          regionPeril: [item.regionPeril],
-          createdBy: [item.createdBy],
-          createdDate: [item.createdDate],
-          restricted: [item.restricted],
-          archived: [item.archived]
-        })
-      };
-    });
   }
 }

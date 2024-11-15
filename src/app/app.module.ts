@@ -18,7 +18,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RemoteDataModule } from 'ngx-remotedata';
 import { TestApiComponent } from './app-api-testing.component';
-
+import { AgGridModule } from 'ag-grid-angular';
 registerLocaleData(en);
 
 @NgModule({
@@ -34,7 +34,7 @@ registerLocaleData(en);
     NzMenuModule,
     FormsModule,
     RemoteDataModule,
-
+    AgGridModule,
     EffectsModule.forRoot(),
     StoreModule.forRoot(),
     StoreDevtoolsModule.instrument({

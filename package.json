@@ -32,6 +32,8 @@
     "@ngrx/effects": "^18.1.0",
     "@ngrx/store": "^18.1.0",
     "@ngrx/store-devtools": "^18.1.0",
+    "ag-grid-angular": "^32.3.3",
+    "ag-grid-community": "^32.3.3",
     "ng-zorro-antd": "^18.1.1",
     "ngx-remotedata": "^8.0.0",
     "rxjs": "~7.8.0",

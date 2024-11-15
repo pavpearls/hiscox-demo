@@ -1105,6 +1105,100 @@
                 }
             }
         },
+        "/api/EventSet/Events": {
+            "post": {
+                "tags": [
+                    "EventSet"
+                ],
+                "operationId": "CreateEventSetAndEvents",
+                "requestBody": {
+                    "content": {
+                        "application/json-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EventSetAndEventsRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EventSetAndEventsRequest"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EventSetAndEventsRequest"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EventSetAndEventsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventSet"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventSet"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventSet"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/EventSetMember/{id}": {
             "get": {
                 "tags": [
@@ -2289,6 +2383,55 @@
                         "items": {
                             "$ref": "#/components/schemas/Event"
                         },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "EventSetAndEventsRequest": {
+                "type": "object",
+                "properties": {
+                    "eventSetID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "eventTypeID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "eventSetName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "eventSetDescription": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "isArchived": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "createUserID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "createDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "eventRequests": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EventRequest"
+                        },
+                        "nullable": true
+                    },
+                    "existingEventSetId": {
+                        "type": "integer",
+                        "format": "int32",
                         "nullable": true
                     }
                 },

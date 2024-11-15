@@ -21,6 +21,7 @@ model/event.ts
 model/eventPagedResult.ts
 model/eventRequest.ts
 model/eventSet.ts
+model/eventSetAndEventsRequest.ts
 model/eventSetMember.ts
 model/eventSetMemberRequest.ts
 model/eventSetRequest.ts

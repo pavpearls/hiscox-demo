@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { EventSet } from '@shared/api-services/eventSet';
+import { Observable, of } from 'rxjs';
 
 interface ParentItemData {
   key: number;
@@ -19,40 +21,90 @@ interface ChildrenItemData {
   status: string;
 }
 
+import { ColDef } from 'ag-grid-community';
+
+
+
 @Component({
   selector: 'app-nested-table',
-  templateUrl: './nested-table.component.html',
-  styleUrls: ['./nested-table.component.scss']
+  templateUrl: './set-events-table.component.html',
 })
-export class NestedTableComponent implements OnInit {
-  @Input() parentData: ParentItemData[] = [];
-  @Input() childrenData: { [key: number]: ChildrenItemData[] } = {};
+export class NestedTableComponent {
+  rowData$: Observable<Array<EventSet>>;
 
-  constructor() {}
+  columnDefs: ColDef[] = [
+    {
+      field: 'eventSetName',
+      headerName: 'Event Set Name',
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'eventSetDescription',
+      headerName: 'Description',
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'createDate',
+      headerName: 'Created Date',
+      valueFormatter: (params) => {
+        return params.value ? new Date(params.value).toLocaleDateString() : '';
+      },
+    },
+  ];
 
-  ngOnInit(): void {}
+  detailCellRendererParams = {
+    detailGridOptions: {
+      columnDefs: [
+        { field: 'eventID', headerName: 'Event ID' },
+        { field: 'simYear', headerName: 'Simulation Year' },
+        { field: 'eventOrder', headerName: 'Order' },
+      ],
+      defaultColDef: {
+        flex: 1,
+        minWidth: 100,
+        resizable: true,
+      },
+    },
+    getDetailRowData: (params: any) => {
+      params.successCallback(params.data.eventSetMembers || []);
+    },
+  };
 
-  toggleExpand(parentItem: ParentItemData): void {
-    parentItem.expand = !parentItem.expand;
+  constructor() {
+    // Replace this with your API call
+    this.rowData$ = of(this.mockEventSets());
   }
 
-  onPublish(parentItem: ParentItemData): void {
-    console.log('Publish:', parentItem);
+  // Sample mock data to simulate API response
+  mockEventSets(): EventSet[] {
+    return [
+      {
+        eventSetID: 1,
+        eventSetName: 'Flood Event Set',
+        eventSetDescription: 'Set of flood events',
+        createDate: new Date(),
+        eventSetMembers: [
+          { eventID: 101, simYear: 2021, eventOrder: 1 },
+          { eventID: 102, simYear: 2022, eventOrder: 2 },
+        ],
+      },
+      {
+        eventSetID: 2,
+        eventSetName: 'Earthquake Event Set',
+        eventSetDescription: 'Set of earthquake events',
+        createDate: new Date(),
+        eventSetMembers: [
+          { eventID: 201, simYear: 2020, eventOrder: 1 },
+          { eventID: 202, simYear: 2021, eventOrder: 2 },
+        ],
+      },
+    ];
   }
 
-  onAction1(childItem: ChildrenItemData): void {
-    console.log('Action 1:', childItem);
-  }
-
-  onAction2(childItem: ChildrenItemData): void {
-    console.log('Action 2:', childItem);
-  }
-
-  onStop(childItem: ChildrenItemData): void {
-    console.log('Stop:', childItem);
-  }
-
-  onMore(childItem: ChildrenItemData): void {
-    console.log('More:', childItem);
+  // Format dates in the main grid
+  dateFormatter(params: any) {
+    return params.value ? new Date(params.value).toLocaleDateString() : '';
   }
 }
