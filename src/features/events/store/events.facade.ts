@@ -1,71 +1,121 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { isInProgress, RemoteData } from 'ngx-remotedata';
-import { combineLatest, Observable, takeWhile } from 'rxjs';
+import { Event, EventSet, EventSetMember } from '@shared/api-services/models';
+import { isInProgress } from 'ngx-remotedata';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { combineLatest, map } from 'rxjs';
 import { EventsActions } from './events.actions';
-import { EventsState } from './events.reducer';
+import { CombinedEventsState } from './events.reducer';
 import { EventsSelectors } from './events.selectors';
-import { Event, EventType, RegionPeril } from '@shared/api-services/models';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EventsFacade {
+    constructor(private store: Store<CombinedEventsState>, private spinner: NgxSpinnerService) { }
 
-    eventsTypeList$: Observable<RemoteData<EventType[], HttpErrorResponse>> = this.store.pipe(
-        select(EventsSelectors.selectEventTypeList)
-    );
-    regionPerilList$: Observable<RemoteData<RegionPeril[], HttpErrorResponse>> = this.store.pipe(
-        select(EventsSelectors.selectRegionPerilList)
-    );
-    eventsByEventType$: Observable<RemoteData<Event[], HttpErrorResponse>> = this.store.pipe(
-        select(EventsSelectors.selectEventsByEventType)
-    );
-    addEvent$: Observable<RemoteData<Event, HttpErrorResponse>> = this.store.pipe(
-        select(EventsSelectors.selectAddEvent)
-    );
-    industryLossList$: Observable<RemoteData<number[], HttpErrorResponse>> = this.store.pipe(
-        select(EventsSelectors.selectIndustryLossList)
-    );
-    hiscoxImpactList$: Observable<RemoteData<string[], HttpErrorResponse>> = this.store.pipe(
-        select(EventsSelectors.selectHiscoxImpactList)
-    );
+    state = {
+        events: {
+            eventsTypeList$: this.store.pipe(select(EventsSelectors.selectEventTypeList)),
+            regionPerilList$: this.store.pipe(select(EventsSelectors.selectRegionPerilList)),
+            eventsByEventType$: this.store.pipe(select(EventsSelectors.selectEventsByEventType)),
+            addEvent$: this.store.pipe(select(EventsSelectors.selectAddEvent)),
+            industryLossList$: this.store.pipe(select(EventsSelectors.selectIndustryLossList)),
+            hiscoxImpactList$: this.store.pipe(select(EventsSelectors.selectHiscoxImpactList)),
+            deleteEvent$: this.store.pipe(select(EventsSelectors.selectDeleteEvent)),
+            updateEvent$: this.store.pipe(select(EventsSelectors.selectUpdateEvent)),
+        },
+        eventSets: {
+            createEventSet$: this.store.pipe(select(EventsSelectors.selectCreateEventSet)),
+            createEventSetAndEvents$: this.store.pipe(select(EventsSelectors.selectCreateEventSetAndEvents)),
+            deleteEventSet$: this.store.pipe(select(EventsSelectors.selectDeleteEventSet)),
+            getEventSetById$: this.store.pipe(select(EventsSelectors.selectGetEventSetById)),
+            getEventSetList$: this.store.pipe(select(EventsSelectors.selectGetEventSetList)),
+            updateEventSet$: this.store.pipe(select(EventsSelectors.selectUpdateEventSet)),
+        },
+        eventSetMemberships: {
+            createMembership$: this.store.pipe(select(EventsSelectors.selectCreateMembership)),
+            updateMembership$: this.store.pipe(select(EventsSelectors.selectUpdateMembership)),
+            deleteMembership$: this.store.pipe(select(EventsSelectors.selectDeleteMembership)),
+            membershipById$: this.store.pipe(select(EventsSelectors.selectMembershipById)),
+            membershipList$: this.store.pipe(select(EventsSelectors.selectMembershipList)),
+        },
+    };
 
-    constructor(private store: Store<EventsState>) { }
+    actions = {
+        events: {
+            loadEventTypeList: (): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.getEventTypeList());
+            },
+            loadRegionPerilList: (): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.getRegionPerilList());
+            },
+            loadEventsByEventType: (payload: { eventTypeId: string }): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.getEventsByEventType({ payload }));
+            },
+            loadIndustryLossList: (): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.getIndustryLossList());
+            },
+            loadHiscoxImpactList: (): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.getHiscoxImpactList());
+            },
+            addNewEvent: (payload: Event): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.addNewEvent({ payload }));
+            },
+            deleteEvent: (id: number): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.deleteEvent({ id }));
+            },
+            updateEvent: (payload: Event): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.updateEvent({ payload }));
+            },
+        },
+        eventSets: {
+            createEventSet: (payload: EventSet): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.createEventSet({ payload }));
+            },
+            createEventSetAndEvents: (payload: EventSet): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.createEventSetAndEvents({ payload }));
+            },
+            deleteEventSet: (id: number): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.deleteEventSet({ id }));
+            },
+            getEventSetById: (id: number): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.getEventSetById({ id }));
+            },
+            getEventSetList: (): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.getEventSetList());
+            },
+            updateEventSet: (payload: EventSet): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.updateEventSet({ payload }));
+            },
+        },
+        eventSetMemberships: {
+            createMembership: (membership: EventSetMember): void => {
+                this.store.dispatch(EventsActions.EventSetMembershipActions.createMembership({ membership }));
+            },
+            updateMembership: (membership: EventSetMember): void => {
+                this.store.dispatch(EventsActions.EventSetMembershipActions.updateMembership({ membership }));
+            },
+            deleteMembership: (id: number): void => {
+                this.store.dispatch(EventsActions.EventSetMembershipActions.deleteMembership({ id }));
+            },
+            getMembershipById: (id: number): void => {
+                this.store.dispatch(EventsActions.EventSetMembershipActions.getMembershipById({ id }));
+            },
+            getMembershipList: (): void => {
+                this.store.dispatch(EventsActions.EventSetMembershipActions.getMembershipList());
+            },
+        },
+    };
 
-    loadEventTypeList(): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.getEventTypeList());
-    }
-
-    loadRegionPerilList(): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.getRegionPerilList());
-    }
-
-    loadEventsByEventType(payload: { eventTypeId: string }): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.getEventsByEventType({payload}));
-    }
-
-    loadIndustryLossList(): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.getIndustryLossList());
-    }
-
-    loadHiscoxImpactList(): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.getHiscoxImpactList());
-    }
-
-    addNewEvent(payload: Event): void {
-        this.store.dispatch(EventsActions.EventsSharedActions.addNewEvent({ payload }));
-    }
-
-    showLoadingSpinnerForApiResponses<T>(observables: Observable<RemoteData<T, HttpErrorResponse>>[], isComponentAlive: boolean): void {
+    showLoadingSpinnerForApiResponses(...observables: any[]): void {
         combineLatest(observables)
-            .pipe(takeWhile(() => isComponentAlive))
-            .subscribe(responses => {
-                if (responses.some(response => isInProgress(response))) {
-                    // this.spinner.show();
+            .pipe(map(states => states.some(isInProgress)))
+            .subscribe(showSpinner => {
+                if (showSpinner) {
+                    this.spinner.show();
                 } else {
-                    // this.spinner.hide();
+                    this.spinner.hide();
                 }
             });
     }

@@ -92,6 +92,14 @@
 
     <nz-content>
       <div class="inner-content">
+       <ngx-spinner 
+  bdColor="rgba(0, 0, 0, 0.8)" 
+  size="medium" 
+  color="#fff" 
+  type="ball-clip-rotate" 
+  [fullScreen]="true">
+  <p style="color: white">Loading...</p>
+</ngx-spinner>
         <router-outlet></router-outlet>
       </div>
     </nz-content>
@@ -99,4 +107,4 @@
 </nz-layout>
 
 <!-- Testing purposes only -->
-<app-test-api></app-test-api>
+<!-- <app-test-api></app-test-api> -->

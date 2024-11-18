@@ -1,7 +1,5 @@
 <section id="events-catalog-dashboard">
     <ng-container *ngIf="vm$ | async as vm">
-      <div class="example">
-        <nz-spin [nzSpinning]="vm.loading">
           <!-- Error State -->
           <ng-container *ngIf="vm.error">
             <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
@@ -12,8 +10,6 @@
             <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
             <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
           </ng-container>
-        </nz-spin>
-      </div>
     </ng-container>
   </section>
   
@@ -50,7 +46,7 @@
           <nz-collapse [nzExpandIconPosition]="expandIconPosition">
             <nz-collapse-panel *ngFor="let panel of panelsTable" [nzHeader]="panel.name" [nzActive]="panel.active" [nzDisabled]="panel.disabled">
               <ng-container *ngIf="eventList$ | async | isSuccess">
-                <app-events-table [successValue]="eventList$ | async | successValue"></app-events-table>
+                <app-events-table [successValue]="eventList$ | async | successValue" (copy)="handleOnCopyEvent($event)" (delete)="handleOnDeleteEvent($event)" (archive)="handleOnArchiveEvent($event)" (edit)="handleOnEditEvent($event)"></app-events-table>
               </ng-container>
             </nz-collapse-panel>
           </nz-collapse>

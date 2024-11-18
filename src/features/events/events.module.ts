@@ -34,6 +34,8 @@ import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NestedTableComponent } from './components/set-events-table/set-events-table.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 const ANGULAR_CORE_MODULES = [
     CommonModule,
@@ -57,7 +59,10 @@ const NG_ZORRO_MODULES = [
     NzBadgeModule,
     NzDropDownModule,
     NzFlexModule, 
-    NzGridModule
+    NzGridModule,
+    NzCheckboxModule,
+    NzModalModule
+    
 ];
 
 const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [
