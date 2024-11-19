@@ -17,7 +17,10 @@ export const CATALOG_EVENTS_TABS = [
   { key: 'eventResponse', label: 'Event Response' },
 ];
 
-export const CATALOG_ADD_EVENT_PANEL = [{ active: true, name: 'RDS', disabled: false }];
+export const CATALOG_ADD_EVENT_PANEL = [
+  { active: true, name: 'New Event', disabled: false },
 
-export const CATALOG_TABLE_PANEL = [{ active: true, name: 'RDS', disabled: false }];
+];
+
+export const CATALOG_TABLE_PANEL = [{ active: true, name: 'Catalog', disabled: false }];
 

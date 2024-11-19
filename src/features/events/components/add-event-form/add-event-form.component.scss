@@ -33,3 +33,19 @@
 .remove-icon {
   color: #f5222d;
 }
+
+#regionPeril {
+  min-width: 250px;
+  width: auto;
+  max-width: 100%;
+}
+
+.nz-select {
+  width: auto;
+  display: block;
+}
+
+.fit-content-width {
+  width: fit-content;
+  white-space: nowrap;
+}

@@ -111,6 +111,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
     this.loadEventsOnAddNewEvent();
 
     this.handleUpdateEvent();
+    this.setActiveTab(CATALOG_EVENTS_TABS[0].key);
   }
 
   loadCatalogDashboardPageData(): void {
