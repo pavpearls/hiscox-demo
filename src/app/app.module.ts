@@ -19,6 +19,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RemoteDataModule } from 'ngx-remotedata';
 import { TestApiComponent } from './app-api-testing.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 registerLocaleData(en);
 
 @NgModule({
@@ -28,6 +30,7 @@ registerLocaleData(en);
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule, 
     AppRoutingModule,
     IconsProviderModule,
     NzLayoutModule,
@@ -37,6 +40,7 @@ registerLocaleData(en);
     AgGridModule,
     EffectsModule.forRoot(),
     StoreModule.forRoot(),
+    NgxSpinnerModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge: 50,
       logOnly: false,

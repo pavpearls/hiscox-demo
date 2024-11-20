@@ -1,39 +1,119 @@
 import { createSelector, createFeatureSelector } from "@ngrx/store";
-import { EventsState } from "./events.reducer";
+import { CombinedEventsState, EventsState, EventSetState, EventSetMembershipState } from "./events.reducer";
 import { RemoteData } from "ngx-remotedata";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Event, EventType, RegionPeril } from '@shared/api-services/models';
+import { Event, EventSet, EventType, RegionPeril, EventSetMember } from '@shared/api-services/models';
 
-export const selectEventsState = createFeatureSelector<EventsState>('events');
+export const selectCombinedState = createFeatureSelector<CombinedEventsState>('events');
 
-const selectEventTypeList = createSelector(
+export const selectEventsState = createSelector(
+  selectCombinedState,
+  (state: CombinedEventsState): EventsState => state.eventsState
+);
+
+export const selectEventSetState = createSelector(
+  selectCombinedState,
+  (state: CombinedEventsState): EventSetState => state.eventSetState
+);
+
+export const selectEventSetMembershipState = createSelector(
+  selectCombinedState,
+  (state: CombinedEventsState): EventSetMembershipState => state.eventSetMembershipState
+);
+
+export const selectEventTypeList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<EventType[], HttpErrorResponse> => state.eventsTypeList
 );
 
-const selectRegionPerilList = createSelector(
+export const selectRegionPerilList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<RegionPeril[], HttpErrorResponse> => state.regionPerilList
 );
 
-const selectEventsByEventType = createSelector(
+export const selectEventsByEventType = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<Event[], HttpErrorResponse> => state.eventsByEventType
 );
 
-const selectAddEvent = createSelector(
+export const selectAddEvent = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<Event, HttpErrorResponse> => state.addEvent
 );
 
-const selectIndustryLossList = createSelector(
+export const selectIndustryLossList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<number[], HttpErrorResponse> => state.industryLossList
 );
 
-const selectHiscoxImpactList = createSelector(
+export const selectHiscoxImpactList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<string[], HttpErrorResponse> => state.hiscoxImpactList
+);
+
+export const selectDeleteEvent = createSelector(
+  selectEventsState,
+  (state: EventsState): RemoteData<number, HttpErrorResponse> => state.deleteEvent
+);
+
+export const selectUpdateEvent = createSelector(
+  selectEventsState,
+  (state: EventsState): RemoteData<Event, HttpErrorResponse> => state.updateEvent
+);
+
+export const selectCreateEventSet = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<EventSet, HttpErrorResponse> => state.createEventSet
+);
+
+export const selectCreateEventSetAndEvents = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<EventSet, HttpErrorResponse> => state.createEventSetAndEvents
+);
+
+export const selectDeleteEventSet = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<number, HttpErrorResponse> => state.deleteEventSet
+);
+
+export const selectGetEventSetById = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<EventSet, HttpErrorResponse> => state.getEventSetById
+);
+
+export const selectGetEventSetList = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<EventSet[], HttpErrorResponse> => state.getEventSetList
+);
+
+export const selectUpdateEventSet = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<EventSet, HttpErrorResponse> => state.updateEventSet
+);
+
+export const selectCreateMembership = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<EventSetMember, HttpErrorResponse> => state.createMembership
+);
+
+export const selectUpdateMembership = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<EventSetMember, HttpErrorResponse> => state.updateMembership
+);
+
+export const selectDeleteMembership = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<number, HttpErrorResponse> => state.deleteMembership
+);
+
+export const selectMembershipById = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<EventSetMember, HttpErrorResponse> => state.getMembershipById
+);
+
+export const selectMembershipList = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<EventSetMember[], HttpErrorResponse> => state.getMembershipList
 );
 
 export const EventsSelectors = {
@@ -42,5 +122,20 @@ export const EventsSelectors = {
   selectIndustryLossList,
   selectHiscoxImpactList,
   selectEventsByEventType,
-  selectAddEvent
+  selectAddEvent,
+  selectDeleteEvent,
+  selectUpdateEvent,
+
+  selectCreateEventSet,
+  selectCreateEventSetAndEvents,
+  selectDeleteEventSet,
+  selectGetEventSetById,
+  selectGetEventSetList,
+  selectUpdateEventSet,
+
+  selectCreateMembership,
+  selectUpdateMembership,
+  selectDeleteMembership,
+  selectMembershipById,
+  selectMembershipList,
 };

@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    baseUrl: 'https://localhost:7224'
+    baseUrl: 'https://dev-nds-78ql.azurewebsites.net/'
 };

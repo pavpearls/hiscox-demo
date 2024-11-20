@@ -28,10 +28,10 @@
       <li nz-submenu nzTitle="Events" nzIcon="calendar">
         <ul>
           <li nz-menu-item>
-            <a routerLink="/events/sets">Sets</a>
+            <a routerLink="/events/catalog">Catalog</a>
           </li>
           <li nz-menu-item>
-            <a routerLink="/events/catalog">Catalog</a>
+            <a routerLink="/events/sets">Sets</a>
           </li>
         </ul>
       </li>
@@ -92,6 +92,14 @@
 
     <nz-content>
       <div class="inner-content">
+       <ngx-spinner 
+  bdColor="rgba(0, 0, 0, 0.8)" 
+  size="medium" 
+  color="#fff" 
+  type="ball-clip-rotate" 
+  [fullScreen]="true">
+  <p style="color: white">Loading...</p>
+</ngx-spinner>
         <router-outlet></router-outlet>
       </div>
     </nz-content>
@@ -99,4 +107,4 @@
 </nz-layout>
 
 <!-- Testing purposes only -->
-<app-test-api></app-test-api>
+<!-- <app-test-api></app-test-api> -->
