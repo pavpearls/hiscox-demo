@@ -81,7 +81,7 @@ export class EventsTableComponent implements OnInit {
         headerName: 'Created Date',
         sortable: true,
         filter: 'agDateColumnFilter',
-        valueFormatter: params => params.value || '',
+        valueFormatter: (params: any) => params.value || '',
       },
       {
         field: 'industryLossEstimate',
@@ -93,6 +93,24 @@ export class EventsTableComponent implements OnInit {
         cellRenderer: (params: any) => {
           return params?.data?.industryLossEstimate ?? null
         },
+        cellEditorParams: { values: ['10', '20', '30', '40', '50'] },
+      },
+      {
+        field: 'hiscoxLossImpactRating',
+        headerName: 'Hiscox Loss Impact Rating',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        editable: true,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: { values: ['HIGH', 'MEDIUM', 'LOW'] },
+      },
+      {
+        field: 'industryLossEstimate',
+        headerName: 'Industry Loss Estimate',
+        sortable: true,
+        filter: 'agNumberColumnFilter',
+        editable: true,
+        cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: ['10', '20', '30', '40', '50'] },
       },
       {
