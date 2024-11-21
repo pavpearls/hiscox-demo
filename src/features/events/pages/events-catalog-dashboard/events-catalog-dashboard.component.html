@@ -1,60 +1,67 @@
 <section id="events-catalog-dashboard">
-    <ng-container *ngIf="vm$ | async as vm">
-          <!-- Error State -->
-          <ng-container *ngIf="vm.error">
-            <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
-          </ng-container>
-  
-          <!-- Success State -->
-          <ng-container *ngIf="vm.success">
-            <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
-            <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
-          </ng-container>
+  <ng-container *ngIf="vm$ | async as vm">
+    <!-- Error State -->
+    <ng-container *ngIf="vm.error">
+      <ng-container *ngTemplateOutlet="errorTemplate"></ng-container>
     </ng-container>
-  </section>
-  
-  <!-- Buttons Template -->
-  <ng-template #buttonsTemplate>
-    <div class="tab-buttons">
-      <h2>Event Catalog</h2>
-      <nz-divider nzType="vertical"></nz-divider>
+
+    <!-- Success State -->
+    <ng-container *ngIf="vm.success">
+      <ng-container *ngTemplateOutlet="buttonsTemplate"></ng-container>
+      <ng-container *ngTemplateOutlet="tabContentTemplate"></ng-container>
+    </ng-container>
+  </ng-container>
+</section>
+
+<!-- Buttons Template -->
+<ng-template #buttonsTemplate>
+  <div class="tab-buttons">
+    <h2>Event Catalog</h2>
+    <nz-divider nzType="vertical"></nz-divider>
+    <ng-container *ngIf="selectedTab$ | async as selectedTab">
       <button
-        nz-button
-        nzType="default"
-        *ngFor="let tab of tabs"
-        [ngClass]="{ 'active-tab': selectedTab === tab.key }"
-        (click)="setActiveTab(tab.key)"
-      >
-        {{ tab.label }}
-      </button>
-    </div>
-  </ng-template>
-  
-  <!-- Tab Content Template -->
-  <ng-template #tabContentTemplate>
-    <div class="tab-content">
+      nz-button
+      *ngFor="let tab of tabs"
+      [nzType]="selectedTab === tab.key ? 'primary' : 'default'"
+      (click)="setActiveTab(tab.key)"
+    >
+      {{ tab.label }}
+    </button>
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- Tab Content Template -->
+<ng-template #tabContentTemplate>
+  <div class="tab-content">
+    <ng-container *ngIf="selectedTab$ | async as selectedTab">
       <ng-container *ngIf="selectedTab">
         @defer (when selectedTab === selectedTab) {
-          <nz-collapse [nzExpandIconPosition]="expandIconPosition">
-            <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.name" [nzActive]="panel.active" [nzDisabled]="panel.disabled">
-              <app-add-event-form [addEventConfig]="addEventConfig" (onEventAdded)="handleEventAdded($event)"></app-add-event-form>
-            </nz-collapse-panel>
-          </nz-collapse>
-  
-          <nz-collapse [nzExpandIconPosition]="expandIconPosition">
-            <nz-collapse-panel *ngFor="let panel of panelsTable" [nzHeader]="panel.name" [nzActive]="panel.active" [nzDisabled]="panel.disabled">
-              <ng-container *ngIf="eventList$ | async | isSuccess">
-                <app-events-table [successValue]="eventList$ | async | successValue" (copy)="handleOnCopyEvent($event)" (delete)="handleOnDeleteEvent($event)" (archive)="handleOnArchiveEvent($event)" (edit)="handleOnEditEvent($event)"></app-events-table>
-              </ng-container>
-            </nz-collapse-panel>
-          </nz-collapse>
+        <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+          <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.name" [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled">
+            <app-add-event-form [addEventConfig]="addEventConfig"
+              (onEventAdded)="handleEventAdded($event)"></app-add-event-form>
+          </nz-collapse-panel>
+        </nz-collapse>
+
+        <nz-collapse [nzExpandIconPosition]="expandIconPosition">
+          <nz-collapse-panel *ngFor="let panel of panelsTable" [nzHeader]="panel.name" [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled">
+            <ng-container *ngIf="eventList$ | async | isSuccess">
+              <app-events-table [addEventConfig]="addEventConfig" [successValue]="eventList$ | async | successValue" (copy)="handleOnCopyEvent($event)"
+                (delete)="handleOnDeleteEvent($event)" (archive)="handleOnArchiveEvent($event)"
+                (edit)="handleOnEditEvent($event)"></app-events-table>
+            </ng-container>
+          </nz-collapse-panel>
+        </nz-collapse>
         }
       </ng-container>
-    </div>
-  </ng-template>
-  
-  <!-- Error Template -->
-  <ng-template #errorTemplate>
-    <p>Error loading data. Please try again later.</p>
-  </ng-template>
-  
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- Error Template -->
+<ng-template #errorTemplate>
+  <p>Error loading data. Please try again later.</p>
+</ng-template>

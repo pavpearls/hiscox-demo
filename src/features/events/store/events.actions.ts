@@ -3,6 +3,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Event, EventSet, EventSetAndEventsRequest, EventSetMember, EventSetRequest, EventType, RegionPeril } from '@shared/api-services/models';
 
 //////////////////////////////////////////////////////
+//                  Events Actions                  //
+//////////////////////////////////////////////////////
+
+const setActiveTab = createAction('[Events Catalog Dashboard] Set Active Tab', props<{activeTab: string}>());
+
+const EventsCatalogDashboardActions = {
+  setActiveTab
+}
+//////////////////////////////////////////////////////
 //                  Events Shared Actions           //
 //////////////////////////////////////////////////////
 
@@ -343,5 +352,6 @@ export const EventSetMembershipActions = {
 export const EventsActions = {
   EventsSharedActions,
   EventsSetActions,
-  EventSetMembershipActions
+  EventSetMembershipActions,
+  EventsCatalogDashboardActions
 };

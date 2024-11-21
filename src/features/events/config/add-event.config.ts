@@ -1,4 +1,4 @@
-import { AddEventConfig } from '../components/add-event-form/add-event-form.component';
+import { AddEventConfig } from "../interfaces/events.interfaces";
 
 export const ADD_EVENT_CONFIG: AddEventConfig = {
   eventTypeId: '',

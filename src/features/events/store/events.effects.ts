@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
 import { NdsApiServiceWrapper } from '../../../shared/api-services/nds-api/custom/nds-api-service-wrapper';
 import { EventsActions } from './events.actions';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { EventsFacade } from './events.facade';
+import { filterSuccess } from 'ngx-remotedata';
 
 @Injectable()
 export class EventsEffects {
   constructor(
     private actions$: Actions,
-    private ndsApiServiceWrapper: NdsApiServiceWrapper
+    private ndsApiServiceWrapper: NdsApiServiceWrapper,
+    private notification: NzNotificationService,
+    private eventFacade: EventsFacade
   ) { }
 
   //////////////////////////////////////////////////////
@@ -175,6 +180,100 @@ export class EventsEffects {
         )
       )
     )
+  );
+
+  setActiveTab$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventsCatalogDashboardActions.setActiveTab),
+      withLatestFrom(
+        this.eventFacade.state.events.eventsTypeList$.pipe(filterSuccess())
+      ),
+      mergeMap(([{ activeTab }, eventTypeList]) => {
+        const eventType = eventTypeList?.value.find((type) => type.eventTypeName?.toLowerCase() === activeTab.toLowerCase());
+        if (eventType) {
+          return [
+            EventsActions.EventsSharedActions.getEventsByEventType({
+              payload: { eventTypeId: eventType.eventTypeID?.toString() as string },
+            }),
+          ];
+        } else {
+          console.error(`No event type found for activeTab: ${activeTab}`);
+          return [];
+        }
+      })
+    )
+  );
+
+  deleteEventFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSharedActions.deleteEventFailure),
+        tap(() =>
+          this.notification.error(
+            'Delete Event Failed',
+            `An error occurred while deleting the event.`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  deleteEventSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSharedActions.deleteEventSuccess),
+        tap(() =>
+          this.notification.success(
+            'Delete Event Successful',
+            `Event has been deleted successfully.`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  updateEventSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventsSharedActions.updateEventSuccess),
+      withLatestFrom(
+        this.eventFacade.state.events.activeTab$,
+        this.eventFacade.state.events.eventsTypeList$.pipe(filterSuccess())
+      ),
+      tap(([_, activeTab, eventTypeList]) => {
+        const eventType = eventTypeList?.value.find(
+          (type) => type.eventTypeName?.toLowerCase() === activeTab.toLowerCase()
+        );
+  
+        if (eventType) {
+          this.eventFacade.actions.events.loadEventsByEventType({
+            eventTypeId: eventType.eventTypeID?.toString() as string,
+          });
+        } else {
+          console.error(`No event type found for activeTab: ${activeTab}`);
+        }
+  
+        // Show a success notification
+        this.notification.success(
+          'Update Event Successful',
+          `Event has been updated successfully.`
+        );
+      })
+    ),
+    { dispatch: false }
+  );
+
+  updateEventFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSharedActions.updateEventFailure),
+        tap(() =>
+          this.notification.error(
+            'Updating Event Failed',
+            'An error occurred while updating the event.'
+          )
+        )
+      ),
+    { dispatch: false }
   );
 
   //////////////////////////////////////////////////////

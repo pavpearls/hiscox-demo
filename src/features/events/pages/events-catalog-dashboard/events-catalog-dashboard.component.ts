@@ -47,8 +47,8 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
   updateEvent$: Observable<RemoteData<Event, HttpErrorResponse>> = this.eventsFacade.state.events.updateEvent$;
 
   eventList$: Observable<RemoteData<Event[], HttpErrorResponse>> = this.eventsFacade.state.events.eventsByEventType$.pipe(filterSuccess());
+  selectedTab$:Observable<string> = this.eventsFacade.state.events.activeTab$;
 
-  selectedTab = '';
   addEventConfig = CATALOG_ADD_EVENT_CONFIG;
   expandIconPosition: 'start' | 'end' = 'end';
 
@@ -108,8 +108,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadCatalogDashboardPageData();
     this.loadEventsOnAddNewEvent();
-
-    this.handleUpdateEvent();
+    this.setDashboardFilterOptions();
     this.setActiveTab(CATALOG_EVENTS_TABS[0].key);
   }
 
@@ -131,8 +130,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: string): void {
-    this.selectedTab = tab;
-    this.setDashboardFilterOptions();
+    this.eventsFacade.actions.events.setActiveTab(tab);
   }
 
   setDashboardFilterOptions(): void {
@@ -141,23 +139,26 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
       this.hiscoxImpactList$.pipe(filterSuccess()),
       this.industryLossList$.pipe(filterSuccess()),
       this.eventsTypeList$.pipe(filterSuccess()),
+      this.selectedTab$
     ])
-      .pipe(take(1))
       .subscribe(
         ([
           regionPerilList,
           hiscoxImpactList,
           industryLossList,
           eventsTypeList,
+          selectedTab
         ]) => {
-          this.addEventConfig = this.eventsCatalogService.prepareAddEventConfig(
-            this.addEventConfig,
-            regionPerilList.value,
-            hiscoxImpactList.value,
-            industryLossList.value,
-            eventsTypeList.value,
-            this.selectedTab
-          );
+          this.addEventConfig = {
+            ...this.eventsCatalogService.prepareAddEventConfig(
+              this.addEventConfig,
+              regionPerilList.value,
+              hiscoxImpactList.value,
+              industryLossList.value,
+              eventsTypeList.value,
+              selectedTab
+            ),
+          };
 
           if (this.addEventConfig.eventTypeId) {
             this.eventsFacade.actions.events.loadEventsByEventType({
@@ -197,36 +198,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
     }
   
     const eventID = events[0].eventID as number;
-  
     this.eventsFacade.actions.events.deleteEvent(eventID);
-  
-    this.deleteEvent$
-      .pipe(
-        filterSuccess(),
-        takeWhile(() => this.isComponentAlive)
-      )
-      .subscribe(() => {
-        this.notification.success(
-          'Delete Event Successful',
-          `Event with ID ${eventID} has been deleted successfully.`
-        );
-        this.eventsFacade.actions.events.loadEventsByEventType({
-          eventTypeId: this.addEventConfig.eventTypeId,
-        });
-      });
-  
-    this.deleteEvent$
-      .pipe(
-        filterFailure(),
-        takeWhile(() => this.isComponentAlive)
-      )
-      .subscribe((error) => {
-        this.notification.error(
-          'Delete Event Failed',
-          `An error occurred while deleting event with ID ${eventID}.`
-        );
-        console.error('Delete Event Error:', error);
-      });
   }
 
   handleOnArchiveEvent(events: Event[]) {
@@ -238,7 +210,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
     if (events[0].isArchived) {
       this.notification.info(
         'Event Already Archived',
-        `Event with ID ${events[0].eventID} is already archived.`
+        `Selected event is already archived.`
       );
       return;
     }
@@ -253,45 +225,36 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  handleOnEditEvent(event: Event): void {
-    if (!event) {
-      this.notification.warning('No Event Selected', 'Please select an event to edit.');
-      return;
-    }
-
-    const updateEvent = { ...event};
-    // Do not call yet, find out the mapping for label and value for editable grid cells
-    // this.eventsFacade.actions.events.updateEvent(updateEvent);
+  handleOnEditEvent(editedEvent: any): void {
+    this.eventList$.pipe(take(1)).subscribe((data: any) => {
+      const events: Event[] = data.value;
+  
+      const originalEvent = events.find(event => event.eventID === editedEvent.eventID);
+  
+      if (originalEvent) {
+        const updatedEvent = {
+          ...originalEvent,
+          ...this.patchEditedValues(originalEvent, editedEvent),
+        };
+        this.eventsFacade.actions.events.updateEvent(updatedEvent);
+      } else {
+        console.warn('Original event not found for update');
+      }
+    });
   }
 
-  handleUpdateEvent(): void {
-    this.updateEvent$
-    .pipe(
-      filterSuccess(),
-      takeWhile(() => this.isComponentAlive)
-    )
-    .subscribe(() => {
-      this.notification.success(
-        'Update Event Successful',
-        `Event has been updated successfully.`
-      );
-      this.eventsFacade.actions.events.loadEventsByEventType({
-        eventTypeId: this.addEventConfig.eventTypeId,
-      });
-    });
+  private patchEditedValues(originalEvent: Event, editedEvent: any): Partial<Event> {
 
-  this.updateEvent$
-    .pipe(
-      filterFailure(),
-      takeWhile(() => this.isComponentAlive)
-    )
-    .subscribe((error) => {
-      this.notification.error(
-        'Updating Event Failed',
-        `An error occurred while updating the event.`
-      );
-      console.error('Update Event Error:', error);
-    });
+    const regionPeril = this.addEventConfig.regionPerilOptions.find(x =>x.displayValue === editedEvent.regionPerilName);
+    
+    return {
+      eventNameShort: editedEvent.eventNameShort,
+      regionPerilID: Number(regionPeril?.actualValue),
+      industryLossEstimate: Number(editedEvent.industryLossEstimate),
+      hiscoxLossImpactRating: editedEvent.hiscoxLossImpactRating,
+      isArchived: editedEvent.archived === 'Yes',
+      isRestrictedAccess: editedEvent.restricted === 'Yes',
+    };
   }
 
   ngOnDestroy(): void {

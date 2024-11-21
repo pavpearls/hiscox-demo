@@ -34,7 +34,9 @@
           addEventConfig.labels?.regionPeril || "Region-Peril"
         }}</nz-form-label>
         <nz-form-control [nzSpan]="12">
-          <nz-select
+          <nz-select-dropdown-with-add-option  formControlName="regionPeril" [listOfItems]="regionPerilOptions" (itemAdded)="onRegionPerilItemAdded($event)" > </nz-select-dropdown-with-add-option>
+
+          <!-- <nz-select
             nzShowSearch
             nzAllowClear
             id="regionPeril"
@@ -46,7 +48,7 @@
               [nzValue]="option.actualValue"
               [nzLabel]="option.displayValue"
             ></nz-option>
-          </nz-select>
+          </nz-select> -->
           <div
             *ngIf="
               eventForm.get('regionPeril')?.invalid &&
@@ -100,7 +102,7 @@
                 addEventConfig.labels?.industryLoss || "Industry Loss"
               }}</nz-form-label>
               <nz-form-control [nzSpan]="12">
-                <nz-select
+                <!-- <nz-select
                   formControlName="industryLoss"
                   nzPlaceHolder="Select industry loss"
                 >
@@ -109,7 +111,9 @@
                     [nzValue]="option.actualValue"
                     [nzLabel]="option.displayValue"
                   ></nz-option>
-                </nz-select>
+                </nz-select> -->
+
+                <nz-select-dropdown-with-add-option  formControlName="industryLoss" [listOfItems]="industryLossOptions" (itemAdded)="onIndustryLossOptionAdded($event)" > </nz-select-dropdown-with-add-option>
                 <div
                   *ngIf="
                     event.get('industryLoss')?.invalid &&
@@ -128,11 +132,11 @@
 
           <nz-col [nzSpan]="8">
             <nz-form-item>
-              <nz-form-label [nzSpan]="12" nzLabelAlign="left" class="fit-content-width">{{
+              <nz-form-label nzLabelAlign="left" class="fit-content-width">{{
                 addEventConfig.labels?.hiscoxImpact || "Hiscox Impact"
               }}</nz-form-label>
               <nz-form-control [nzSpan]="12">
-                <nz-select
+                <!-- <nz-select
                   formControlName="hiscoxImpact"
                   nzPlaceHolder="Select Hiscox impact"
                 >
@@ -141,7 +145,9 @@
                     [nzValue]="option.actualValue"
                     [nzLabel]="option.displayValue"
                   ></nz-option>
-                </nz-select>
+                </nz-select> -->
+
+                <nz-select-dropdown-with-add-option  formControlName="hiscoxImpact" [listOfItems]="hiscoxImpactOptions" (itemAdded)="onHiscoxImpactOptionAdded($event)" > </nz-select-dropdown-with-add-option>
                 <div
                   *ngIf="
                     event.get('hiscoxImpact')?.invalid &&

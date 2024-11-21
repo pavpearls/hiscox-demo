@@ -21,6 +21,11 @@ export const selectEventSetMembershipState = createSelector(
   (state: CombinedEventsState): EventSetMembershipState => state.eventSetMembershipState
 );
 
+export const selectActiveTab = createSelector(
+  selectEventsState,
+  (state: EventsState): string => state.setActiveTab
+);
+
 export const selectEventTypeList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<EventType[], HttpErrorResponse> => state.eventsTypeList
@@ -125,6 +130,7 @@ export const EventsSelectors = {
   selectAddEvent,
   selectDeleteEvent,
   selectUpdateEvent,
+  selectActiveTab,
 
   selectCreateEventSet,
   selectCreateEventSetAndEvents,

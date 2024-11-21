@@ -9,6 +9,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { IconsProviderModule } from '../../../../app/icons-provider.module';
+import { SelectDropdownWithAddOptionComponent } from 'shared/ui-components/ng-zorro-select-dropdown-with-add-option/ng-zorro-select-dropdown-with-add-option.component';
+import { EventsFacade } from '@events//store/events.facade';
 
 @Component({
   selector: 'app-add-event-form',
@@ -22,6 +24,7 @@ import { IconsProviderModule } from '../../../../app/icons-provider.module';
     NzButtonModule,
     NzFormModule,
     IconsProviderModule,
+    SelectDropdownWithAddOptionComponent
   ],
   templateUrl: './add-event-form.component.html',
   styleUrls: ['./add-event-form.component.scss']
@@ -30,7 +33,9 @@ export class AddEventFormComponent implements OnInit, OnChanges {
   @Input({ required: true }) addEventConfig!: AddEventConfig;
   @Output() onEventAdded = new EventEmitter<any>();
   eventForm!: FormGroup<AddEventForm>;
-
+  regionPerilOptions:string[] = [];
+  hiscoxImpactOptions: string[] = [];
+  industryLossOptions: number[] = [];
   constructor(private eventsFormsService: AddEventFormService) { }
   
   ngOnInit(): void {
@@ -40,6 +45,9 @@ export class AddEventFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['addEventConfig']) {
       this.eventForm = this.eventsFormsService.initEventForm(this.addEventConfig);
+      this.regionPerilOptions = [...this.addEventConfig.regionPerilOptions.map(x =>x.displayValue)];
+      this.industryLossOptions = [...this.addEventConfig.industryLossOptions.map(x =>Number(x.displayValue))];
+      this.hiscoxImpactOptions = [...this.addEventConfig.hiscoxImpactOptions.map(x =>x.displayValue)];
     }
   }
 
@@ -67,4 +75,18 @@ export class AddEventFormComponent implements OnInit, OnChanges {
   resetForm(): void {
     this.eventsFormsService.resetForm(this.eventForm, this.addEventConfig);
   }
+
+  onRegionPerilItemAdded($event: any): void {
+    // TODO add region peril to DB
+  }
+
+  onIndustryLossOptionAdded($event: any): void {
+
+  }
+
+  onHiscoxImpactOptionAdded($event: any): void {
+
+  }
+
+
 }

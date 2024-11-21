@@ -29,19 +29,19 @@ export class EventsCatalogService {
       actualValue: item?.toString() ?? ''
     }));
 
-    const tabConfig: any = {
-      rds: { name: 'rds', allowMultiple: false },
-      postEvent: { name: 'event', allowMultiple: false },
-      eventResponse: { name: 'event response', allowMultiple: true }
-    };
+    const tabConfig: any = [
+      { name: 'rds', allowMultiple: false },
+      { name: 'event', allowMultiple: false },
+      { name: 'event response', allowMultiple: true }
+    ]
 
     const eventType = eventsTypeList.find(
-      x => x?.eventTypeName?.toLowerCase() === tabConfig[selectedTab].name
+      x => x?.eventTypeName?.toLowerCase() === selectedTab.toLowerCase()
     );
 
     if (eventType) {
       config.eventTypeId = eventType?.eventTypeID?.toString() ?? '';
-      config.allowMultipleEvents = tabConfig[selectedTab].allowMultiple;
+      config.allowMultipleEvents = tabConfig.find((x: any) => x.name === selectedTab)?.allowMultiple || false;
     }
 
     return config;

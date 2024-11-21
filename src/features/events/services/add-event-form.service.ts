@@ -20,7 +20,7 @@ export class AddEventFormService {
                 )
             ) as FormArray<FormGroup<EventDetailsForm>>
         });
-
+        
         if (config.allowMultipleEvents && formGroup?.controls?.events?.controls?.length === 0) {
             this.addEvent(formGroup);
         }

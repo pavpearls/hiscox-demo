@@ -36,6 +36,7 @@ const initialCombinedState: CombinedEventsState = {
         addEvent: notAsked(),
         deleteEvent: notAsked(),
         updateEvent: notAsked(),
+        setActiveTab: ''
     },
     eventSetState: {
         createEventSet: notAsked(),
@@ -79,8 +80,9 @@ export interface EventsState {
     hiscoxImpactList: RemoteData<string[], HttpErrorResponse>;
     industryLossList: RemoteData<number[], HttpErrorResponse>;
     addEvent: RemoteData<Event, HttpErrorResponse>;
-    deleteEvent: RemoteData<number, HttpErrorResponse>; // Added for delete
-    updateEvent: RemoteData<Event, HttpErrorResponse>;  // Added for update
+    deleteEvent: RemoteData<number, HttpErrorResponse>;
+    updateEvent: RemoteData<Event, HttpErrorResponse>;
+    setActiveTab: string;
 }
 
 const initialEventsState: EventsState = {
@@ -92,10 +94,19 @@ const initialEventsState: EventsState = {
     addEvent: notAsked(),
     deleteEvent: notAsked(),
     updateEvent: notAsked(),
+    setActiveTab: ''
 };
 
 export const eventsReducer = createReducer(
     initialCombinedState,
+
+    on(EventsActions.EventsCatalogDashboardActions.setActiveTab, (state, {activeTab}) => ({
+        ...state,
+        eventsState: {
+            ...state.eventsState,
+            setActiveTab: activeTab
+        },
+    })),
 
     on(EventsActions.EventsSharedActions.getEventTypeList, (state) => ({
         ...state,

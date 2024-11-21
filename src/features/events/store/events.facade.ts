@@ -24,6 +24,7 @@ export class EventsFacade {
             hiscoxImpactList$: this.store.pipe(select(EventsSelectors.selectHiscoxImpactList)),
             deleteEvent$: this.store.pipe(select(EventsSelectors.selectDeleteEvent)),
             updateEvent$: this.store.pipe(select(EventsSelectors.selectUpdateEvent)),
+            activeTab$: this.store.pipe(select(EventsSelectors.selectActiveTab))
         },
         eventSets: {
             createEventSet$: this.store.pipe(select(EventsSelectors.selectCreateEventSet)),
@@ -44,6 +45,9 @@ export class EventsFacade {
 
     actions = {
         events: {
+            setActiveTab: (activeTab: string): void => {
+                this.store.dispatch(EventsActions.EventsCatalogDashboardActions.setActiveTab({activeTab}))
+            },
             loadEventTypeList: (): void => {
                 this.store.dispatch(EventsActions.EventsSharedActions.getEventTypeList());
             },
