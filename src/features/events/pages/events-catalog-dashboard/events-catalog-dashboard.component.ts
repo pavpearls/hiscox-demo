@@ -181,7 +181,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
   }
 
   handleEventAdded(event: any): void {
-    const events = this.eventsCatalogService.generateEvents(event);
+    const events = this.eventsCatalogService.generateEvents(event, this.addEventConfig);
     events.forEach((newEvent) => {
       this.eventsFacade.actions.events.addNewEvent(newEvent);
     });
@@ -246,7 +246,7 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
   private patchEditedValues(originalEvent: Event, editedEvent: any): Partial<Event> {
 
     const regionPeril = this.addEventConfig.regionPerilOptions.find(x =>x.displayValue === editedEvent.regionPerilName);
-    
+
     return {
       eventNameShort: editedEvent.eventNameShort,
       regionPerilID: Number(regionPeril?.actualValue),

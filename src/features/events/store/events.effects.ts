@@ -218,17 +218,32 @@ export class EventsEffects {
     { dispatch: false }
   );
 
-  deleteEventSuccess$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(EventsActions.EventsSharedActions.deleteEventSuccess),
-        tap(() =>
-          this.notification.success(
-            'Delete Event Successful',
-            `Event has been deleted successfully.`
-          )
-        )
+  deleteEventSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventsSharedActions.deleteEventSuccess),
+      withLatestFrom(
+        this.eventFacade.state.events.activeTab$,
+        this.eventFacade.state.events.eventsTypeList$.pipe(filterSuccess())
       ),
+      tap(([_, activeTab, eventTypeList]) => {
+        const eventType = eventTypeList?.value.find(
+          (type) => type.eventTypeName?.toLowerCase() === activeTab.toLowerCase()
+        );
+  
+        if (eventType) {
+          this.eventFacade.actions.events.loadEventsByEventType({
+            eventTypeId: eventType.eventTypeID?.toString() as string,
+          });
+        } else {
+          console.error(`No event type found for activeTab: ${activeTab}`);
+        }
+  
+        this.notification.success(
+          'Delete Event Successful',
+          `Event has been deleted successfully.`
+        );
+      })
+    ),
     { dispatch: false }
   );
 

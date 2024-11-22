@@ -47,11 +47,12 @@ export class EventsCatalogService {
     return config;
   }
 
-  generateEvents(eventForm: any): Event[] {
+  generateEvents(eventForm: any, config: AddEventConfig): Event[] {
     const { eventDate, eventName, eventTypeId, events, regionPeril } = eventForm;
+
     const baseEvent: Event = {
-      eventTypeID: eventTypeId,
-      regionPerilID: regionPeril,
+      eventTypeID: Number(eventTypeId),
+      regionPerilID: Number(config.regionPerilOptions.find(x =>x.displayValue === regionPeril)?.actualValue) ?? null,
       eventNameShort: eventName,
       eventNameLong: '',
       eventDate,
@@ -60,11 +61,11 @@ export class EventsCatalogService {
       isRestrictedAccess: false,
       isArchived: false,
       createUserID: null,
-      createDate: new Date(),
+      createDate: eventDate ?? null,
       createUser: undefined
     };
 
-    if (events.length > 0) {
+    if (events?.length > 0) {
       return events.map((evt: any) => ({
         ...baseEvent,
         industryLossEstimate: evt.industryLoss,
