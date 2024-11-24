@@ -91,6 +91,11 @@ export const selectGetEventSetList = createSelector(
   (state: EventSetState): RemoteData<EventSet[], HttpErrorResponse> => state.getEventSetList
 );
 
+export const selectGetEventSetFlatList = createSelector(
+  selectEventSetState,
+  (state: EventSetState): RemoteData<any[], HttpErrorResponse> => state.getEventSetFlatList
+);
+
 export const selectUpdateEventSet = createSelector(
   selectEventSetState,
   (state: EventSetState): RemoteData<EventSet, HttpErrorResponse> => state.updateEventSet
@@ -137,6 +142,7 @@ export const EventsSelectors = {
   selectDeleteEventSet,
   selectGetEventSetById,
   selectGetEventSetList,
+  selectGetEventSetFlatList,
   selectUpdateEventSet,
 
   selectCreateMembership,

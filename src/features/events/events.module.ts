@@ -32,10 +32,10 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { EventsCatalogService } from './services/events-catalog.service';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NestedTableComponent } from './components/set-events-table/set-events-table.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { EventSetTableComponent } from './components/event-set-table/event-set-table.component';
 
 const ANGULAR_CORE_MODULES = [
     CommonModule,
@@ -95,7 +95,7 @@ const MODULE_REUSABLE_STANDALONE_COMPONENTS = [
     declarations: [
         ...MODULE_PAGES,
         EventsTableComponent,
-        NestedTableComponent
+        EventSetTableComponent
     ],
     imports: [
         AgGridModule,

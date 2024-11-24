@@ -44,6 +44,7 @@ const initialCombinedState: CombinedEventsState = {
         deleteEventSet: notAsked(),
         getEventSetById: notAsked(),
         getEventSetList: notAsked(),
+        getEventSetFlatList: notAsked(),      
         updateEventSet: notAsked(),
     },
     eventSetMembershipState: {
@@ -61,6 +62,7 @@ export interface EventSetState {
     deleteEventSet: RemoteData<number, HttpErrorResponse>;
     getEventSetById: RemoteData<EventSet, HttpErrorResponse>;
     getEventSetList: RemoteData<EventSet[], HttpErrorResponse>;
+    getEventSetFlatList: RemoteData<any[], HttpErrorResponse>;
     updateEventSet: RemoteData<EventSet, HttpErrorResponse>;
 }
 
@@ -70,6 +72,7 @@ const initialEventSetState: EventSetState = {
     deleteEventSet: notAsked(),
     getEventSetById: notAsked(),
     getEventSetList: notAsked(),
+    getEventSetFlatList: notAsked(),
     updateEventSet: notAsked(),
 };
 
@@ -391,6 +394,28 @@ export const eventsReducer = createReducer(
         eventSetState: {
             ...state.eventSetState,
             getEventSetList: failure(error) as any,
+        },
+    })),
+
+    on(EventsActions.EventsSetActions.getEventSetFlatList, (state) => ({
+        ...state,
+        eventSetState: {
+            ...state.eventSetState,
+            getEventSetFlatList: inProgress() as any,
+        },
+    })),
+    on(EventsActions.EventsSetActions.getEventSetFlatListSuccess, (state, { payload }) => ({
+        ...state,
+        eventSetState: {
+            ...state.eventSetState,
+            getEventSetFlatList: success(payload) as any,
+        },
+    })),
+    on(EventsActions.EventsSetActions.getEventSetFlatListFailure, (state, { error }) => ({
+        ...state,
+        eventSetState: {
+            ...state.eventSetState,
+            getEventSetFlatList: failure(error) as any,
         },
     })),
 

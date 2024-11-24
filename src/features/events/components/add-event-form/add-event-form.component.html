@@ -5,8 +5,8 @@
       [nzXs]="24"
       [nzSm]="12"
       [nzMd]="12"
-      [nzLg]="8"
-      [nzXl]="6"
+      [nzLg]="12"
+      [nzXl]="8"
       *ngIf="isRDS() || isNewEvent() || isNewEventResponse()"
     >
       <nz-form-item>
@@ -40,9 +40,9 @@
       nz-col
       [nzXs]="24"
       [nzSm]="12"
-      [nzMd]="8"
-      [nzLg]="6"
-      [nzXl]="4"
+      [nzMd]="12"
+      [nzLg]="12"
+      [nzXl]="8"
       *ngIf="isRDS() || isNewEvent() || isNewEventResponse()"
     >
       <nz-form-item>
@@ -51,6 +51,7 @@
         }}</nz-form-label>
         <nz-form-control>
           <nz-select-dropdown-with-add-option
+            id="regionPeril"
             formControlName="regionPeril"
             [listOfItems]="regionPerilOptions"
             (itemAdded)="onRegionPerilItemAdded($event)"
@@ -76,9 +77,9 @@
       nz-col
       [nzXs]="24"
       [nzSm]="12"
-      [nzMd]="8"
-      [nzLg]="6"
-      [nzXl]="4"
+      [nzMd]="12"
+      [nzLg]="12"
+      [nzXl]="8"
       *ngIf="isNewEvent() || isNewEventResponse()"
     >
       <nz-form-item>

@@ -32,6 +32,7 @@ export class EventsFacade {
             deleteEventSet$: this.store.pipe(select(EventsSelectors.selectDeleteEventSet)),
             getEventSetById$: this.store.pipe(select(EventsSelectors.selectGetEventSetById)),
             getEventSetList$: this.store.pipe(select(EventsSelectors.selectGetEventSetList)),
+            getEventSetFlatList$: this.store.pipe(select(EventsSelectors.selectGetEventSetFlatList)),
             updateEventSet$: this.store.pipe(select(EventsSelectors.selectUpdateEventSet)),
         },
         eventSetMemberships: {
@@ -88,6 +89,9 @@ export class EventsFacade {
             },
             getEventSetList: (): void => {
                 this.store.dispatch(EventsActions.EventsSetActions.getEventSetList());
+            },
+            getEventSetFlatList: (): void => {
+                this.store.dispatch(EventsActions.EventsSetActions.getEventSetFlatList());
             },
             updateEventSet: (payload: EventSet): void => {
                 this.store.dispatch(EventsActions.EventsSetActions.updateEventSet({ payload }));

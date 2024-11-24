@@ -1,9 +1,5 @@
 <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
-    nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
-    [(nzCollapsed)]="isCollapsed"
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null">
 
     <div class="sidebar-logo">
@@ -87,19 +83,15 @@
         <span class="netting-title">Netting Down</span>
         <span class="prod-version">PROD Version 1.2 Build 1234</span>
         <span class="username">Etso Bela</span>
-    </span>
+      </span>
     </nz-header>
 
     <nz-content>
       <div class="inner-content">
-       <ngx-spinner 
-  bdColor="rgba(0, 0, 0, 0.8)" 
-  size="medium" 
-  color="#fff" 
-  type="ball-clip-rotate" 
-  [fullScreen]="true">
-  <p style="color: white">Loading...</p>
-</ngx-spinner>
+        <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-clip-rotate"
+          [fullScreen]="true">
+          <p style="color: white">Loading...</p>
+        </ngx-spinner>
         <router-outlet></router-outlet>
       </div>
     </nz-content>

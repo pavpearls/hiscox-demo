@@ -208,6 +208,17 @@ const getEventSetListFailure = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+const getEventSetFlatList = createAction('[Event Set] Get Event Set Flat List');
+const getEventSetFlatListSuccess = createAction(
+  '[Event Set] Get Event Set Flat List Success',
+  props<{ payload: EventSet[] }>()
+);
+const getEventSetFlatListFailure = createAction(
+  '[Event Set] Get Event Set Flat List Failure',
+  props<{ error: HttpErrorResponse }>()
+);
+
+
 const updateEventSet = createAction(
   '[Event Set] Update Event Set',
   props<{ payload: EventSetRequest }>()
@@ -241,6 +252,10 @@ const EventsSetActions = {
   getEventSetList,
   getEventSetListSuccess,
   getEventSetListFailure,
+
+  getEventSetFlatList,
+  getEventSetFlatListSuccess,
+  getEventSetFlatListFailure,
 
   updateEventSet,
   updateEventSetSuccess,

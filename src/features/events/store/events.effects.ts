@@ -6,6 +6,7 @@ import { EventsActions } from './events.actions';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { EventsFacade } from './events.facade';
 import { filterSuccess } from 'ngx-remotedata';
+import { EventSetService } from '../pages/events-set-dashboard/services/event-set.service';
 
 @Injectable()
 export class EventsEffects {
@@ -13,7 +14,8 @@ export class EventsEffects {
     private actions$: Actions,
     private ndsApiServiceWrapper: NdsApiServiceWrapper,
     private notification: NzNotificationService,
-    private eventFacade: EventsFacade
+    private eventFacade: EventsFacade,
+    private eventSetService: EventSetService
   ) { }
 
   //////////////////////////////////////////////////////
@@ -367,6 +369,22 @@ export class EventsEffects {
           ),
           catchError((error) =>
             of(EventsActions.EventsSetActions.getEventSetListFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  getEventSetFlatList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventsSetActions.getEventSetFlatList),
+      mergeMap(() =>
+        this.eventSetService.getEventSetFlatList().pipe(
+          map((response) =>
+            EventsActions.EventsSetActions.getEventSetFlatListSuccess({ payload: response })
+          ),
+          catchError((error) =>
+            of(EventsActions.EventsSetActions.getEventSetFlatListFailure({ error }))
           )
         )
       )
