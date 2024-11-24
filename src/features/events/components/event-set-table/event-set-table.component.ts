@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ColDef, FirstDataRenderedEvent, GridApi, GridReadyEvent, ICellRendererParams, IDetailCellRendererParams, IGroupCellRendererParams, RowGroupingDisplayType, SizeColumnsToContentStrategy, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy } from 'ag-grid-enterprise';
 import moment from 'moment';
 
@@ -10,13 +10,13 @@ import moment from 'moment';
 })
 export class EventSetTableComponent implements OnInit, OnChanges {
   @Input() eventSetData: any[];
+  @Output() new = new EventEmitter<Event>();
 
   private gridApi!: GridApi;
   public columnDefs: ColDef[] = [];
   public defaultColDef: ColDef = { flex: 1 };
   public rowData!: any[];
   public detailRowHeight = 195;
-
   public autoSizeStrategy:
     | SizeColumnsToFitGridStrategy
     | SizeColumnsToFitProvidedWidthStrategy
@@ -39,10 +39,6 @@ export class EventSetTableComponent implements OnInit, OnChanges {
 
     return res;
   };
-
-
-
-
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['eventSetData'].currentValue) {
@@ -128,8 +124,5 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       },
       { field: 'hiscoxLossImpactRating', headerName: 'Hiscox Impact', sortable: true }
     ]
-
   }
-
-
 }

@@ -14,7 +14,7 @@ import { Event } from './event';
 export interface EventType { 
     eventTypeID?: number;
     eventTypeName?: string | null;
-    eventTypeAltName?: string | null;
+    eventTypeDescription?: string | null;
     events?: Array<Event> | null;
     eventSets?: Array<EventSet> | null;
 }

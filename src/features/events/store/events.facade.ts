@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Event, EventSet, EventSetMember } from '@shared/api-services/models';
+import { Event, EventSet, EventSetMember, EventSetAndEventsRequest } from '@shared/api-services/models';
 import { isInProgress } from 'ngx-remotedata';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { combineLatest, map } from 'rxjs';
@@ -78,7 +78,7 @@ export class EventsFacade {
             createEventSet: (payload: EventSet): void => {
                 this.store.dispatch(EventsActions.EventsSetActions.createEventSet({ payload }));
             },
-            createEventSetAndEvents: (payload: EventSet): void => {
+            createEventSetAndEvents: (payload: EventSetAndEventsRequest): void => {
                 this.store.dispatch(EventsActions.EventsSetActions.createEventSetAndEvents({ payload }));
             },
             deleteEventSet: (id: number): void => {

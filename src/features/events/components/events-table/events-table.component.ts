@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { AddEventConfig } from '@events//interfaces/events.interfaces';
 import { EventsFacade } from '@events//store/events.facade';
 import { Event } from '@shared/api-services/models';
-import { ColDef, GridApi, GridReadyEvent, RowNode, RowSelectionOptions } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, RowNode, RowSelectedEvent, RowSelectionOptions } from 'ag-grid-community';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
@@ -28,12 +28,13 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
   @Input() enableRowSelection = true;
   @Input() enableEditMode = true;
+  @Input() isMultipleAddMode = false; 
 
   @Output() edit = new EventEmitter<Event>();
   @Output() copy = new EventEmitter<any[]>();
   @Output() delete = new EventEmitter<any[]>();
   @Output() archive = new EventEmitter<any[]>();
-
+  @Output() selectedRowsChanged = new EventEmitter<any[]>();
   columnDefs: ColDef[] = [];
   rowData: any[] = [];
   editCache: { [key: number]: { edit: boolean; form: FormGroup } } = {};
@@ -60,6 +61,14 @@ export class EventsTableComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['addEventConfig']) {
       this.columnDefs = [...this.generateColumns(this.addEventConfig)];
+      
+      this.isMultipleAddMode
+      ? this.rowSelection = {
+        mode: 'multiRow'
+      }
+      : this.rowSelection = {
+        mode: 'singleRow'
+      }
     }
   }
 
@@ -304,5 +313,10 @@ export class EventsTableComponent implements OnInit, OnChanges {
     if (this.gridApi) {
       this.gridApi.stopEditing();
     }
+  }
+
+  onRowSelected(event: RowSelectedEvent): void {
+    const selectedRows = this.gridApi.getSelectedRows();
+    this.selectedRowsChanged.emit(selectedRows);
   }
 }

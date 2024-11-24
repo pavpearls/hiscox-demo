@@ -329,6 +329,18 @@ export class EventsEffects {
     )
   );
 
+
+  createEventSetAndEventsSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSetActions.createEventSetAndEventsSuccess),
+        tap(() => {
+          this.eventFacade.actions.eventSets.getEventSetList();
+        })
+      ),
+    { dispatch: false }
+  );
+
   deleteEventSet$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EventsActions.EventsSetActions.deleteEventSet),

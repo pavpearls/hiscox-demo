@@ -31,5 +31,7 @@ export interface Event {
     eventType?: EventType;
     regionPeril?: RegionPeril;
     eventSetMembers?: Array<EventSetMember> | null;
+    simYear?: number;
+    eventOrder?: number;
 }
 

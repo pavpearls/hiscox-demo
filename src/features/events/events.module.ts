@@ -36,6 +36,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { EventSetTableComponent } from './components/event-set-table/event-set-table.component';
+import { AddEventSetModalComponent } from './components/add-event-set-modal/add-event-set-modal.component';
 
 const ANGULAR_CORE_MODULES = [
     CommonModule,
@@ -95,7 +96,8 @@ const MODULE_REUSABLE_STANDALONE_COMPONENTS = [
     declarations: [
         ...MODULE_PAGES,
         EventsTableComponent,
-        EventSetTableComponent
+        EventSetTableComponent,
+        AddEventSetModalComponent
     ],
     imports: [
         AgGridModule,

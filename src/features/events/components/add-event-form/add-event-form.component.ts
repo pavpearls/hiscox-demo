@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddEventConfig, AddEventForm, EventDetailsForm } from '@events//interfaces/events.interfaces';
 import { AddEventFormService, EventType } from '@events//services/add-event-form.service';
 import { IconsProviderModule } from 'app/icons-provider.module';
@@ -18,6 +18,7 @@ import { SelectDropdownWithAddOptionComponent } from 'shared/ui-components/ng-zo
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     NzInputModule,
     NzSelectModule,
     NzDatePickerModule,

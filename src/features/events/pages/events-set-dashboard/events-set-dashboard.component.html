@@ -10,6 +10,15 @@
   </div>
 
   <div class="event-set-data">
-    <app-event-set-table [eventSetData]="eventSetData"></app-event-set-table>
+    <app-event-set-table [eventSetData]="eventSetData" (new)="handleOnNewEvent($event)"></app-event-set-table>
   </div>
 </div>
+
+
+<ng-container *ngIf="isAddEventSetModalVisible">
+  <add-event-set-modal
+    [showModal]="isAddEventSetModalVisible"
+    (onOk)="onModalOk($event)"
+    (onCancel)="onModalCancel()"
+  ></add-event-set-modal>
+</ng-container>

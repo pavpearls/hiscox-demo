@@ -36,7 +36,7 @@ export class EventsCatalogService {
     ]
 
     const eventType = eventsTypeList.find(
-      x => x?.eventTypeName?.toLowerCase() === selectedTab.toLowerCase()
+      x => x?.eventTypeName?.toLowerCase() === selectedTab.toLowerCase() || x?.eventTypeID?.toString() === selectedTab.toString()
     );
 
     if (eventType) {

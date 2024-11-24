@@ -35,6 +35,7 @@
     "ag-grid-angular": "^32.3.3",
     "ag-grid-community": "^32.3.3",
     "ag-grid-enterprise": "^32.3.3",
+    "moment": "^2.30.1",
     "ng-zorro-antd": "^18.1.1",
     "ngx-remotedata": "^8.0.0",
     "ngx-spinner": "^16.0.0",

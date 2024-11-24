@@ -29,6 +29,8 @@ export interface AddEventConfig {
   hiscoxImpactOptions: DropdownOption[];
   industryLossOptions: DropdownOption[];
   allowMultipleEvents: boolean;
+  allowMultipleRowSelection: boolean;
+  
   labels?: {
     eventName?: string;
     regionPeril?: string;
