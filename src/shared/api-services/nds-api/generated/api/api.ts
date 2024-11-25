@@ -10,4 +10,6 @@ export * from './nDSBackendApi.service';
 import { NDSBackendApiService } from './nDSBackendApi.service';
 export * from './parameter.service';
 import { ParameterService } from './parameter.service';
-export const APIS = [AppLogService, EventService, EventSetService, EventSetMemberService, NDSBackendApiService, ParameterService];
+export * from './user.service';
+import { UserService } from './user.service';
+export const APIS = [AppLogService, EventService, EventSetService, EventSetMemberService, NDSBackendApiService, ParameterService, UserService];

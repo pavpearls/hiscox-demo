@@ -9,6 +9,7 @@ api/eventSet.service.ts
 api/eventSetMember.service.ts
 api/nDSBackendApi.service.ts
 api/parameter.service.ts
+api/user.service.ts
 configuration.ts
 encoder.ts
 git_push.sh

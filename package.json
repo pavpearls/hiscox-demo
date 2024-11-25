@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-ng-nds-api": "rimraf ./src/shared/api-services/nds-api/generated && npx @openapitools/openapi-generator-cli generate -i https://dev-nds-78ql.azurewebsites.net/swagger/v1/swagger.json -g typescript-angular -o ./src/shared/api-services/nds-api/generated --type-mappings DateTime=Date",
+    "generate-ng-nds-api": "rimraf ./src/shared/api-services/nds-api/generated && npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-angular -o ./src/shared/api-services/nds-api/generated --type-mappings DateTime=Date",
     "start:mock": "prism mock ./swagger.json -h 127.0.0.1 -p 7224",
     "start:local": "ng serve --configuration=local",
     "start:dev": "ng serve --configuration=development",
