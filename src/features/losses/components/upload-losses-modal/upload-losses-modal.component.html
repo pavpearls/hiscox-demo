@@ -1,0 +1,135 @@
+<nz-modal [(nzVisible)]="showModal" nzTitle="Upload Gross Loss File" [nzWidth]="modalWidth"
+  (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <nz-tabset [nzAnimated]="true">
+      <nz-tab nzTitle="Upload">
+        <form [formGroup]="uploadForm" (ngSubmit)="handleOk()" nz-form>
+          <div class="top-panel">
+            <div nz-row [nzGutter]="16" class="top-panel-row">
+             
+                <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+                  <nz-form-item>
+                    <nz-form-control>
+                      <input nz-input id="friendlyName" formControlName="friendlyName"
+                        placeholder="User friendly name instead of filename" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+                  <nz-form-item>
+                    <nz-form-control>
+                      <nz-select id="dataFormat" formControlName="dataFormat" placeholder="Select Format">
+                        <nz-option *ngFor="let option of dataFormatOptions" [nzValue]="option.value"
+                          placeholder="Select value" [nzLabel]="option.label"></nz-option>
+                      </nz-select>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzXs]="12">
+
+            </div>
+          </div>
+
+          <div nz-row [nzGutter]="16">
+            <div nz-col [nzSpan]="12">
+              <div nz-row [nzGutter]="16" style="margin-bottom: 2rem;">
+                <div nz-col [nzSpan]="12">
+                  <nz-upload nzAction="#" nzListType="text" (nzChange)="handleFileInput($event)">
+                    <button nz-button>
+                      <i nz-icon nzType="upload"></i> Choose files to upload
+                    </button>
+                  </nz-upload>
+                </div>
+              </div>
+
+              <nz-form-item>
+                <nz-form-label [nzFor]="'dataProducer'" nzRequired>Data Producer</nz-form-label>
+                <nz-form-control>
+                  <nz-select id="dataProducer" formControlName="dataProducer" placeholder="Select Data Producer">
+                    <nz-option nzValue="Exposure Management" nzLabel="Exposure Management"></nz-option>
+                    <nz-option nzValue="Other" nzLabel="Other"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label [nzFor]="'description'">Description</nz-form-label>
+                <nz-form-control>
+                  <textarea nz-input id="description" formControlName="description" rows="3"
+                    placeholder="Enter description"></textarea>
+                </nz-form-control>
+              </nz-form-item>
+
+
+            </div>
+
+            <div nz-col [nzSpan]="12">
+              <h3>File Validation</h3>
+              <div nz-row [nzGutter]="16" style="margin-bottom: 16px; display: block; align-items: center; padding-bottom: 1rem;">
+                <button nz-button (click)="validateFile()">Validate</button>
+                <div *ngIf="isValidating" style="margin-left: 8px;">
+                  <nz-spin [nzTip]="'Validating...'" [nzSize]="'small'"></nz-spin>
+                </div>
+              </div>
+              <nz-table [nzData]="fileValidationResults" [nzBordered]="true" [nzSize]="'small'" [nzScroll]="{ x: '300px' }">
+                <thead>
+                  <tr>
+                    <th>Check</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let result of fileValidationResults">
+                    <td>{{ result.check }}</td>
+                    <td [style.background]="result.result === 'true' ? '#d4edda' : '#f8d7da'">
+                      {{ result.result }}
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+            
+          </div>
+          </div>
+        </form>
+      </nz-tab>
+
+      <nz-tab nzTitle="Preview">
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <h3>Preview Screen</h3>
+            <nz-table style="min-height: 600px;" #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="listOfData"
+              [nzScroll]="{ y: '600px' }" [nzShowPagination]="false" [nzShowSizeChanger]="true" [nzLoading]="!listOfData.length">
+              <thead>
+                <tr>
+                  <th nzWidth="100px">RowNum</th>
+                  <th nzWidth="200px">EventName</th>
+                  <th nzWidth="200px">LossClassName</th>
+                  <th nzWidth="100px">YOA</th>
+                  <th nzWidth="150px">YearLoss Apportionment</th>
+                  <th nzWidth="100px">Currency</th>
+                  <th nzWidth="150px">GrossLoss</th>
+                  <th nzWidth="150px">ReinstatementRoL</th>
+                  <th nzWidth="200px">Aggregate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of basicTable.data">
+                  <td>{{ data.rowNum }}</td>
+                  <td>{{ data.eventName }}</td>
+                  <td>{{ data.lossClassName }}</td>
+                  <td>{{ data.yoa }}</td>
+                  <td>{{ data.yearLossApportionment }}</td>
+                  <td>{{ data.currency }}</td>
+                  <td>{{ data.grossLoss }}</td>
+                  <td>{{ data.reinstatementRoL }}</td>
+                  <td>{{ data.aggregate }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </ng-container>
+</nz-modal>

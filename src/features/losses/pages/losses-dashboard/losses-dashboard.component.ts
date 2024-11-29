@@ -7,4 +7,14 @@ import { Component } from '@angular/core';
 })
 export class LossesDashboardComponent {
   title = 'Losses Dashboard';
+  isModalVisible = true;
+
+  handleModalOk($event: any) {
+
+  }
+
+  handleModalCancel() {
+    
+  }
+  
 }

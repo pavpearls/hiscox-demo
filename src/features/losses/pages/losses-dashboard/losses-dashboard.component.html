@@ -2,3 +2,10 @@
     <h1>{{ title }}</h1>
     <p>Welcome to the Losses Dashboard!</p>
 </div>
+
+
+<upload-loss-load-modal
+  [showModal]="isModalVisible"
+  (onOk)="handleModalOk($event)"
+  (onCancel)="handleModalCancel()">
+</upload-loss-load-modal>

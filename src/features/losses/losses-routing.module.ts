@@ -4,6 +4,8 @@ import { LossesDashboardComponent } from './pages/losses-dashboard/losses-dashbo
 
 const routes: Routes = [
     { path: '', component: LossesDashboardComponent },
+    { path: 'sets', component: LossesDashboardComponent },
+    { path: 'uploads', component: LossesDashboardComponent },
   ];
 
 @NgModule({
