@@ -94,6 +94,32 @@
         </form>
       </nz-tab>
 
+      <nz-tab nzTitle="User Defined Fields">
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="24">
+            <h3>User Defined Fields</h3>
+            <label>
+              Include User Defined Fields Found in File?
+              <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+              Select all
+            </label>
+            <div nz-row [nzGutter]="16" *ngFor="let field of userDefinedFields; let i = index">
+              <div nz-col [nzSpan]="2">
+                <input type="checkbox" [(ngModel)]="field.selected" />
+              </div>
+              <div nz-col [nzSpan]="10">
+                {{ field.name }}
+              </div>
+              <div nz-col [nzSpan]="12">
+                <nz-select [(ngModel)]="field.type" [nzPlaceHolder]="'Select Type'">
+                  <nz-option *ngFor="let option of dataTypeOptions" [nzValue]="option" [nzLabel]="option"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+
       <nz-tab nzTitle="Preview">
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="24">

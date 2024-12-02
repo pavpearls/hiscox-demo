@@ -7,17 +7,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { LossSet } from './lossSet';
+import { LossLoad } from './lossLoad';
 
 
-export interface EventSetRequest { 
-    eventSetID?: number;
-    eventTypeID?: number | null;
-    eventSetName?: string | null;
-    eventSetDescription?: string | null;
-    isArchived?: boolean | null;
+export interface LossSetLoadMember { 
+    lossSetLoadMemberID?: number;
+    lossSetID?: number;
+    lossLoadID?: number;
     createdBy?: string | null;
     modifiedBy?: string | null;
-    createUserID?: number | null;
-    createDate?: Date | null;
+    lossLoad?: LossLoad;
+    lossSet?: LossSet;
 }
 

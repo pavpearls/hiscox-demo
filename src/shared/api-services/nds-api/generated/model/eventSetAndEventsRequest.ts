@@ -16,6 +16,8 @@ export interface EventSetAndEventsRequest {
     eventSetName?: string | null;
     eventSetDescription?: string | null;
     isArchived?: boolean | null;
+    createdBy?: string | null;
+    modifiedBy?: string | null;
     createUserID?: number | null;
     createDate?: Date | null;
     eventRequests?: Array<EventRequest> | null;

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'upload-loss-load-modal',
@@ -10,6 +11,10 @@ export class UploadLossLoadModalComponent {
   @Input() showModal = false;
   @Output() onOk = new EventEmitter<any>();
   @Output() onCancel = new EventEmitter<void>();
+
+  selectAll = false;
+  userDefinedFields: { name: string; selected: boolean; type: string }[] = [];
+  dataTypeOptions = ['String', 'Number', 'Boolean', 'Date'];
 
   listOfData: any[] = [];
   totalRows = 5000;
@@ -40,11 +45,20 @@ export class UploadLossLoadModalComponent {
         file: [null, Validators.required]
       });
       this.generateMockData();
+      this.generateUserDefinedFields();
   }
 
   handleFileInput(event: any): void {
     const file = event.target.files[0];
-    this.uploadForm.patchValue({ file });
+    if (file) {
+      this.uploadForm.patchValue({ file });
+      const fileType = file.name.split('.').pop()?.toLowerCase();
+      if (fileType === 'xlsx' || fileType === 'csv') {
+        this.readFile(file);
+      } else {
+        alert('Invalid file type. Please upload an XLSX or CSV file.');
+      }
+    }
   }
 
   handleOk(): void {
@@ -89,6 +103,73 @@ export class UploadLossLoadModalComponent {
         aggregate: (Math.random() * 100000000).toFixed(2),
       });
     }
+  }
+
+  toggleSelectAll(): void {
+    this.userDefinedFields.forEach(field => (field.selected = this.selectAll));
+  }
+
+  onValidationComplete(): void {
+    this.generateUserDefinedFields();
+  }
+
+  readFile(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(data, { type: 'binary' });
+      this.validateWorkbook(workbook);
+    };
+    reader.readAsBinaryString(file);
+  }
+
+  validateWorkbook(workbook: XLSX.WorkBook): void {
+    const requiredSheets = ['Loss Worksheet'];
+    const requiredFields = ['Risk Carrier', 'Sales Unit', 'Line of Business'];
+
+    let validationResults = [...this.fileValidationResults];
+    const sheetNames = workbook.SheetNames;
+
+    // Validate Sheets
+    validationResults[1].result = requiredSheets.every(sheet =>
+      sheetNames.includes(sheet)
+    ) ? 'true' : 'false';
+
+    // Validate Fields in the First Sheet
+    if (sheetNames.length > 0) {
+      const firstSheet = workbook.Sheets[sheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 }) as any[];
+      const headers = data[0] || [];
+
+      validationResults[2].result = requiredFields.every(field =>
+        headers.includes(field)
+      ) ? 'true' : 'false';
+    }
+
+    // Validate Overall File
+    validationResults[5].result = validationResults.every(res => res.result === 'true') ? 'true' : 'false';
+    this.fileValidationResults = validationResults;
+
+    if (validationResults[5].result === 'true') {
+      console.log('File validated successfully!');
+    } else {
+      console.log('File validation failed. Please check the file format.');
+    }
+  }
+  
+  generateUserDefinedFields(): void {
+    this.userDefinedFields = [
+      { name: 'Risk Carrier', selected: false, type: 'String' },
+      { name: 'Sales Unit', selected: false, type: 'String' },
+      { name: 'Line of Business', selected: false, type: 'String' },
+      { name: 'Assured', selected: false, type: 'String' },
+      { name: 'Terms', selected: false, type: 'String' },
+      { name: 'Signed Line', selected: false, type: 'String' },
+      { name: 'Program ID', selected: false, type: 'String' },
+      { name: 'Layer ID', selected: false, type: 'String' },
+      { name: 'UW Ref', selected: false, type: 'String' },
+      { name: 'Claims Ref', selected: false, type: 'String' }
+    ];
   }
 
   validateFile(): void {

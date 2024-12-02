@@ -7,9 +7,9 @@ api/appLog.service.ts
 api/event.service.ts
 api/eventSet.service.ts
 api/eventSetMember.service.ts
+api/lossLoad.service.ts
 api/nDSBackendApi.service.ts
 api/parameter.service.ts
-api/user.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -17,6 +17,8 @@ index.ts
 model/appLog.ts
 model/appLogPagedResult.ts
 model/createResult.ts
+model/dataProducer.ts
+model/dataSourceType.ts
 model/deleteResult.ts
 model/event.ts
 model/eventPagedResult.ts
@@ -27,6 +29,10 @@ model/eventSetMember.ts
 model/eventSetMemberRequest.ts
 model/eventSetRequest.ts
 model/eventType.ts
+model/lossLoad.ts
+model/lossLoadRequest.ts
+model/lossSet.ts
+model/lossSetLoadMember.ts
 model/models.ts
 model/problemDetails.ts
 model/regionPeril.ts

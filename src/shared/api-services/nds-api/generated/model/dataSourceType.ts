@@ -7,16 +7,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EventSet } from './eventSet';
-import { Event } from './event';
 import { LossLoad } from './lossLoad';
 
 
-export interface User { 
-    userID?: number;
-    userName?: string | null;
-    events?: Array<Event> | null;
-    eventSets?: Array<EventSet> | null;
+export interface DataSourceType { 
+    dataSourceTypeID?: number;
+    dataSourceTypeName?: string | null;
     lossLoads?: Array<LossLoad> | null;
 }
 

@@ -17,6 +17,8 @@ export interface EventSetMember {
     eventSetID?: number;
     simYear?: number;
     eventOrder?: number;
+    createdBy?: string | null;
+    modifiedBy?: string | null;
     event?: Event;
     eventSet?: EventSet;
 }

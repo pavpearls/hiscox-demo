@@ -105,26 +105,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -141,6 +121,26 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
                                 }
                             }
                         }
@@ -452,26 +452,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -488,6 +468,26 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
                                 }
                             }
                         }
@@ -869,26 +869,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -905,6 +885,26 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
                                 }
                             }
                         }
@@ -1209,26 +1209,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateResult"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateResult"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateResult"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -1245,6 +1225,26 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
                                 }
                             }
                         }
@@ -1352,26 +1352,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteResult"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -1388,6 +1368,26 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
                                 }
                             }
                         }
@@ -1651,26 +1651,6 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateResult"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateResult"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateResult"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -1687,6 +1667,26 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
                                 }
                             }
                         }
@@ -1772,6 +1772,26 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "content": {
@@ -1788,6 +1808,462 @@
                             "text/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/CreateResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LossLoad/{id}": {
+            "get": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "GetLossLoadById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoad"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoad"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoad"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "DeleteLossLoad",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LossLoad/EventSet/{eventSetId}": {
+            "get": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "GetLossLoadByEventSetId",
+                "parameters": [
+                    {
+                        "name": "eventSetId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LossLoad/EventSetType/{eventSetTypeId}": {
+            "get": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "GetLossLoadByEventSetTypeId",
+                "parameters": [
+                    {
+                        "name": "eventSetTypeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LossLoad": {
+            "get": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "GetLossLoadList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventSet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "CreateLossLoad",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LossLoadRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoadRequest"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoadRequest"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoadRequest"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "LossLoad"
+                ],
+                "operationId": "UpdateLossLoad",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LossLoadRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoadRequest"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoadRequest"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LossLoadRequest"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
                                 }
                             }
                         }
@@ -2131,67 +2607,6 @@
                     }
                 }
             }
-        },
-        "/api/User/{id}": {
-            "get": {
-                "tags": [
-                    "User"
-                ],
-                "operationId": "GetUserInfo                                                                                                                                                    ",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Event"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Event"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Event"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ProblemDetails"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ProblemDetails"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ProblemDetails"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -2271,6 +2686,52 @@
                 },
                 "additionalProperties": false
             },
+            "DataProducer": {
+                "type": "object",
+                "properties": {
+                    "dataProducerID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataProducerName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dataProducerDescription": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossLoad"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "DataSourceType": {
+                "type": "object",
+                "properties": {
+                    "dataSourceTypeID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataSourceTypeName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossLoad"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
             "DeleteResult": {
                 "type": "object",
                 "properties": {
@@ -2323,6 +2784,14 @@
                         "nullable": true
                     },
                     "hiscoxLossImpactRating": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
                         "type": "string",
                         "nullable": true
                     },
@@ -2428,6 +2897,14 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "createUserID": {
                         "type": "integer",
                         "format": "int32",
@@ -2477,6 +2954,14 @@
                         "type": "boolean",
                         "nullable": true
                     },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "createUserID": {
                         "type": "integer",
                         "format": "int32",
@@ -2497,6 +2982,20 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/EventSetMember"
+                        },
+                        "nullable": true
+                    },
+                    "lossSets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossSet"
+                        },
+                        "nullable": true
+                    },
+                    "lossLoads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossLoad"
                         },
                         "nullable": true
                     },
@@ -2532,6 +3031,14 @@
                     },
                     "isArchived": {
                         "type": "boolean",
+                        "nullable": true
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
                         "nullable": true
                     },
                     "createUserID": {
@@ -2582,6 +3089,14 @@
                         "type": "integer",
                         "format": "int32"
                     },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "event": {
                         "$ref": "#/components/schemas/Event"
                     },
@@ -2613,6 +3128,14 @@
                     "eventOrder": {
                         "type": "integer",
                         "format": "int32"
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
                     }
                 },
                 "additionalProperties": false
@@ -2639,6 +3162,14 @@
                     },
                     "isArchived": {
                         "type": "boolean",
+                        "nullable": true
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
                         "nullable": true
                     },
                     "createUserID": {
@@ -2682,6 +3213,234 @@
                             "$ref": "#/components/schemas/EventSet"
                         },
                         "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "LossLoad": {
+                "type": "object",
+                "properties": {
+                    "lossLoadID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "eventSetID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataSourceTypeID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataProducerID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataSourceName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoadName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoadDescription": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "loadUserID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "loadDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "isArchived": {
+                        "type": "boolean"
+                    },
+                    "isValid": {
+                        "type": "boolean"
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "eventSet": {
+                        "$ref": "#/components/schemas/EventSet"
+                    },
+                    "dataSourceType": {
+                        "$ref": "#/components/schemas/DataSourceType"
+                    },
+                    "dataProducer": {
+                        "$ref": "#/components/schemas/DataProducer"
+                    },
+                    "loadUser": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "lossSetLoadMembers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossSetLoadMember"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "LossLoadRequest": {
+                "type": "object",
+                "properties": {
+                    "lossLoadID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "eventSetID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataSourceTypeID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataProducerID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataSourceName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoadName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoadDescription": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "loadUserID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "loadDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "isArchived": {
+                        "type": "boolean"
+                    },
+                    "isValid": {
+                        "type": "boolean"
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "LossSet": {
+                "type": "object",
+                "properties": {
+                    "lossSetID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "eventSetID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "lossSetName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossSetDescription": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "asAtDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "versionNum": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "isArchived": {
+                        "type": "boolean"
+                    },
+                    "isLocked": {
+                        "type": "boolean"
+                    },
+                    "isApproved": {
+                        "type": "boolean"
+                    },
+                    "approvedComments": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "eventSet": {
+                        "$ref": "#/components/schemas/EventSet"
+                    },
+                    "lossSetLoadMembers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossSetLoadMember"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "LossSetLoadMember": {
+                "type": "object",
+                "properties": {
+                    "lossSetLoadMemberID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "lossSetID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "lossLoadID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "modifiedBy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "lossLoad": {
+                        "$ref": "#/components/schemas/LossLoad"
+                    },
+                    "lossSet": {
+                        "$ref": "#/components/schemas/LossSet"
                     }
                 },
                 "additionalProperties": false
@@ -2804,6 +3563,13 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/EventSet"
+                        },
+                        "nullable": true
+                    },
+                    "lossLoads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LossLoad"
                         },
                         "nullable": true
                     }

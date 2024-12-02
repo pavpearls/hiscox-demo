@@ -18,6 +18,8 @@ export interface EventRequest {
     eventDate?: Date;
     industryLossEstimate?: number | null;
     hiscoxLossImpactRating?: string | null;
+    createdBy?: string | null;
+    modifiedBy?: string | null;
     createUserID?: number | null;
     createDate?: Date | null;
     isLossPick?: boolean | null;

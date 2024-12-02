@@ -7,9 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { LossSet } from './lossSet';
 import { User } from './user';
 import { EventType } from './eventType';
 import { Event } from './event';
+import { LossLoad } from './lossLoad';
 import { EventSetMember } from './eventSetMember';
 
 
@@ -19,11 +21,15 @@ export interface EventSet {
     eventSetName?: string | null;
     eventSetDescription?: string | null;
     isArchived?: boolean | null;
+    createdBy?: string | null;
+    modifiedBy?: string | null;
     createUserID?: number | null;
     createDate?: Date | null;
     createUser?: User;
     eventType?: EventType;
     eventSetMembers?: Array<EventSetMember> | null;
+    lossSets?: Array<LossSet> | null;
+    lossLoads?: Array<LossLoad> | null;
     events?: Array<Event> | null;
 }
 
