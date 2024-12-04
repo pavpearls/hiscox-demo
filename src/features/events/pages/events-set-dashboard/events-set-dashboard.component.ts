@@ -82,11 +82,11 @@ export class EventsSetDashboardComponent implements OnInit {
   
         const payload: EventSetAndEventsRequest = {
           eventSetID: undefined,
-          eventTypeID: this.selectedTabId,
+          eventSetTypeID: this.selectedTabId,
           eventSetName,
           eventSetDescription,
           isArchived: false,
-          createUserID: undefined,
+          createdBy: undefined,
           createDate: new Date(),
           eventRequests: [...matchedEvents],
         };

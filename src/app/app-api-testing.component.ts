@@ -47,7 +47,6 @@ export class TestApiComponent implements OnInit {
     const payload: Event = {
         eventTypeID: 2,
         regionPerilID: 9,
-        createUserID: null,
         eventNameShort: 'Pav Event',
         eventNameLong: 'Pav Event Long Description',
         eventDate: new Date(),
@@ -56,7 +55,6 @@ export class TestApiComponent implements OnInit {
         isLossPick: false,
         isRestrictedAccess: false,
         isArchived: false,
-        createUser: undefined,
         eventSetMembers: []
     };
     this.ndsApiServiceWrapper.eventService.createEvent(payload).subscribe(
@@ -67,11 +65,11 @@ export class TestApiComponent implements OnInit {
 
   private createEventSet(data: any) {
     const payload: EventSetRequest = {
-     eventTypeID: 2,
+     eventSetTypeID: 2,
      eventSetName: 'Pav Set Name',
      eventSetDescription: 'Pav Test Set',
      isArchived: false,
-     createUserID: null,
+     createdBy: null,
      createDate: new Date()
     };
     this.ndsApiServiceWrapper.eventSetService.createEventSet(payload).subscribe(

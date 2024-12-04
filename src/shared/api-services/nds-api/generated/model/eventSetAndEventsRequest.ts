@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -12,14 +12,13 @@ import { EventRequest } from './eventRequest';
 
 export interface EventSetAndEventsRequest { 
     eventSetID?: number;
-    eventTypeID?: number | null;
+    eventSetTypeID?: number;
     eventSetName?: string | null;
     eventSetDescription?: string | null;
-    isArchived?: boolean | null;
+    isArchived?: boolean;
     createdBy?: string | null;
     modifiedBy?: string | null;
-    createUserID?: number | null;
-    createDate?: Date | null;
+    createDate?: Date;
     eventRequests?: Array<EventRequest> | null;
     existingEventSetId?: number | null;
 }

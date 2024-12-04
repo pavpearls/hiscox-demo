@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -7,7 +7,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { User } from './user';
 import { EventSet } from './eventSet';
 import { DataSourceType } from './dataSourceType';
 import { LossSetLoadMember } from './lossSetLoadMember';
@@ -22,8 +21,7 @@ export interface LossLoad {
     dataSourceName?: string | null;
     lossLoadName?: string | null;
     lossLoadDescription?: string | null;
-    loadUserID?: number | null;
-    loadDate?: Date | null;
+    loadDate?: Date;
     isArchived?: boolean;
     isValid?: boolean;
     createdBy?: string | null;
@@ -31,7 +29,6 @@ export interface LossLoad {
     eventSet?: EventSet;
     dataSourceType?: DataSourceType;
     dataProducer?: DataProducer;
-    loadUser?: User;
     lossSetLoadMembers?: Array<LossSetLoadMember> | null;
 }
 

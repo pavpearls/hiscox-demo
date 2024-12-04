@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -13,8 +13,9 @@ import { RegionPerilType } from './regionPerilType';
 
 export interface RegionPeril { 
     regionPerilID?: number;
-    regionPerilTypeID?: number | null;
+    regionPerilTypeID?: number;
     regionPerilName?: string | null;
+    regionPerilCode?: string | null;
     regionPerilType?: RegionPerilType;
     events?: Array<Event> | null;
 }

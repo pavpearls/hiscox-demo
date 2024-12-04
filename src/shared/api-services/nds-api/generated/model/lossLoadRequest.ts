@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -17,8 +17,7 @@ export interface LossLoadRequest {
     dataSourceName?: string | null;
     lossLoadName?: string | null;
     lossLoadDescription?: string | null;
-    loadUserID?: number | null;
-    loadDate?: Date | null;
+    loadDate?: Date;
     isArchived?: boolean;
     isValid?: boolean;
     createdBy?: string | null;

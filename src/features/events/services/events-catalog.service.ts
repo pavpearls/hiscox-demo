@@ -60,9 +60,8 @@ export class EventsCatalogService {
       hiscoxLossImpactRating: null,
       isRestrictedAccess: false,
       isArchived: false,
-      createUserID: null,
+      createdBy: null,
       createDate: eventDate ?? null,
-      createUser: undefined
     };
 
     if (events?.length > 0) {

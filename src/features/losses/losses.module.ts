@@ -24,13 +24,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import { LossSetsDashboardComponent } from './pages/loss-sets-dashboard/loss-sets-dashboard.component';
 
 @NgModule({
     declarations: [
         LossesDashboardComponent,
-        UploadLossLoadModalComponent
+        UploadLossLoadModalComponent,
+        LossSetsDashboardComponent
     ],
     imports: [
+        AgGridModule,
         CommonModule,
         LossesRoutingModule,
         NzButtonModule,

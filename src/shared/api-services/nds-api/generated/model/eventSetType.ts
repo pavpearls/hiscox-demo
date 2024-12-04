@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -8,15 +8,12 @@
  * Do not edit the class manually.
  */
 import { EventSet } from './eventSet';
-import { Event } from './event';
-import { LossLoad } from './lossLoad';
 
 
-export interface User { 
-    userID?: number;
-    userName?: string | null;
-    events?: Array<Event> | null;
+export interface EventSetType { 
+    eventSetTypeID?: number;
+    eventSetTypeName?: string | null;
+    eventSetTypeDescription?: string | null;
     eventSets?: Array<EventSet> | null;
-    lossLoads?: Array<LossLoad> | null;
 }
 

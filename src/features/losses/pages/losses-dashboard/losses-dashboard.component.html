@@ -3,6 +3,21 @@
     <p>Welcome to the Losses Dashboard!</p>
 </div>
 
+<div class="dashboard-container">
+  <h2>Loss Load Dashboard</h2>
+  <div class="grid-wrapper">
+    <ag-grid-angular
+    style="height: 600px;"
+      class="ag-theme-alpine"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [groupDefaultExpanded]="-1"
+      [animateRows]="true"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+</div>
 
 <upload-loss-load-modal
   [showModal]="isModalVisible"

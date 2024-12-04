@@ -160,7 +160,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
       eventTypeName: event?.eventType?.eventTypeName || '',
       eventNameShort: event?.eventNameShort || '',
       regionPerilName: event?.regionPeril?.regionPerilName || '',
-      userName: event?.createUser?.userName || '',
+      userName: event?.createdBy || '',
       createDate: event?.createDate ? new Date(event?.createDate).toLocaleDateString('en-GB') : '',
       industryLossEstimate: event?.industryLossEstimate || '',
       hiscoxLossImpactRating: event?.hiscoxLossImpactRating || '',

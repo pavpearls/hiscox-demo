@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -15,15 +15,14 @@ export interface EventRequest {
     regionPerilID?: number;
     eventNameShort?: string | null;
     eventNameLong?: string | null;
-    eventDate?: Date;
+    eventDate?: Date | null;
     industryLossEstimate?: number | null;
     hiscoxLossImpactRating?: string | null;
     createdBy?: string | null;
     modifiedBy?: string | null;
-    createUserID?: number | null;
-    createDate?: Date | null;
-    isLossPick?: boolean | null;
-    isRestrictedAccess?: boolean | null;
-    isArchived?: boolean | null;
+    createDate?: Date;
+    isLossPick?: boolean;
+    isRestrictedAccess?: boolean;
+    isArchived?: boolean;
 }
 
