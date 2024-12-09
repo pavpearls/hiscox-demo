@@ -26,12 +26,14 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { LossSetsDashboardComponent } from './pages/loss-sets-dashboard/loss-sets-dashboard.component';
+import { AddNewLossSetModalComponent } from './components/add-new-loss-set-modal/add-new-loss-set-modal.component';
 
 @NgModule({
     declarations: [
         LossesDashboardComponent,
         UploadLossLoadModalComponent,
-        LossSetsDashboardComponent
+        LossSetsDashboardComponent,
+        AddNewLossSetModalComponent
     ],
     imports: [
         AgGridModule,

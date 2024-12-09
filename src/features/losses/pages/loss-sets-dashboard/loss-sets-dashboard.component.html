@@ -1,9 +1,33 @@
 <div class="dashboard-container">
     <h2>Loss Sets</h2>
     <div class="grid-wrapper">
-        <ag-grid-angular style="height: 600px;" class="ag-theme-alpine" [rowData]="rowData" [columnDefs]="columnDefs"
-            [defaultColDef]="defaultColDef" [groupDefaultExpanded]="-1" [animateRows]="true"
-            (gridReady)="onGridReady($event)">
-        </ag-grid-angular>
+      <div nz-button-group class="action-buttons">
+        <button nz-button nz-dropdown [nzDropdownMenu]="menu">
+          New <i nz-icon nzType="down"></i>
+        </button>
+  
+        <button nz-button (click)="onCopyClick()">Copy</button>
+  
+        <button nz-button (click)="onEditClick()">Edit</button>
+      </div>
+  
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item (click)="onCreateLossSet()">Loss Set</li>
+          <li nz-menu-item (click)="onCreateLossSetVersion()">Loss Set Version</li>
+        </ul>
+      </nz-dropdown-menu>
+  
+      <ag-grid-angular style="height: 600px;" class="ag-theme-alpine" [rowData]="rowData" [columnDefs]="columnDefs"
+                       [defaultColDef]="defaultColDef" [groupDefaultExpanded]="-1" [animateRows]="true"
+                       (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
     </div>
-</div>
+  </div>
+  
+  <app-add-new-loss-set-modal
+    [isVisible]="isAddLossSetModalVisible"
+    [selectedOption]="selectedOption"
+    (onCancel)="isAddLossSetModalVisible=false"
+    (onSave)="saveNewLossSet($event)"
+  ></app-add-new-loss-set-modal>

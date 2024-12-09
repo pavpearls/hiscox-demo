@@ -91,7 +91,6 @@ export class LossesDashboardComponent implements OnInit {
       },
     ];
 
-    // Flatten data and add the `eventCategory` field for grouping
     this.rowData = MOCK_DATA.flatMap((category) =>
       category.events.map((event) => ({
         ...event,

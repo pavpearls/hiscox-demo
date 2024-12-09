@@ -7,7 +7,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EventSet } from './eventSet';
 import { Event } from './event';
 
 
@@ -16,6 +15,5 @@ export interface EventType {
     eventTypeName?: string | null;
     eventTypeDescription?: string | null;
     events?: Array<Event> | null;
-    eventSets?: Array<EventSet> | null;
 }
 

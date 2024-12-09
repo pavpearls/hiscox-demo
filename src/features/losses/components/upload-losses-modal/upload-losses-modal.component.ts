@@ -130,12 +130,10 @@ export class UploadLossLoadModalComponent {
     let validationResults = [...this.fileValidationResults];
     const sheetNames = workbook.SheetNames;
 
-    // Validate Sheets
     validationResults[1].result = requiredSheets.every(sheet =>
       sheetNames.includes(sheet)
     ) ? 'true' : 'false';
 
-    // Validate Fields in the First Sheet
     if (sheetNames.length > 0) {
       const firstSheet = workbook.Sheets[sheetNames[0]];
       const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 }) as any[];
@@ -146,7 +144,6 @@ export class UploadLossLoadModalComponent {
       ) ? 'true' : 'false';
     }
 
-    // Validate Overall File
     validationResults[5].result = validationResults.every(res => res.result === 'true') ? 'true' : 'false';
     this.fileValidationResults = validationResults;
 

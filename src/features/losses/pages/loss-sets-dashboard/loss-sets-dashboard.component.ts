@@ -18,7 +18,8 @@ export class LossSetsDashboardComponent implements OnInit {
   public defaultColDef: ColDef = { flex: 1, resizable: true, sortable: true };
 
   private gridApi!: GridApi;
-
+  isAddLossSetModalVisible = false;
+  selectedOption: 'Loss Set' | 'Loss Set Version' | null = null;
   constructor() {}
 
   ngOnInit(): void {
@@ -93,7 +94,6 @@ export class LossSetsDashboardComponent implements OnInit {
       },
     ];
 
-    // Flatten the data for row grouping
     this.rowData = MOCK_DATA.flatMap((lossSet) =>
       lossSet.versions.flatMap((version) =>
         version.subVersions.flatMap((subVersion) =>
@@ -114,5 +114,32 @@ export class LossSetsDashboardComponent implements OnInit {
 
   private formatCurrency(params: any): string {
     return params.value ? `$${params.value.toLocaleString()}` : '';
+  }
+
+  onCopyClick(): void {
+    console.log('Copy clicked');
+  }
+
+  onEditClick(): void {
+    console.log('Edit clicked');
+  }
+
+  onCreateLossSet() {
+    this.selectedOption = 'Loss Set';
+    this.isAddLossSetModalVisible = true;
+  }
+  
+  onCreateLossSetVersion() {
+    this.selectedOption = 'Loss Set Version';
+    this.isAddLossSetModalVisible = true;
+  }
+
+  showAddLossSetModal() {
+    this.isAddLossSetModalVisible = true;
+  }
+
+  saveNewLossSet(data: any) {
+    console.log('Saving new Loss Set:', data);
+    this.isAddLossSetModalVisible = false;
   }
 }
