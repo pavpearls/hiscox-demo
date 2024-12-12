@@ -10,6 +10,7 @@
 import { EventSet } from './eventSet';
 import { DataSourceType } from './dataSourceType';
 import { LossSetLoadMember } from './lossSetLoadMember';
+import { GrossLoss } from './grossLoss';
 import { DataProducer } from './dataProducer';
 
 
@@ -30,5 +31,6 @@ export interface LossLoad {
     dataSourceType?: DataSourceType;
     dataProducer?: DataProducer;
     lossSetLoadMembers?: Array<LossSetLoadMember> | null;
+    grossLosses?: Array<GrossLoss> | null;
 }
 

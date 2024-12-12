@@ -1815,6 +1815,476 @@
         }
       }
     },
+    "/api/FileUpload/validate": {
+      "post": {
+        "tags": [
+          "FileUpload"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FileUpload/UploadFile": {
+      "post": {
+        "tags": [
+          "FileUpload"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GrossLoss/{id}": {
+      "get": {
+        "tags": [
+          "GrossLoss"
+        ],
+        "operationId": "GetGrossLossById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLoss"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLoss"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLoss"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "GrossLoss"
+        ],
+        "operationId": "DeleteGrossLoss",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GrossLoss/LossLoad/{lossLoadId}": {
+      "get": {
+        "tags": [
+          "GrossLoss"
+        ],
+        "operationId": "GetGrossLossByLossLoadId",
+        "parameters": [
+          {
+            "name": "lossLoadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoad"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoad"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoad"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GrossLoss": {
+      "get": {
+        "tags": [
+          "GrossLoss"
+        ],
+        "operationId": "GetGrossLossList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "GrossLoss"
+        ],
+        "operationId": "CreateGrossLoss",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrossLossRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLossRequest"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLossRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLossRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "GrossLoss"
+        ],
+        "operationId": "UpdateGrossLoss",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrossLossRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLossRequest"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLossRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrossLossRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/LossLoad/{id}": {
       "get": {
         "tags": [
@@ -2244,6 +2714,682 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LossLoadRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossLoad/UploadGrossLossFile": {
+      "post": {
+        "tags": [
+          "LossLoad"
+        ],
+        "operationId": "UploadGrossLossFile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossLoad/CreateLossLoadMetrics": {
+      "post": {
+        "tags": [
+          "LossLoad"
+        ],
+        "operationId": "CreateLossLoadMetrics",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/LossLoadMetricRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoadMetricRequest"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoadMetricRequest"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoadMetricRequest"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossLoad/LossLoadMetrics/{lossLoadId}": {
+      "get": {
+        "tags": [
+          "LossLoad"
+        ],
+        "operationId": "GetLossLoadMetricsByLossLoadId",
+        "parameters": [
+          {
+            "name": "lossLoadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoadMetric"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoadMetric"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LossLoadMetric"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossSet/{id}": {
+      "get": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "GetLossSetById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSet"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSet"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSet"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "DeleteLossSet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossSet/EventSet/{eventSetId}": {
+      "get": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "GetLossSetByEventSetId",
+        "parameters": [
+          {
+            "name": "eventSetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossSet/EventSetType/{eventSetTypeId}": {
+      "get": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "GetLossSetByEventSetTypeId",
+        "parameters": [
+          {
+            "name": "eventSetTypeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LossSet": {
+      "get": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "GetLossSetList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventSet"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "CreateLossSet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LossSetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSetRequest"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSetRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSetRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "LossSet"
+        ],
+        "operationId": "UpdateLossSet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LossSetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSetRequest"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSetRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossSetRequest"
                 }
               }
             }
@@ -2741,6 +3887,31 @@
           "newId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Currency": {
+        "type": "object",
+        "properties": {
+          "currencyID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currencyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "grossLoss": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrossLoss"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3248,6 +4419,173 @@
         },
         "additionalProperties": false
       },
+      "GrossLoss": {
+        "type": "object",
+        "properties": {
+          "grossLossID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currencyID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organisationClassID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grossLossAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregateLossAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "reinstatementROL": {
+            "type": "number",
+            "format": "double"
+          },
+          "yearOfAccount": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "yearOfAccountLossSplit": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "lossLoad": {
+            "$ref": "#/components/schemas/LossLoad"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "organisationClass": {
+            "$ref": "#/components/schemas/OrganisationClass"
+          },
+          "event": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "grossLossParameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrossLossParameter"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GrossLossParameter": {
+        "type": "object",
+        "properties": {
+          "grossLossParameterID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parameterDataTypeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grossLossID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grossLossParameterName": {
+            "type": "string",
+            "nullable": true
+          },
+          "grossLossParameterValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameterDataType": {
+            "$ref": "#/components/schemas/ParameterDataType"
+          },
+          "grossLoss": {
+            "$ref": "#/components/schemas/GrossLoss"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GrossLossRequest": {
+        "type": "object",
+        "properties": {
+          "grossLossID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currencyID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organisationClassID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grossLossAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregateLossAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "reinstatementROL": {
+            "type": "number",
+            "format": "double"
+          },
+          "yearOfAccount": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "yearOfAccountLossSplit": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LossLoad": {
         "type": "object",
         "properties": {
@@ -3311,6 +4649,68 @@
             "items": {
               "$ref": "#/components/schemas/LossSetLoadMember"
             },
+            "nullable": true
+          },
+          "grossLosses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrossLoss"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LossLoadMetric": {
+        "type": "object",
+        "properties": {
+          "lossLoadMetricID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadMetricName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameterDataTypeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadMetricValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "lossLoad": {
+            "$ref": "#/components/schemas/LossLoad"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LossLoadMetricRequest": {
+        "type": "object",
+        "properties": {
+          "lossLoadMetricID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadMetricName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameterDataTypeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadMetricValue": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -3461,6 +4861,107 @@
         },
         "additionalProperties": false
       },
+      "LossSetRequest": {
+        "type": "object",
+        "properties": {
+          "lossSetID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventSetID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossSetName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lossSetDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "asAtDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "versionNum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isArchived": {
+            "type": "boolean"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "isApproved": {
+            "type": "boolean"
+          },
+          "approvedComments": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrganisationClass": {
+        "type": "object",
+        "properties": {
+          "organisationClassID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organisationClassTypeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organisationClassName": {
+            "type": "string",
+            "nullable": true
+          },
+          "organisationClassCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "grossLoss": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrossLoss"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParameterDataType": {
+        "type": "object",
+        "properties": {
+          "parameterDataTypeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parameterDataTypeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "grossLossParameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrossLossParameter"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -3559,6 +5060,36 @@
           }
         },
         "additionalProperties": false
+      },
+      "UploadGrossLossFileRequest": {
+        "required": [
+          "lossLoadRequest"
+        ],
+        "type": "object",
+        "properties": {
+          "lossSetID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lossLoadRequest": {
+            "$ref": "#/components/schemas/LossLoadRequest"
+          },
+          "lossLoadMetricRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LossLoadMetricRequest"
+            },
+            "nullable": true
+          },
+          "grossLossRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrossLossRequest"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     },
     "securitySchemes": {
@@ -3566,7 +5097,7 @@
         "type": "oauth2",
         "flows": {
           "implicit": {
-            "authorizationUrl": "https://login.microsoftonline.com/dfbcc178-bccf-4595-8f8e-3a3175df90b7/oauth2/v2.0/authorize",
+            "authorizationUrl":"https://login.microsoftonline.com/dfbcc178-bccf-4595-8f8e-3a3175df90b7/oauth2/v2.0/authorize",
             "tokenUrl": "https://login.microsoftonline.com/dfbcc178-bccf-4595-8f8e-3a3175df90b7/v2.0/token",
             "scopes": {
               "api://c30eebb1-b940-4cc8-bd6d-37ad84541780/App.Access": "App.Access"

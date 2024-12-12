@@ -34,9 +34,9 @@
             <div nz-col [nzSpan]="12">
               <div nz-row [nzGutter]="16" style="margin-bottom: 2rem;">
                 <div nz-col [nzSpan]="12">
-                  <nz-upload nzAction="#" nzListType="text" (nzChange)="handleFileInput($event)">
+                  <nz-upload nzAction="#" nzListType="text" [nzMultiple]="false" (nzChange)="handleFileInput($event)">
                     <button nz-button>
-                      <i nz-icon nzType="upload"></i> Choose files to upload
+                      <i nz-icon nzType="upload"></i> Choose file to upload
                     </button>
                   </nz-upload>
                 </div>
@@ -94,7 +94,7 @@
         </form>
       </nz-tab>
 
-      <nz-tab nzTitle="User Defined Fields">
+      <!-- <nz-tab nzTitle="User Defined Fields">
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="24">
             <h3>User Defined Fields</h3>
@@ -118,41 +118,39 @@
             </div>
           </div>
         </div>
-      </nz-tab>
+      </nz-tab> -->
 
       <nz-tab nzTitle="Preview">
         <div nz-row [nzGutter]="16">
           <div nz-col [nzSpan]="24">
             <h3>Preview Screen</h3>
-            <nz-table style="min-height: 600px;" #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="listOfData"
-              [nzScroll]="{ y: '600px' }" [nzShowPagination]="false" [nzShowSizeChanger]="true" [nzLoading]="!listOfData.length">
+            <nz-table
+              *ngIf="listOfData.length"
+              style="min-height: 600px;"
+              #basicTable
+              [nzBordered]="true"
+              [nzSize]="'middle'"
+              [nzData]="listOfData"
+              [nzScroll]="{ y: '600px' }"
+              [nzShowPagination]="false"
+              [nzLoading]="isValidating"
+            >
               <thead>
                 <tr>
-                  <th nzWidth="100px">RowNum</th>
-                  <th nzWidth="200px">EventName</th>
-                  <th nzWidth="200px">LossClassName</th>
-                  <th nzWidth="100px">YOA</th>
-                  <th nzWidth="150px">YearLoss Apportionment</th>
-                  <th nzWidth="100px">Currency</th>
-                  <th nzWidth="150px">GrossLoss</th>
-                  <th nzWidth="150px">ReinstatementRoL</th>
-                  <th nzWidth="200px">Aggregate</th>
+                  <ng-container *ngFor="let header of listOfData[0]">
+                    <th>{{ header }}</th>
+                  </ng-container>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let data of basicTable.data">
-                  <td>{{ data.rowNum }}</td>
-                  <td>{{ data.eventName }}</td>
-                  <td>{{ data.lossClassName }}</td>
-                  <td>{{ data.yoa }}</td>
-                  <td>{{ data.yearLossApportionment }}</td>
-                  <td>{{ data.currency }}</td>
-                  <td>{{ data.grossLoss }}</td>
-                  <td>{{ data.reinstatementRoL }}</td>
-                  <td>{{ data.aggregate }}</td>
+                <tr *ngFor="let row of listOfData.slice(1)">
+                  <ng-container *ngFor="let cell of row">
+                    <td>{{ cell }}</td>
+                  </ng-container>
                 </tr>
               </tbody>
             </nz-table>
+            <p *ngIf="!listOfData.length">No data to display. Please validate and parse the file.</p>
           </div>
         </div>
       </nz-tab>
