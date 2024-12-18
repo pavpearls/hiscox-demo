@@ -15,7 +15,13 @@ export const CATALOG_ADD_EVENT_CONFIG: AddEventConfig = {
 export const CATALOG_EVENTS_TABS = [
   { key: 'rds', label: 'RDS', id: 1 },
   { key: 'event', label: 'Post Event', id:2 },
-  { key: 'event response', label: 'Event Response', id: 3 },
+  { key: 'response scenario', label: 'Response Scenario', id: 3 },
+];
+
+export const EVENT_SET_TABS = [
+  { key: 'rds', label: 'RDS', id: 1 },
+  { key: 'event', label: 'Post Event', id:2 },
+  { key: 'response_scenario', label: 'Response Scenario', id: 3 },
 ];
 
 export const CATALOG_ADD_EVENT_PANEL = [

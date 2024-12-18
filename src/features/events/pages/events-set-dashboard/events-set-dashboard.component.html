@@ -10,7 +10,8 @@
   </div>
 
   <div class="event-set-data">
-    <app-event-set-table [eventSetData]="eventSetData" (new)="handleOnNewEvent($event)"></app-event-set-table>
+    <app-event-set-table [eventSetData]="eventSetData" (new)="handleOnNewEvent($event)"
+     (delete)="handleOnDeleteEventSet($event)"></app-event-set-table>
   </div>
 </div>
 

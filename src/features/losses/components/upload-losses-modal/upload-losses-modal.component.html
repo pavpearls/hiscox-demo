@@ -3,7 +3,7 @@
   <ng-container *nzModalContent>
     <nz-tabset [nzAnimated]="true">
       <nz-tab nzTitle="Upload">
-        <form [formGroup]="uploadForm" (ngSubmit)="handleOk()" nz-form>
+        <form [formGroup]="uploadForm" nz-form>
           <div class="top-panel">
             <div nz-row [nzGutter]="16" class="top-panel-row">
              
@@ -34,7 +34,7 @@
             <div nz-col [nzSpan]="12">
               <div nz-row [nzGutter]="16" style="margin-bottom: 2rem;">
                 <div nz-col [nzSpan]="12">
-                  <nz-upload nzAction="#" nzListType="text" [nzMultiple]="false" (nzChange)="handleFileInput($event)">
+                  <nz-upload nzAction="#" nzListType="text" [nzShowUploadList]="true" [(nzFileList)]="fileList" [nzCustomRequest]="customRequest" [nzBeforeUpload]="beforeUpload" [nzMultiple]="false" (nzChange)="handleFileInput($event)">
                     <button nz-button>
                       <i nz-icon nzType="upload"></i> Choose file to upload
                     </button>
@@ -43,7 +43,7 @@
               </div>
 
               <nz-form-item>
-                <nz-form-label [nzFor]="'dataProducer'" nzRequired>Data Producer</nz-form-label>
+                <nz-form-label nzRequired>Data Producer</nz-form-label>
                 <nz-form-control>
                   <nz-select id="dataProducer" formControlName="dataProducer" placeholder="Select Data Producer">
                     <nz-option nzValue="Exposure Management" nzLabel="Exposure Management"></nz-option>

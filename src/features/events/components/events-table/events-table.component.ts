@@ -1,9 +1,25 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AddEventConfig } from '@events//interfaces/events.interfaces';
-import { EventsFacade } from '@events//store/events.facade';
 import { Event } from '@shared/api-services/models';
-import { ColDef, GridApi, GridReadyEvent, RowNode, RowSelectedEvent, RowSelectionOptions } from 'ag-grid-community';
+import {
+  ColDef,
+  GridApi,
+  GridReadyEvent,
+  ITextFilterParams,
+  RowNode,
+  RowSelectedEvent,
+  RowSelectionOptions,
+} from 'ag-grid-community';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
@@ -18,7 +34,9 @@ export class EventsTableComponent implements OnInit, OnChanges {
   @Input() set successValue(value: Event[] | undefined) {
     this._successValue = value;
     if (this._successValue) {
-      this.rowData = this._successValue.map(event => this.transformEventDataItem(event));
+      this.rowData = this._successValue.map((event) =>
+        this.transformEventDataItem(event)
+      );
     }
   }
 
@@ -28,7 +46,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
   @Input() enableRowSelection = true;
   @Input() enableEditMode = true;
-  @Input() isMultipleAddMode = false; 
+  @Input() isMultipleAddMode = false;
 
   @Output() edit = new EventEmitter<Event>();
   @Output() copy = new EventEmitter<any[]>();
@@ -38,7 +56,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
   columnDefs: ColDef[] = [];
   rowData: any[] = [];
   editCache: { [key: number]: { edit: boolean; form: FormGroup } } = {};
-  public editType: "fullRow" = "fullRow";
+  public editType: 'fullRow' = 'fullRow';
   private editingRowData: any | null = null;
   private originalRowData: any | null = null;
   private gridApi!: GridApi;
@@ -46,62 +64,110 @@ export class EventsTableComponent implements OnInit, OnChanges {
   public rowSelection: RowSelectionOptions | 'single' | 'multiple' = {
     mode: 'singleRow',
   };
-
+  paginationPageSizeSelector = [10, 25, 50, 100];
   public isEditing = false;
-
+  paginationPageSize = 25;
   constructor(
     private fb: FormBuilder,
     private modal: NzModalService,
-    private notification: NzNotificationService,
-  ) { }
+    private notification: NzNotificationService
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['addEventConfig']) {
       this.columnDefs = [...this.generateColumns(this.addEventConfig)];
-      
+
       this.isMultipleAddMode
-      ? this.rowSelection = {
-        mode: 'multiRow'
-      }
-      : this.rowSelection = {
-        mode: 'singleRow'
-      }
+        ? (this.rowSelection = {
+            mode: 'multiRow',
+          })
+        : (this.rowSelection = {
+            mode: 'singleRow',
+          });
     }
   }
 
   private generateColumns(addEventConfig: AddEventConfig): ColDef[] {
     return [
-      { field: 'eventID', headerName: 'Event ID', sortable: true, filter: 'agNumberColumnFilter' },
-      { field: 'eventTypeName', headerName: 'Event Type', sortable: true, filter: 'agTextColumnFilter' },
-      { field: 'eventNameShort', headerName: 'Event Name', sortable: true, filter: 'agTextColumnFilter', editable: true },
-      { 
-        field: 'regionPerilName', 
-        headerName: 'Region-Peril', 
-        sortable: true, 
-        filter: 'agTextColumnFilter', 
+      {
+        field: 'eventID',
+        headerName: 'Event ID',
+        sortable: true,
+        filter: 'agNumberColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
+      {
+        field: 'eventTypeName',
+        headerName: 'Event Type',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
+      {
+        field: 'eventNameShort',
+        cellStyle: { fontWeight: 'bold' },
+        headerName: 'Event Name',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        editable: true,
+      },
+      {
+        field: 'regionPerilName',
+        headerName: 'Region-Peril',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
         editable: true,
         cellEditor: 'agSelectCellEditor',
         cellRenderer: (params: any) => {
-          return params?.data?.regionPerilName ?? null
+          return params?.data?.regionPerilName ?? null;
         },
-        cellEditorParams: { values: this.addEventConfig.regionPerilOptions.map((option: any) => option.displayValue)},
+        cellEditorParams: {
+          values: this.addEventConfig.regionPerilOptions.map(
+            (option: any) => option.displayValue
+          ),
+        },
       },
-      { field: 'userName', headerName: 'Created By', sortable: true, filter: 'agTextColumnFilter' },
+      {
+        field: 'userName',
+        headerName: 'Created By',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
       {
         field: 'createDate',
         headerName: 'Created Date',
         sortable: true,
         filter: 'agDateColumnFilter',
-        valueFormatter: (params: any) => params.value || '',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        valueFormatter: (params: any) => {
+          return params?.data?.createDate || '';
+        },
       },
       {
         field: 'industryLossEstimate',
         headerName: 'Industry Loss Estimate',
         sortable: true,
         filter: 'agNumberColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
         editable: true,
         cellEditor: 'agSelectCellEditor',
         cellRenderer: (params: any) => {
@@ -127,16 +193,27 @@ export class EventsTableComponent implements OnInit, OnChanges {
         headerName: 'Hiscox Loss Impact Rating',
         sortable: true,
         filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
         editable: true,
         cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {  values: this.addEventConfig.hiscoxImpactOptions.map((option: any) => option.displayValue), },
+        cellEditorParams: {
+          values: this.addEventConfig.hiscoxImpactOptions.map(
+            (option: any) => option.displayValue
+          ),
+        },
       },
       {
         field: 'restricted',
         headerName: 'Restricted',
-        filter: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['clear', 'apply'],
+        } as ITextFilterParams,
+
         cellRenderer: (params: any) => {
-          return params?.data?.isRestrictedAccess === true ? 'Yes' : 'No'
+          return params?.data?.isRestrictedAccess === true ? 'Yes' : 'No';
         },
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: ['Yes', 'No'] },
@@ -146,7 +223,11 @@ export class EventsTableComponent implements OnInit, OnChanges {
         field: 'archived',
         headerName: 'Archived',
         filter: true,
-        cellRenderer: (params: any) => (params?.data?.isArchived === true ? 'Yes' : 'No'),
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        cellRenderer: (params: any) =>
+          params?.data?.isArchived === true ? 'Yes' : 'No',
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: ['Yes', 'No'] },
         editable: true,
@@ -161,7 +242,9 @@ export class EventsTableComponent implements OnInit, OnChanges {
       eventNameShort: event?.eventNameShort || '',
       regionPerilName: event?.regionPeril?.regionPerilName || '',
       userName: event?.createdBy || '',
-      createDate: event?.createDate ? new Date(event?.createDate).toLocaleDateString('en-GB') : '',
+      createDate: event?.createDate
+        ? new Date(event?.createDate).toLocaleDateString('en-GB')
+        : '',
       industryLossEstimate: event?.industryLossEstimate || '',
       hiscoxLossImpactRating: event?.hiscoxLossImpactRating || '',
       isRestrictedAccess: event?.isRestrictedAccess || false,
@@ -179,7 +262,10 @@ export class EventsTableComponent implements OnInit, OnChanges {
     this.editingRowData = null;
     this.originalRowData = null;
     this.gridApi.refreshCells();
-    this.notification.success('Success', `Changes to Event ID ${eventID} saved.`);
+    this.notification.success(
+      'Success',
+      `Changes to Event ID ${eventID} saved.`
+    );
   }
 
   onCancelClick(eventID: number): void {
@@ -195,11 +281,15 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
     this.editingRowData = null;
     this.originalRowData = null;
-    this.notification.info('Cancelled', `Changes to Event ID ${eventID} reverted.`);
+    this.notification.info(
+      'Cancelled',
+      `Changes to Event ID ${eventID} reverted.`
+    );
   }
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
+    this.gridApi.autoSizeAllColumns();
   }
 
   getRowId = (params: any) => params.data.eventID.toString();
@@ -248,11 +338,13 @@ export class EventsTableComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.modal.confirm({
-      nzTitle: 'Are you sure you want to delete the selected rows?',
-      nzContent: `${selectedRows.length} rows will be deleted.`,
-      nzOnOk: () => this.delete.emit(selectedRows),
-    });
+    this.delete.emit(selectedRows);
+
+    // this.modal.confirm({
+    //   nzTitle: 'Are you sure you want to delete the selected rows?',
+    //   nzContent: `${selectedRows.length} rows will be deleted.`,
+    //   nzOnOk: () => this.delete.emit(selectedRows),
+    // });
   }
 
   onEditClick(): void {
@@ -269,12 +361,12 @@ export class EventsTableComponent implements OnInit, OnChanges {
       }
 
       if (selectedNodes.length > 1) {
-            this.modal.warning({
-              nzTitle: 'Too Many Rows Selected',
-              nzContent: 'Please select a single row you wish to edit.',
-            });
-            return;
-          }
+        this.modal.warning({
+          nzTitle: 'Too Many Rows Selected',
+          nzContent: 'Please select a single row you wish to edit.',
+        });
+        return;
+      }
 
       const selectedNode = selectedNodes[0];
       this.startEditingRow(selectedNode as any);
@@ -286,7 +378,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
     if (this.gridApi) {
       this.gridApi.startEditingCell({
         rowIndex: rowNode.rowIndex!,
-        colKey: this.columnDefs.find(col => col.editable)?.field as any,
+        colKey: this.columnDefs.find((col) => col.editable)?.field as any,
       });
     }
   }
@@ -296,7 +388,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
       this.gridApi.stopEditing();
       const selectedRows = this.gridApi.getSelectedRows();
       if (selectedRows.length > 0) {
-        this.edit.emit(selectedRows[0])
+        this.edit.emit(selectedRows[0]);
       }
     }
   }
@@ -306,7 +398,6 @@ export class EventsTableComponent implements OnInit, OnChanges {
     if (this.gridApi) {
       this.gridApi.stopEditing(true);
     }
-
   }
 
   stopEditing(): void {
@@ -318,5 +409,12 @@ export class EventsTableComponent implements OnInit, OnChanges {
   onRowSelected(event: RowSelectedEvent): void {
     const selectedRows = this.gridApi.getSelectedRows();
     this.selectedRowsChanged.emit(selectedRows);
+  }
+
+  onCellDoubleClicked(event: any): void {
+    const node = event.api.getDisplayedRowAtIndex(event.rowIndex);
+    node.setSelected(true);
+    this.startEditingRow(node as any);
+    this.isEditing = true;
   }
 }

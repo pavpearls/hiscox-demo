@@ -29,7 +29,7 @@ export class LossSetsDashboardComponent implements OnInit {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    this.gridApi.sizeColumnsToFit();
+    this.gridApi.autoSizeAllColumns();
   }
 
   private initializeColumns(): void {

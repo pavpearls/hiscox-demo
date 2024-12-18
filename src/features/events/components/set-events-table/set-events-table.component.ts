@@ -21,7 +21,7 @@ interface ChildrenItemData {
   status: string;
 }
 
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
 
 
 
@@ -31,7 +31,7 @@ import { ColDef } from 'ag-grid-community';
 })
 export class NestedTableComponent {
   rowData$: Observable<Array<EventSet>>;
-
+  private gridApi!: GridApi;
   columnDefs: ColDef[] = [
     {
       field: 'eventSetName',
@@ -73,11 +73,9 @@ export class NestedTableComponent {
   };
 
   constructor() {
-    // Replace this with your API call
     this.rowData$ = of(this.mockEventSets());
   }
 
-  // Sample mock data to simulate API response
   mockEventSets(): EventSet[] {
     return [
       {
@@ -103,8 +101,12 @@ export class NestedTableComponent {
     ];
   }
 
-  // Format dates in the main grid
   dateFormatter(params: any) {
     return params.value ? new Date(params.value).toLocaleDateString() : '';
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+    this.gridApi.autoSizeAllColumns(); 
   }
 }

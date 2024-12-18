@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CATALOG_ADD_EVENT_CONFIG, CATALOG_EVENTS_TABS } from '@events//config/events-catalog-dashboard-page.config';
+import { CATALOG_ADD_EVENT_CONFIG, CATALOG_EVENTS_TABS, EVENT_SET_TABS } from '@events//config/events-catalog-dashboard-page.config';
 import { EventsCatalogService } from '@events//services/events-catalog.service';
 import { EventsFacade } from '@events//store/events.facade';
 import { EventSet, EventSetAndEventsRequest, EventType, RegionPeril, Event } from '@shared/api-services/models';
@@ -18,10 +18,9 @@ export class EventsSetDashboardComponent implements OnInit {
   
   eventSetData : any[] = [];
   eventSetRawData : any[] = [];
-  tabs = CATALOG_EVENTS_TABS;
+  tabs = EVENT_SET_TABS;
   isComponentAlive = true;
   selectedTabId = 1 // RDS;
-  addEventConfig = CATALOG_ADD_EVENT_CONFIG;
   public isAddEventSetModalVisible = false;
 
   constructor(private eventsFacade: EventsFacade) {  }
@@ -34,12 +33,16 @@ export class EventsSetDashboardComponent implements OnInit {
       this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
     })
 
+    this.eventsFacade.state.eventSets.deleteEventSet$.pipe(filterSuccess()).subscribe(() => {
+      this.populateEventSetData();
+    });
+
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
    
   }
 
   filterBySelectedTab(dataList: any[]) : any[] {
-    return dataList ? dataList.filter(d=> d.eventTypeID === this.selectedTabId) : [];
+    return dataList ? dataList.filter(d=> d.eventSetTypeID === this.selectedTabId) : [];
   }
 
   populateEventSetData() {
@@ -58,6 +61,12 @@ export class EventsSetDashboardComponent implements OnInit {
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
   }
 
+  handleOnDeleteEventSet(eventSets: EventSet[]): void {
+    const eventSetID = eventSets[0].eventSetID as number;
+    this.eventsFacade.actions.eventSets.deleteEventSet(eventSetID);
+    this.populateEventSetData();
+  }
+
   handleOnNewEvent($event: any): void {
     this.showAddEventSetModal();
   }
@@ -67,7 +76,7 @@ export class EventsSetDashboardComponent implements OnInit {
   }
 
   onModalOk($event: any): void {
-    const { eventSetName, eventSetDescription, events }: { eventSetName: string; eventSetDescription: string; events: Event[] } = $event;
+    const { eventSetName, eventSetDescription, events, eventType }: { eventSetName: string; eventSetDescription: string; events: Event[], eventType: number } = $event;
     this.isAddEventSetModalVisible = false;
   
     this.eventsFacade.state.events.eventsByEventType$
@@ -82,7 +91,7 @@ export class EventsSetDashboardComponent implements OnInit {
   
         const payload: EventSetAndEventsRequest = {
           eventSetID: undefined,
-          eventSetTypeID: this.selectedTabId,
+          eventSetTypeID: eventType,
           eventSetName,
           eventSetDescription,
           isArchived: false,

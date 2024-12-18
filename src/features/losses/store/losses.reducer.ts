@@ -9,8 +9,6 @@ import { LossActions } from './losses.actions';
 import { LossSetRequest } from '@shared/api-services/lossSetRequest';
 import { LossSet } from '@shared/api-services/lossSet';
 
-
-
 export interface LossState {
     uploadFile: RemoteData<any, HttpErrorResponse>;
     validateFile: RemoteData<any, HttpErrorResponse>;

@@ -47,6 +47,7 @@ export class TestApiComponent implements OnInit {
     const payload: Event = {
         eventTypeID: 2,
         regionPerilID: 9,
+        createdBy: null,
         eventNameShort: 'Pav Event',
         eventNameLong: 'Pav Event Long Description',
         eventDate: new Date(),

@@ -22,8 +22,7 @@ export class LossesDashboardComponent implements OnInit {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    this.gridApi.sizeColumnsToFit();
-    console.log('Grid is ready:', params);
+    this.gridApi.autoSizeAllColumns();
   }
 
   private initializeColumns(): void {
@@ -97,8 +96,6 @@ export class LossesDashboardComponent implements OnInit {
         eventCategory: category.eventCategory,
       }))
     );
-
-    console.log('Row Data:', this.rowData);
   }
 
   handleModalOk($event: any) {

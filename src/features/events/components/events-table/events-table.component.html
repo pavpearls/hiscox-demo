@@ -25,10 +25,13 @@
     [columnDefs]="columnDefs"
     [rowSelection]="rowSelection"
     [pagination]="true"
+    [paginationPageSize]="paginationPageSize"
+    [paginationPageSizeSelector]="paginationPageSizeSelector"
     [domLayout]="'autoHeight'"
     [editType]="editType"
     [getRowId]="getRowId"
     (gridReady)="onGridReady($event)"
+    (cellDoubleClicked)="onCellDoubleClicked($event)"
     (rowSelected)="onRowSelected($event)"
   >
   </ag-grid-angular>

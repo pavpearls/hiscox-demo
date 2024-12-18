@@ -96,6 +96,7 @@ export class AddNewLossSetModalComponent {
 
   onGridReady(params: GridReadyEvent) {
     this.gridColumnApi = params.api;
+    this.gridColumnApi.autoSizeAllColumns();
   }
 
   onFirstDataRendered(params: FirstDataRenderedEvent) {

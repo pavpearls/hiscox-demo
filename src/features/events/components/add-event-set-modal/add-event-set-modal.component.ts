@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EventsFacade } from '@events//store/events.facade';
-import { RemoteData, filterSuccess } from 'ngx-remotedata';
-import { combineLatest, Observable } from 'rxjs';
-import { EventType, RegionPeril, Event } from '@shared/api-services/models';
 import { CATALOG_ADD_EVENT_CONFIG } from '@events//config/events-catalog-dashboard-page.config';
 import { EventsCatalogService } from '@events//services/events-catalog.service';
+import { EventsFacade } from '@events//store/events.facade';
+import { Event, EventType } from '@shared/api-services/models';
+import { filterSuccess, RemoteData } from 'ngx-remotedata';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'add-event-set-modal',
@@ -20,10 +20,12 @@ export class AddEventSetModalComponent {
 
   eventSetForm: FormGroup;
   modalWidth: string | number = '80%';
-
+  eventsTypeList: any[];
   selectedRows: any[] = [];
-  eventsTypeList$: Observable<RemoteData<EventType[], HttpErrorResponse>> = this.eventsFacade.state.events.eventsTypeList$;
-  eventList$: Observable<RemoteData<Event[], HttpErrorResponse>> = this.eventsFacade.state.events.eventsByEventType$.pipe(filterSuccess());
+  eventsTypeList$: Observable<RemoteData<EventType[], HttpErrorResponse>> =
+    this.eventsFacade.state.events.eventsTypeList$;
+  eventList$: Observable<RemoteData<Event[], HttpErrorResponse>> =
+    this.eventsFacade.state.events.eventsByEventType$.pipe(filterSuccess());
   addEventConfig = CATALOG_ADD_EVENT_CONFIG;
   selectedTab$: Observable<string> = this.eventsFacade.state.events.activeTab$;
 
@@ -35,30 +37,43 @@ export class AddEventSetModalComponent {
     this.eventsFacade.actions.events.loadEventTypeList();
     this.eventSetForm = this.fb.group({
       eventSetName: ['', [Validators.required, Validators.maxLength(200)]],
-      eventSetDescription: ['', [Validators.required, Validators.maxLength(2000)]],
+      eventSetDescription: [''],
+      eventType: [null, [Validators.required, Validators.maxLength(200)]],
       events: [[], [Validators.required, this.validateSelectedRows()]],
     });
 
-    combineLatest([this.eventsTypeList$.pipe(filterSuccess()), this.selectedTab$]).subscribe(
-      ([eventsTypeList, selectedTab]) => {
-        this.addEventConfig = {
-          ...this.eventsCatalogService.prepareAddEventConfig(
-            this.addEventConfig,
-            [],
-            [],
-            [],
-            eventsTypeList.value,
-            selectedTab
-          ),
-        };
+    combineLatest([
+      this.eventsTypeList$.pipe(filterSuccess()),
+      this.selectedTab$,
+    ]).subscribe(([eventsTypeList, selectedTab]) => {
+      this.eventsTypeList = eventsTypeList.value;
+      this.addEventConfig = {
+        ...this.eventsCatalogService.prepareAddEventConfig(
+          this.addEventConfig,
+          [],
+          [],
+          [],
+          eventsTypeList.value,
+          selectedTab
+        ),
+      };
 
-        if (this.addEventConfig.eventTypeId) {
+      const selectedEventTypeId = this.eventSetForm.get('eventType')?.value;
+      if (selectedEventTypeId) {
+        this.eventsFacade.actions.events.loadEventsByEventType({
+          eventTypeId: selectedEventTypeId,
+        });
+      }
+    });
+    this.eventSetForm
+      .get('eventType')
+      ?.valueChanges.subscribe((eventTypeId) => {
+        if (eventTypeId) {
           this.eventsFacade.actions.events.loadEventsByEventType({
-            eventTypeId: this.addEventConfig.eventTypeId,
+            eventTypeId: eventTypeId,
           });
         }
-      }
-    );
+      });
   }
 
   handleOk(): void {

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AppLogService, EventService, EventSetMemberService, EventSetService, ParameterService } from "../generated";
+import { AppLogService, EventService, EventSetMemberService, EventSetService, FileUploadService, GrossLossService, LossSetService, ParameterService } from "../generated";
 import { environment } from "@env/environment";
 
 @Injectable({
@@ -14,6 +14,9 @@ export class NdsApiServiceWrapper {
         public parameterService: ParameterService,
         public appLogService: AppLogService,
         public eventSetMemberService: EventSetMemberService,
+        public fileUploadService: FileUploadService,
+        public grossLossService: GrossLossService,
+        public lossSetService: LossSetService
 
     ) {
         this.setServicesBaseUrl();
@@ -25,5 +28,8 @@ export class NdsApiServiceWrapper {
         this.parameterService.configuration.basePath = this.baseUrl;
         this.appLogService.configuration.basePath = this.baseUrl;
         this.eventSetMemberService.configuration.basePath = this.baseUrl;
+        this.fileUploadService.configuration.basePath = this.baseUrl;
+        this.grossLossService.configuration.basePath = this.baseUrl;
+        this.lossSetService.configuration.basePath = this.baseUrl;
     }
 }
