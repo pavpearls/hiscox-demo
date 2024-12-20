@@ -1118,19 +1118,19 @@
               "text/plain": {
                 "schema": {
                   "type": "array",
-                  "items": {}
+                  "items": { }
                 }
               },
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {}
+                  "items": { }
                 }
               },
               "text/json": {
                 "schema": {
                   "type": "array",
-                  "items": {}
+                  "items": { }
                 }
               }
             }
@@ -2761,17 +2761,17 @@
         }
       }
     },
-    "/api/LossLoad/UploadGrossLossFile": {
+    "/api/LossLoad/UploadFileRequest": {
       "post": {
         "tags": [
           "LossLoad"
         ],
-        "operationId": "UploadGrossLossFile",
+        "operationId": "UploadFileRequest",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                "$ref": "#/components/schemas/UploadFileRequest"
               }
             }
           }
@@ -2782,17 +2782,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                  "type": "integer",
+                  "format": "int32"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                  "type": "integer",
+                  "format": "int32"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadGrossLossFileRequest"
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -2816,6 +2819,45 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/LossLoad/UploadFile": {
+      "post": {
+        "tags": [
+          "LossLoad"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "LossLoadID": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "LossLoadID": {
+                  "style": "form"
+                },
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -3812,6 +3854,65 @@
           }
         }
       }
+    },
+    "/api/Parameter/DataSourceTypes": {
+      "get": {
+        "tags": [
+          "Parameter"
+        ],
+        "operationId": "GetDataSourceTypesAsync",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataSourceType"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataSourceType"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataSourceType"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4028,7 +4129,8 @@
           },
           "createDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "isLossPick": {
             "type": "boolean"
@@ -4127,7 +4229,8 @@
           },
           "createDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "isLossPick": {
             "type": "boolean"
@@ -4446,27 +4549,38 @@
             "type": "integer",
             "format": "int32"
           },
+          "rowNum": {
+            "type": "integer",
+            "format": "int32"
+          },
           "aggregateLossAmount": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "reinstatementROL": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yearOfAccount": {
-            "type": "string",
-            "format": "date-time"
+            "type": "integer",
+            "format": "int32"
           },
           "yearOfAccountLossSplit": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "createdBy": {
             "type": "string",
             "nullable": true
           },
           "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "optionalData": {
             "type": "string",
             "nullable": true
           },
@@ -4559,27 +4673,38 @@
             "type": "integer",
             "format": "int32"
           },
+          "rowNum": {
+            "type": "integer",
+            "format": "int32"
+          },
           "aggregateLossAmount": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "reinstatementROL": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yearOfAccount": {
-            "type": "string",
-            "format": "date-time"
+            "type": "integer",
+            "format": "int32"
           },
           "yearOfAccountLossSplit": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "createdBy": {
             "type": "string",
             "nullable": true
           },
           "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "optionalData": {
             "type": "string",
             "nullable": true
           }
@@ -4633,6 +4758,10 @@
           },
           "modifiedBy": {
             "type": "string",
+            "nullable": true
+          },
+          "includeOptionalFields": {
+            "type": "boolean",
             "nullable": true
           },
           "eventSet": {
@@ -4763,6 +4892,10 @@
           },
           "modifiedBy": {
             "type": "string",
+            "nullable": true
+          },
+          "includeOptionalFields": {
+            "type": "boolean",
             "nullable": true
           }
         },
@@ -4987,7 +5120,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "RegionPeril": {
         "type": "object",
@@ -5061,10 +5194,7 @@
         },
         "additionalProperties": false
       },
-      "UploadGrossLossFileRequest": {
-        "required": [
-          "lossLoadRequest"
-        ],
+      "UploadFileRequest": {
         "type": "object",
         "properties": {
           "lossSetID": {
@@ -5073,20 +5203,6 @@
           },
           "lossLoadRequest": {
             "$ref": "#/components/schemas/LossLoadRequest"
-          },
-          "lossLoadMetricRequests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LossLoadMetricRequest"
-            },
-            "nullable": true
-          },
-          "grossLossRequests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrossLossRequest"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -5097,7 +5213,7 @@
         "type": "oauth2",
         "flows": {
           "implicit": {
-            "authorizationUrl":"https://login.microsoftonline.com/dfbcc178-bccf-4595-8f8e-3a3175df90b7/oauth2/v2.0/authorize",
+            "authorizationUrl": "https://login.microsoftonline.com/dfbcc178-bccf-4595-8f8e-3a3175df90b7/oauth2/v2.0/authorize",
             "tokenUrl": "https://login.microsoftonline.com/dfbcc178-bccf-4595-8f8e-3a3175df90b7/v2.0/token",
             "scopes": {
               "api://c30eebb1-b940-4cc8-bd6d-37ad84541780/App.Access": "App.Access"
@@ -5109,7 +5225,7 @@
   },
   "security": [
     {
-      "oauth2": []
+      "oauth2": [ ]
     }
   ]
 }
