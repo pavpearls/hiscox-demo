@@ -27,6 +27,7 @@ export interface LossLoad {
     isValid?: boolean;
     createdBy?: string | null;
     modifiedBy?: string | null;
+    includeOptionalFields?: boolean | null;
     eventSet?: EventSet;
     dataSourceType?: DataSourceType;
     dataProducer?: DataProducer;

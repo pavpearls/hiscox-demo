@@ -51,6 +51,6 @@ model/problemDetails.ts
 model/regionPeril.ts
 model/regionPerilType.ts
 model/updateResult.ts
-model/uploadGrossLossFileRequest.ts
+model/uploadFileRequest.ts
 param.ts
 variables.ts

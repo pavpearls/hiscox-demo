@@ -22,5 +22,6 @@ export interface LossLoadRequest {
     isValid?: boolean;
     createdBy?: string | null;
     modifiedBy?: string | null;
+    includeOptionalFields?: boolean | null;
 }
 

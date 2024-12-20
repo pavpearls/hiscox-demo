@@ -1,5 +1,5 @@
 /**
- * NDSBackend.Api
+ * NDS Api
  *
  * 
  *
@@ -7,11 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EventSet } from './eventSet';
+import { LossLoadRequest } from './lossLoadRequest';
 
 
-export interface EventSetPagedResult { 
-    totalCount?: number;
-    pageOfData?: Array<EventSet> | null;
+export interface UploadFileRequest { 
+    lossSetID?: number;
+    lossLoadRequest?: LossLoadRequest;
 }
 

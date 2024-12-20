@@ -16,11 +16,13 @@ export interface GrossLossRequest {
     organisationClassID?: number;
     eventID?: number;
     grossLossAmount?: number;
-    aggregateLossAmount?: number;
-    reinstatementROL?: number;
-    yearOfAccount?: Date;
-    yearOfAccountLossSplit?: number;
+    rowNum?: number;
+    aggregateLossAmount?: number | null;
+    reinstatementROL?: number | null;
+    yearOfAccount?: number;
+    yearOfAccountLossSplit?: number | null;
     createdBy?: string | null;
     modifiedBy?: string | null;
+    optionalData?: string | null;
 }
 

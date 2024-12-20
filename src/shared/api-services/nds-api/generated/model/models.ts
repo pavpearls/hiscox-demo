@@ -31,4 +31,4 @@ export * from './problemDetails';
 export * from './regionPeril';
 export * from './regionPerilType';
 export * from './updateResult';
-export * from './uploadGrossLossFileRequest';
+export * from './uploadFileRequest';

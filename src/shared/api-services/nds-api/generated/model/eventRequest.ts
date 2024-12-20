@@ -20,7 +20,7 @@ export interface EventRequest {
     hiscoxLossImpactRating?: string | null;
     createdBy?: string | null;
     modifiedBy?: string | null;
-    createDate?: Date;
+    createDate?: Date | null;
     isLossPick?: boolean;
     isRestrictedAccess?: boolean;
     isArchived?: boolean;
