@@ -59,9 +59,9 @@ export class EventsSetDashboardComponent implements OnInit {
   }
 
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
-    if (eventSets[0] && eventSets[0].lossLoads && eventSets[0].lossLoads.length > 0) {
-      this.notification.warning('Warning:', 'Cannot delete Event that has Gross Losses. Archive the Event to remove from the display.');
-    }
+    // if (eventSets[0] && eventSets[0].lossLoads && eventSets[0].lossLoads.length > 0) {
+    //   this.notification.warning('Warning:', 'Cannot delete Event that has Gross Losses. Archive the Event to remove from the display.');
+    // }
     const eventSetID = eventSets[0].eventSetID as number;
     this.eventsFacade.actions.eventSets.deleteEventSet(eventSetID);
     this.populateEventSetData();

@@ -1,0 +1,74 @@
+<nz-modal
+  [(nzVisible)]="showModal"
+  nzTitle="Edit Event Set"
+  [nzWidth]="modalWidth"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <form [formGroup]="eventSetForm" (ngSubmit)="handleOk()" nz-form>
+      <div nz-row [nzGutter]="16">
+        <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+          <nz-form-item>
+            <nz-form-label nzFor="eventSetName" nzRequired>Event Set Name</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="eventSetName" placeholder="Enter Event Set Name" />
+              <div *ngIf="eventSetForm.get('eventSetName')?.invalid && eventSetForm.get('eventSetName')?.touched" class="error">
+                <span *ngIf="eventSetForm.get('eventSetName')?.hasError('required')">Event Set Name is required.</span>
+                <span *ngIf="eventSetForm.get('eventSetName')?.hasError('maxlength')">Event Set Name cannot exceed 200 characters.</span>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+          <nz-form-item>
+            <nz-form-label nzFor="eventSetDescription">Event Set Description</nz-form-label>
+            <nz-form-control>
+              <textarea nz-input formControlName="eventSetDescription" rows="3" placeholder="Enter Event Set Description"></textarea>
+              <div *ngIf="eventSetForm.get('eventSetDescription')?.invalid && eventSetForm.get('eventSetDescription')?.touched" class="error">
+                <span *ngIf="eventSetForm.get('eventSetDescription')?.hasError('maxlength')">Event Set Description cannot exceed 2000 characters.</span>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-row [nzGutter]="16">
+        <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+          <nz-form-item>
+            <nz-form-label nzFor="eventType" nzRequired>Event Type</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="eventType" placeholder="Select Event Type">
+                <nz-option *ngFor="let eventType of eventsTypeList" [nzValue]="eventType?.eventTypeID" [nzLabel]="eventType?.eventTypeName"></nz-option>
+              </nz-select>
+              <div *ngIf="eventSetForm.get('eventType')?.invalid && eventSetForm.get('eventType')?.touched" class="error">
+                <span *ngIf="eventSetForm.get('eventType')?.hasError('required')">Event Type is required.</span>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+
+    <!-- Tabs for Available Events and Current Events -->
+    <nz-tabset>
+      <nz-tab nzTitle="Available Events">
+        <!-- This table shows all events from the selected event type that are not yet in the event set -->
+        <app-events-table
+          [addEventConfig]="addEventConfig"
+          [successValue]="eventList$ | async | successValue"
+          [isMultipleAddMode]="true"
+          (selectedRowsChanged)="handleAvailableEventsSelection($event)"
+        ></app-events-table>
+      </nz-tab>
+      <nz-tab nzTitle="Current Event Set Members">
+        <!-- This table shows the current events in the event set, allowing removal or editing -->
+        <app-current-event-set-table
+          [events]="currentEventSetEvents"
+          (eventsChanged)="handleCurrentEventsChange($event)"
+        ></app-current-event-set-table>
+      </nz-tab>
+    </nz-tabset>
+  </ng-container>
+</nz-modal>
