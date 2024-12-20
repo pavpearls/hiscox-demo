@@ -148,6 +148,8 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         field: 'simYear',
         headerName: 'Sim Year',
         sortable: true,
+        editable: true,
+        cellEditor: 'agTextCellEditor',
         cellStyle: () => {
           return { 'text-align': 'center' };
         },
@@ -156,6 +158,8 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         field: 'eventOrder',
         headerName: 'Order',
         sortable: true,
+        editable: true,
+        cellEditor: 'agTextCellEditor',
         cellStyle: () => {
           return { 'text-align': 'center' };
         },

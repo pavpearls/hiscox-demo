@@ -263,31 +263,6 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     const { file } = this.uploadForm.value;
 
     this.lossFacade.actions.fileUpload.validateFile(file);
-
-    this.lossFacade.state.fileUpload.validateFile$
-      .pipe(filterSuccess())
-      .subscribe(
-        (data) => {
-         const response = data.value;
-         this.fileValidationResults = [
-          { check: 'Xlsx File Type', result: response.fileTypeValid ? 'true': 'false' },
-          { check: 'Loss Worksheet Found', result: response.lossWorksheetFound ? 'true': 'false' },
-          { check: 'All Loss Fields Found', result: response.mandatoryFieldsValid ? 'true': 'false' },
-          { check: 'All Events Found', result: response.allEventsValid ? 'true': 'false' },
-          { check: 'All Loss Classes Found', result: response.allLossClassesValid ? 'true': 'false' },
-          { check: 'VALID FILE?', result: response.isValid ? 'true': 'false' },
-        ];
-        this.isFileValid = response.isValid;
-          this.notification.success('Validation Successful', 'File validation passed. Parsing the file now...');
-          this.parseFile(file);
-
-          this.isValidating = false;
-        },
-        () => {
-          this.notification.error('Validation Failed', 'File validation failed. Please check the file and try again.');
-          this.isValidating = false;
-        }
-      );
   }
 
   parseFile(file: File): void {

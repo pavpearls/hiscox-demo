@@ -5,6 +5,7 @@ import { CATALOG_ADD_EVENT_CONFIG, CATALOG_EVENTS_TABS, EVENT_SET_TABS } from '@
 import { EventsCatalogService } from '@events//services/events-catalog.service';
 import { EventsFacade } from '@events//store/events.facade';
 import { EventSet, EventSetAndEventsRequest, EventType, RegionPeril, Event } from '@shared/api-services/models';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { filterSuccess, RemoteData } from 'ngx-remotedata';
 import { combineLatest, Observable, take } from 'rxjs';
 
@@ -23,7 +24,7 @@ export class EventsSetDashboardComponent implements OnInit {
   selectedTabId = 1 // RDS;
   public isAddEventSetModalVisible = false;
 
-  constructor(private eventsFacade: EventsFacade) {  }
+  constructor(private eventsFacade: EventsFacade,  private notification: NzNotificationService) {  }
 
   ngOnInit(): void {
     this.populateEventSetData();
@@ -32,10 +33,6 @@ export class EventsSetDashboardComponent implements OnInit {
       this.eventSetRawData = data.value;
       this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
     })
-
-    this.eventsFacade.state.eventSets.deleteEventSet$.pipe(filterSuccess()).subscribe(() => {
-      this.populateEventSetData();
-    });
 
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
    
@@ -62,6 +59,9 @@ export class EventsSetDashboardComponent implements OnInit {
   }
 
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
+    if (eventSets[0] && eventSets[0].lossLoads && eventSets[0].lossLoads.length > 0) {
+      this.notification.warning('Warning:', 'Cannot delete Event that has Gross Losses. Archive the Event to remove from the display.');
+    }
     const eventSetID = eventSets[0].eventSetID as number;
     this.eventsFacade.actions.eventSets.deleteEventSet(eventSetID);
     this.populateEventSetData();
