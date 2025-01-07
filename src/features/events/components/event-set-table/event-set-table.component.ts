@@ -40,6 +40,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
   @Input() eventSetData: any[];
   @Output() new = new EventEmitter<Event>();
   @Output() delete = new EventEmitter<any[]>();
+  @Output() edit = new EventEmitter<any>();
 
   private gridApi!: GridApi;
   public columnDefs: ColDef[] = [];
@@ -268,10 +269,26 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.modal.confirm({
-       nzTitle: 'Are you sure you want to delete the selected row?',
-       nzContent: `${selectedRows[0].eventSetName} will be deleted.`,
-       nzOnOk: () => this.delete.emit(selectedRows),
-     });
+    this.delete.emit(selectedRows);
+
+    // this.modal.confirm({
+    //    nzTitle: 'Are you sure you want to delete the selected row?',
+    //    nzContent: `${selectedRows[0].eventSetName} will be deleted.`,
+    //    nzOnOk: () => this.delete.emit(selectedRows),
+    //  });
+  }
+
+  onEditClick(): void {
+    const selectedRows = this.gridApi.getSelectedRows();
+
+    if (selectedRows.length === 0) {
+      this.modal.warning({
+        nzTitle: 'No Rows Selected',
+        nzContent: 'Please select rows to edit.',
+      });
+      return;
+    }
+
+    this.edit.emit(selectedRows[0]);
   }
 }

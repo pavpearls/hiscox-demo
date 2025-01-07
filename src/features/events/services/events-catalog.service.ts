@@ -32,7 +32,7 @@ export class EventsCatalogService {
     const tabConfig: any = [
       { name: 'rds', allowMultiple: false },
       { name: 'event', allowMultiple: false },
-      { name: 'event response', allowMultiple: true }
+      { name: 'response scenario', allowMultiple: true }
     ]
 
     const eventType = eventsTypeList.find(

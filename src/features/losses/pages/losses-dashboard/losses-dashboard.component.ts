@@ -8,7 +8,7 @@ import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 })
 export class LossesDashboardComponent implements OnInit {
   title = 'Losses Dashboard';
-  isModalVisible = true;
+  isModalVisible = false;
 
   public rowData: any[] = [];
   public columnDefs: ColDef[] = [];
@@ -44,6 +44,10 @@ export class LossesDashboardComponent implements OnInit {
         }),
       },
     ];
+  }
+
+  onUploadLossFile(): void {
+    this.isModalVisible = true;
   }
 
   private loadMockData(): void {
@@ -103,7 +107,7 @@ export class LossesDashboardComponent implements OnInit {
   }
 
   handleModalCancel() {
-    
+    this.isModalVisible = false;
   }
   
 }

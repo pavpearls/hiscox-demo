@@ -31,7 +31,7 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 })
 export class NestedTableComponent {
   rowData$: Observable<Array<EventSet>>;
-  rivate gridApi!: GridApi;
+  private gridApi!: GridApi;
   columnDefs: ColDef[] = [
     {
       field: 'eventSetName',

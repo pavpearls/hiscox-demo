@@ -1,7 +1,7 @@
 <nz-modal [(nzVisible)]="showModal" nzTitle="Upload Gross Loss File" [nzWidth]="modalWidth"
   (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
-    <nz-tabset [nzAnimated]="true">
+    <nz-tabset [nzAnimated]="true" [(nzSelectedIndex)]="selectedTabIndex">
       <nz-tab nzTitle="Upload">
         <form [formGroup]="uploadForm" nz-form>
           <div class="top-panel">

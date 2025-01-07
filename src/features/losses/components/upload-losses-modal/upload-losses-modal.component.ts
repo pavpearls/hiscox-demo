@@ -7,6 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UploadFileRequest } from '@shared/api-services/uploadFileRequest';
 import { LossFacade } from 'features/losses/store/losses.facade';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
@@ -27,6 +28,7 @@ import {
   take,
   takeWhile,
 } from 'rxjs';
+import { NdsApiServiceWrapper } from 'shared/api-services/nds-api/custom/nds-api-service-wrapper';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -35,7 +37,7 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./upload-losses-modal.component.scss'],
 })
 export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
-  @Input() showModal = false;
+  @Input() showModal = true;
   @Output() onOk = new EventEmitter<any>();
   @Output() onCancel = new EventEmitter<void>();
 
@@ -44,7 +46,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   dataTypeOptions = ['String', 'Number', 'Boolean', 'Date'];
   dontUpload$ = of(false);
   fileList: NzUploadFile[] = [];
-
+  selectedTabIndex = 0
   isFileValid = false;
   listOfData: any[] = [];
   totalRows = 5000;
@@ -87,7 +89,8 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private lossFacade: LossFacade,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private api: NdsApiServiceWrapper
   ) {
     this.uploadForm = this.fb.group({
       friendlyName: ['', [Validators.required, Validators.maxLength(200)]],
@@ -142,6 +145,61 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     );
 
     this.handleFileUploadResponse();
+    this.handleValidateFileResponse();
+  }
+
+  handleValidateFileResponse(): void {
+    this.lossFacade.state.fileUpload.validateFile$
+    .pipe(takeWhile(() => this.isComponentAlive))
+    .pipe(filterSuccess())
+    .subscribe((response) => {
+      const {allEventsValid, errors, allLossClassesValid, fileTypeValid, isValid, lossWorksheetFound, mandatoryFieldsValid, rowValidations} = response.value;
+  
+      this.fileValidationResults = [
+        { check: 'Xlsx File Type', result: fileTypeValid ? 'true' : 'false' },
+        { check: 'Loss Worksheet Found', result: lossWorksheetFound ? 'true' : 'false' },
+        { check: 'All Loss Fields Found', result: mandatoryFieldsValid ? 'true' : 'false' },
+        { check: 'All Events Found', result: allEventsValid ? 'true' : 'false' },
+        { check: 'All Loss Classes Found', result: allLossClassesValid ? 'true' : 'false' },
+        { check: 'VALID FILE?', result: isValid ? 'true' : 'false' },
+      ];
+
+      this.isFileValid = isValid;
+      this.isValidating = false;
+
+      if (isValid) {
+
+      }
+
+      if (!isValid) {
+        const file = this.uploadForm.value.file;
+        this.parseFile(file);
+        this.selectedTabIndex = 1;
+      }
+    });
+
+    this.lossFacade.state.fileUpload.validateFile$
+    .pipe(takeWhile(() => this.isComponentAlive))
+    .pipe(filterFailure())
+    .subscribe(() => {
+      this.notification.error(
+        'File Validation Failed',
+        'Failed to validate the file. Please check the file and try again.'
+      );
+      this.showModal = false;
+      this.uploadForm.reset();
+      this.listOfData = [];
+      this.isValidating = false;
+
+      this.fileValidationResults = [
+        { check: 'Xlsx File Type', result: 'false' },
+        { check: 'Loss Worksheet Found', result: 'false' },
+        { check: 'All Loss Fields Found', result: 'false' },
+        { check: 'All Events Found', result: 'false' },
+        { check: 'All Loss Classes Found', result: 'false' },
+        { check: 'VALID FILE?', result: 'false' },
+      ];
+    });
   }
 
   handleFileUploadResponse(): void {
@@ -174,7 +232,8 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   }
 
   handleOk(): void {
-    if (this.uploadForm.valid && this.isFileValid) {
+    // ignore file valid for now && this.isFileValid
+    if (this.uploadForm.valid) {
       const { file, friendlyName, dataFormat, dataProducer, description } =
         this.uploadForm.value;
 
@@ -193,12 +252,33 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
         description,
       };
 
+      const uploadFileRequestPayload: UploadFileRequest = {
+        lossSetID: 7,
+        lossLoadRequest: {
+          eventSetID: 16,
+          dataSourceTypeID: 1,
+          dataProducerID: 1,
+          dataSourceName: 'test_data_source_2',
+          lossLoadName: friendlyName,
+          lossLoadDescription: description,
+          loadDate: new Date(),
+          isArchived: false,
+          isValid: true,
+          includeOptionalFields: false,
+        }
+      }
+
       this.lossFacade.actions.fileUpload.uploadFile(uploadPayload.file);
 
-      this.notification.success(
-        'Upload Started',
-        `Uploading file: ${renamedFile.name}`
-      );
+      this.api.lossLoadService.uploadFileRequest(uploadFileRequestPayload).pipe(take(1)).subscribe(data => {
+        this.lossFacade.actions.fileUpload.uploadFile(uploadPayload.file);
+
+        this.notification.success(
+          'Upload Started',
+          `Uploading file: ${renamedFile.name}`
+        );
+      });
+      
     } else {
       this.uploadForm.markAllAsTouched();
       this.notification.error(
@@ -210,7 +290,6 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
 
   handleCancel(): void {
     this.onCancel.emit();
-    this.showModal = false;
     this.uploadForm.reset();
     this.listOfData = [];
   }
@@ -250,6 +329,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   }
 
   validateFile(): void {
+
     if (!this.uploadForm.valid) {
       this.uploadForm.markAllAsTouched();
       this.notification.error(

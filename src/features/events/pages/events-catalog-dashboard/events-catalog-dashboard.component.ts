@@ -177,6 +177,8 @@ export class EventsCatalogDashboardComponent implements OnInit, OnDestroy {
         this.eventsFacade.actions.events.loadEventsByEventType({
           eventTypeId: this.addEventConfig.eventTypeId,
         });
+        this.eventsFacade.actions.events.loadHiscoxImpactList();
+        this.eventsFacade.actions.events.loadIndustryLossList();
       });
   }
 

@@ -39,9 +39,9 @@
           <nz-form-item>
             <nz-form-label nzFor="eventType" nzRequired>Event Type</nz-form-label>
             <nz-form-control>
-              <nz-select formControlName="eventType" placeholder="Select Event Type">
+              <!-- <nz-select formControlName="eventType" placeholder="Select Event Type">
                 <nz-option *ngFor="let eventType of eventsTypeList" [nzValue]="eventType?.eventTypeID" [nzLabel]="eventType?.eventTypeName"></nz-option>
-              </nz-select>
+              </nz-select> -->
               <div *ngIf="eventSetForm.get('eventType')?.invalid && eventSetForm.get('eventType')?.touched" class="error">
                 <span *ngIf="eventSetForm.get('eventType')?.hasError('required')">Event Type is required.</span>
               </div>
@@ -64,10 +64,10 @@
       </nz-tab>
       <nz-tab nzTitle="Current Event Set Members">
         <!-- This table shows the current events in the event set, allowing removal or editing -->
-        <app-current-event-set-table
+        <!-- <app-current-event-set-table
           [events]="currentEventSetEvents"
           (eventsChanged)="handleCurrentEventsChange($event)"
-        ></app-current-event-set-table>
+        ></app-current-event-set-table> -->
       </nz-tab>
     </nz-tabset>
   </ng-container>

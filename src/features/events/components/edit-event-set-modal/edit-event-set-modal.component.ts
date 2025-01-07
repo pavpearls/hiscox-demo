@@ -25,8 +25,8 @@ import {
   })
   export class EditEventSetModalComponent implements OnInit, OnChanges {
     @Input() showModal = false;
-    @Input() existingEventSet!: EventSet;   // The existing event set data
-    @Input() existingEvents: Event[] = [];  // Events currently associated with the event set
+    @Input() existingEventSet!: EventSet | null;
+    @Input() existingEvents: Event[] = [];
   
     @Output() onOk = new EventEmitter<any>();
     @Output() onCancel = new EventEmitter<void>();
@@ -34,9 +34,7 @@ import {
     eventSetForm: FormGroup;
     modalWidth: string | number = '80%';
     eventsTypeList: EventType[] = [];
-    // Events selected from the "Available Events" tab to be added
     selectedNewEvents: Event[] = [];
-    // Events currently in the event set, can be edited or removed
     currentEventSetEvents: Event[] = [];
   
     eventsTypeList$: Observable<RemoteData<EventType[], HttpErrorResponse>> =
@@ -59,13 +57,11 @@ import {
         eventSetName: ['', [Validators.required, Validators.maxLength(200)]],
         eventSetDescription: [''],
         eventType: [null, [Validators.required, Validators.maxLength(200)]],
-        // Not directly bound to final data, but used as a form validator placeholder
         events: [[], [Validators.required, this.validateSelectedRows()]],
       });
     }
   
     ngOnInit(): void {
-      // Combine latest event type list and active tab for dynamic configuration
       combineLatest([this.eventsTypeList$.pipe(filterSuccess()), this.selectedTab$])
         .subscribe(([eventsTypeList, selectedTab]) => {
           this.eventsTypeList = eventsTypeList.value;
@@ -87,7 +83,6 @@ import {
           }
         });
   
-      // When eventType changes, load events
       this.eventSetForm.get('eventType')?.valueChanges.subscribe((eventTypeId) => {
         if (eventTypeId) {
           this.eventsFacade.actions.events.loadEventsByEventType({ eventTypeId });
@@ -106,7 +101,7 @@ import {
         eventSetName: eventSet.eventSetName,
         eventSetDescription: eventSet.eventSetDescription,
         eventType: eventSet.eventSetTypeID,
-        events: events, // For validation, but we keep the actual arrays separately
+        events: events,
       });
       this.currentEventSetEvents = [...events];
   
@@ -117,21 +112,18 @@ import {
   
     handleOk(): void {
       if (this.eventSetForm.valid) {
-        // Prepare the final updated list of events:
-        // Start with the current events, minus any removed by the user,
-        // plus any new events selected from the first tab.
         const finalEvents = [...this.currentEventSetEvents, ...this.selectedNewEvents];
   
         const formValue = this.eventSetForm.value;
         const payload = {
-          eventSetID: this.existingEventSet.eventSetID,
+          eventSetID: this.existingEventSet?.eventSetID,
           eventSetTypeID: formValue.eventType,
           eventSetName: formValue.eventSetName,
           eventSetDescription: formValue.eventSetDescription,
-          isArchived: this.existingEventSet.isArchived,
-          createdBy: this.existingEventSet.createdBy,
-          createDate: this.existingEventSet.createDate,
-          eventRequests: finalEvents // updated list
+          isArchived: this.existingEventSet?.isArchived,
+          createdBy: this.existingEventSet?.createdBy,
+          createDate: this.existingEventSet?.createDate,
+          eventRequests: finalEvents
         };
   
         this.onOk.emit(payload);
@@ -149,14 +141,12 @@ import {
   
     handleAvailableEventsSelection(selectedRows: Event[]): void {
       this.selectedNewEvents = selectedRows;
-      // Update form events for validation
       this.eventSetForm.get('events')?.setValue([...this.currentEventSetEvents, ...this.selectedNewEvents]);
     }
   
-    handleCurrentEventsChange(updatedEvents: Event[]): void {
-      this.currentEventSetEvents = updatedEvents;
-      // Update form events for validation
-      this.eventSetForm.get('events')?.setValue([...this.currentEventSetEvents, ...this.selectedNewEvents]);
+    handleCurrentEventsChange(updatedEvents: any): void {
+      // this.currentEventSetEvents = updatedEvents;
+      // this.eventSetForm.get('events')?.setValue([...this.currentEventSetEvents, ...this.selectedNewEvents]);
     }
   
     private validateSelectedRows() {

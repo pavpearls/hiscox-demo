@@ -1,14 +1,16 @@
 <div class="button-panel">
-    <button nz-button nzType="default" (click)="onRemoveSelected()">Remove</button>
-  </div>
-  
-  <ag-grid-angular
-    class="ag-theme-alpine"
-    [columnDefs]="columnDefs"
-    [defaultColDef]="defaultColDef"
-    [rowData]="rowData"
-    [rowSelection]="'multiple'"
-    [animateRows]="true"
-    (gridReady)="onGridReady($event)"
-    (cellValueChanged)="onCellValueChanged($event)"
-  ></ag-grid-angular>
+  <button nz-button nzType="default" (click)="onRemoveSelected()">
+    Remove
+  </button>
+</div>
+
+<ag-grid-angular
+  class="ag-theme-alpine"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  [rowData]="rowData"
+  [rowSelection]="'multiple'"
+  [animateRows]="true"
+  (gridReady)="onGridReady($event)"
+  (cellValueChanged)="onCellValueChanged($event)"
+></ag-grid-angular>
