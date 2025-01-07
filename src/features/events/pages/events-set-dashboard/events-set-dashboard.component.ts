@@ -23,7 +23,8 @@ export class EventsSetDashboardComponent implements OnInit {
   isComponentAlive = true;
   selectedTabId = 1 // RDS;
   public isAddEventSetModalVisible = false;
-
+  public isDeleteModalVisible = false;
+  public selectedEventSet: EventSet | null = null;
   constructor(private eventsFacade: EventsFacade,  private notification: NzNotificationService) {  }
 
   ngOnInit(): void {
@@ -58,10 +59,55 @@ export class EventsSetDashboardComponent implements OnInit {
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
   }
 
+  openDeleteModal(eventSets: EventSet[]): void {
+    if (eventSets.length === 0) {
+      this.notification.warning('No Event Set Selected', 'Please select an event set to delete.');
+      return;
+    }
+    this.selectedEventSet = eventSets[0];
+    this.isDeleteModalVisible = true;
+  }
+
+  handleDeleteConfirmed(payload: { eventSetId: number, eventIds: number[] | null }): void {
+    if (payload.eventIds === null) {
+      // Delete entire event set
+      this.eventsFacade.actions.eventSets.deleteEventSet(payload.eventSetId).subscribe({
+        next: () => {
+          this.notification.success('Deleted', 'Event set and all associated events have been deleted.');
+          this.populateEventSetData();
+        },
+        error: (error) => {
+          this.notification.error('Error', 'Failed to delete event set.');
+        }
+      });
+    } else {
+      // Delete specific events
+      this.eventsFacade.actions.events.deleteEvents(payload.eventSetId, payload.eventIds).subscribe({
+        next: () => {
+          this.notification.success('Deleted', 'Selected events have been deleted.');
+          this.populateEventSetData();
+        },
+        error: (error) => {
+          this.notification.error('Error', 'Failed to delete selected events.');
+        }
+      });
+    }
+
+    this.isDeleteModalVisible = false;
+    this.selectedEventSet = null;
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalVisible = false;
+    this.selectedEventSet = null;
+  }
+
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
     // if (eventSets[0] && eventSets[0].lossLoads && eventSets[0].lossLoads.length > 0) {
     //   this.notification.warning('Warning:', 'Cannot delete Event that has Gross Losses. Archive the Event to remove from the display.');
     // }
+    this.isDeleteModalVisible = true;
+
     const eventSetID = eventSets[0].eventSetID as number;
     this.eventsFacade.actions.eventSets.deleteEventSet(eventSetID);
     this.populateEventSetData();

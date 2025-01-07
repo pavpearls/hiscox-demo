@@ -16,6 +16,14 @@
 </div>
 
 
+<!-- Delete Event Set Modal -->
+<app-delete-event-set-modal 
+  [showModal]="isDeleteModalVisible"
+  [eventSet]="selectedEventSet"
+  (onConfirm)="handleDeleteConfirmed($event)"
+  (onCancel)="closeDeleteModal()">
+</app-delete-event-set-modal>
+
 <ng-container *ngIf="isAddEventSetModalVisible">
   <add-event-set-modal
     [showModal]="isAddEventSetModalVisible"
