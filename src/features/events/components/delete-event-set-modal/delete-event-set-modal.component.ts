@@ -45,135 +45,103 @@ export class DeleteEventSetModalComponent implements OnInit {
   }
 
   initializeColumnDefs(): void {
-      this.columnDefs = [
-        {
-          field: 'eventID',
-          headerName: 'Event ID',
-          sortable: true,
-          filter: 'agNumberColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
+    this.columnDefs = [
+      {
+        field: 'eventType.eventTypeName',
+        headerName: 'Event Type',
+      },
+      {
+        field: 'regionPeril.regionPerilName',
+        headerName: 'Region Peril',
+      },
+      {
+        field: 'eventNameShort',
+        headerName: 'Event Name',
+      },
+      {
+        field: 'eventID',
+        headerName: 'Event ID',
+        sortable: true,
+        filter: 'agNumberColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
+      {
+        field: 'createdBy', // Corrected from userName
+        headerName: 'Created By',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
+      {
+        field: 'createDate',
+        headerName: 'Created Date',
+        sortable: true,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        valueFormatter: (params: any) => {
+          return params?.data?.createDate
+            ? new Date(params.data.createDate).toLocaleDateString('en-GB')
+            : '';
         },
-        {
-          field: 'eventTypeName',
-          headerName: 'Event Type',
-          sortable: true,
-          filter: 'agTextColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
+      },
+      {
+        field: 'industryLossEstimate',
+        headerName: 'Industry Loss Estimate',
+        sortable: true,
+        filter: 'agNumberColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        editable: true,
+        cellEditor: 'agSelectCellEditor',
+        cellRenderer: (params: any) => {
+          return params?.data?.industryLossEstimate != null
+            ? params.data.industryLossEstimate.toString()
+            : '';
         },
-        {
-          field: 'eventNameShort',
-          cellStyle: { fontWeight: 'bold' },
-          headerName: 'Event Name',
-          sortable: true,
-          filter: 'agTextColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
-          editable: true,
+        valueFormatter: (params: any) => {
+          return params?.value != null ? params.value.toString() : '';
         },
-        {
-          field: 'regionPerilName',
-          headerName: 'Region-Peril',
-          sortable: true,
-          filter: 'agTextColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
-          editable: true,
-          cellEditor: 'agSelectCellEditor',
-          cellRenderer: (params: any) => {
-            return params?.data?.regionPerilName ?? null;
-          },
+        valueParser: (params: any) => {
+          const value = params.newValue;
+          return isNaN(Number(value)) ? value : Number(value);
         },
-        {
-          field: 'userName',
-          headerName: 'Created By',
-          sortable: true,
-          filter: 'agTextColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
+      },
+      {
+        field: 'isRestrictedAccess', // Corrected from restricted
+        headerName: 'Restricted',
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          buttons: ['clear', 'apply'],
+        } as ITextFilterParams,
+        cellRenderer: (params: any) => {
+          return params.value ? 'Yes' : 'No';
         },
-        {
-          field: 'createDate',
-          headerName: 'Created Date',
-          sortable: true,
-          filter: 'agDateColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
-          valueFormatter: (params: any) => {
-            return params?.data?.createDate || '';
-          },
-        },
-        {
-          field: 'industryLossEstimate',
-          headerName: 'Industry Loss Estimate',
-          sortable: true,
-          filter: 'agNumberColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
-          editable: true,
-          cellEditor: 'agSelectCellEditor',
-          cellRenderer: (params: any) => {
-            return params?.data?.industryLossEstimate != null
-              ? params.data.industryLossEstimate.toString()
-              : '';
-          },
-          valueFormatter: (params: any) => {
-            return params?.value != null ? params.value.toString() : '';
-          },
-          valueParser: (params: any) => {
-            const value = params.newValue;
-            return isNaN(Number(value)) ? value : Number(value);
-          },
-        },
-        {
-          field: 'hiscoxLossImpactRating',
-          headerName: 'Hiscox Loss Impact Rating',
-          sortable: true,
-          filter: 'agTextColumnFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
-          editable: true,
-          cellEditor: 'agSelectCellEditor',
-        },
-        {
-          field: 'restricted',
-          headerName: 'Restricted',
-          filter: 'agTextColumnFilter',
-          filterParams: {
-            buttons: ['clear', 'apply'],
-          } as ITextFilterParams,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: { values: ['Yes', 'No'] },
+        editable: true,
+      },
+      {
+        field: 'isArchived', // Corrected from archived
+        headerName: 'Archived',
+        filter: true,
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        cellRenderer: (params: any) => (params.value ? 'Yes' : 'No'),
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: { values: ['Yes', 'No'] },
+        editable: true,
+      },
+    ];
+  }
   
-          cellRenderer: (params: any) => {
-            return params?.data?.isRestrictedAccess === true ? 'Yes' : 'No';
-          },
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: { values: ['Yes', 'No'] },
-          editable: true,
-        },
-        {
-          field: 'archived',
-          headerName: 'Archived',
-          filter: true,
-          filterParams: {
-            buttons: ['reset', 'apply'],
-          } as ITextFilterParams,
-          cellRenderer: (params: any) =>
-            params?.data?.isArchived === true ? 'Yes' : 'No',
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: { values: ['Yes', 'No'] },
-          editable: true,
-        },
-      ];
-    }
 
   dateFormatter(params: ValueFormatterParams): string {
     return params.value ? new Date(params.value).toLocaleDateString('en-GB') : '';
