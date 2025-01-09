@@ -26,6 +26,10 @@ import moment from 'moment';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
+/** Interfaces for clarity (import your real ones as needed) **/
+// import { EventSet, Event } from '@shared/api-services/models'; 
+// interface EventSetMember { ... }
+
 function dateFormatter(params: ValueFormatterParams) {
   return params.value ? moment(params.value).format('DD/MM/YYYY') : '';
 }
@@ -63,6 +67,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
   constructor(
     private modal: NzModalService,
     private notification: NzNotificationService,
+    // private eventsFacade: EventsFacade, // If you need to call the facade directly from here
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -286,19 +291,72 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     const updatedParentRow = {
       ...parentRowData,
       events: updatedEvents,
+      // Optionally set modifiedBy, etc.
     };
 
     // 3) Replace the parent row in this.rowData
-    this.rowData = this.rowData.map((row) => {
-      // If this is the matching row by ID, replace with updated parent
-      return row.eventSetID === updatedParentRow.eventSetID ? updatedParentRow : row;
-    });
+    this.rowData = this.rowData.map((row) =>
+      row.eventSetID === updatedParentRow.eventSetID ? updatedParentRow : row
+    );
 
-    // 4) (Optional) Call your API/Facade to persist the change
-    // e.g. this.eventsFacade.actions.eventSets.updateEventSet(updatedParentRow);
+    // 4) Transform updatedParentRow into the structure your API expects
+    const payload = this.transformEventSetForUpdate(updatedParentRow);
 
-    console.log(`Detail column "${colDef.field}" changed from "${oldValue}" to "${newValue}".`);
+    // 5) (Optional) Call your API/Facade to persist the change
+    // e.g.
+    // this.eventsFacade.actions.eventSets.updateEventSet(payload);
+
+    console.log(
+      `Detail column "${colDef.field}" changed from "${oldValue}" to "${newValue}".`
+    );
     console.log('Updated parent row with changed detail row:', updatedParentRow);
+    console.log('Transformed payload for API:', payload);
+  }
+
+  /**
+   * Converts the updatedParentRow (which has a "events" array)
+   * into an EventSet structure that has "eventSetMembers".
+   */
+  private transformEventSetForUpdate(updatedParentRow: any): any {
+    return {
+      eventSetID: updatedParentRow.eventSetID,
+      eventSetTypeID: updatedParentRow.eventSetTypeID,
+      eventSetName: updatedParentRow.eventSetName,
+      eventSetDescription: updatedParentRow.eventSetDescription,
+      isArchived: updatedParentRow.isArchived,
+      createdBy: updatedParentRow.createdBy,
+      modifiedBy: updatedParentRow.modifiedBy,
+      createDate: updatedParentRow.createDate,
+
+      // Convert each `event` to `EventSetMember`
+      eventSetMembers: updatedParentRow.events?.map((evt: any) => ({
+        eventSetMemberID: evt.eventSetMemberID ?? 0, // or undefined
+        eventID: evt.eventID,
+        eventSetID: updatedParentRow.eventSetID,
+        simYear: evt.simYear,
+        eventOrder: evt.eventOrder,
+        createdBy: evt.createdBy,
+        modifiedBy: evt.modifiedBy,
+
+        // If needed, nest the event object
+        event: {
+          eventID: evt.eventID,
+          eventTypeID: evt.eventTypeID,
+          regionPerilID: evt.regionPerilID,
+          eventNameShort: evt.eventNameShort,
+          eventNameLong: evt.eventNameLong,
+          eventDate: evt.eventDate,
+          industryLossEstimate: evt.industryLossEstimate,
+          hiscoxLossImpactRating: evt.hiscoxLossImpactRating,
+          createdBy: evt.createdBy,
+          modifiedBy: evt.modifiedBy,
+          createDate: evt.createDate,
+          isLossPick: evt.isLossPick,
+          isRestrictedAccess: evt.isRestrictedAccess,
+          isArchived: evt.isArchived,
+        },
+      })) ?? [],
+    };
   }
 
   // ---------------------------------------
