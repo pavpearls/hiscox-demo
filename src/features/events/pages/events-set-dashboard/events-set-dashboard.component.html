@@ -2,19 +2,27 @@
   <div class="tab-buttons">
     <h2>Event Sets</h2>
     <nz-divider nzType="vertical"></nz-divider>
-    <button nz-button nzType="default" *ngFor="let tab of tabs" [ngClass]="{ 'active-tab': selectedTabId === tab.id }"
-      (click)="setActiveTab(tab.id)">
+    <button
+      nz-button
+      nzType="default"
+      *ngFor="let tab of tabs"
+      [ngClass]="{ 'active-tab': selectedTabId === tab.id }"
+      (click)="setActiveTab(tab.id)"
+    >
       {{ tab.label }}
     </button>
-
   </div>
 
   <div class="event-set-data">
-    <app-event-set-table [eventSetData]="eventSetData" (new)="handleOnNewEvent($event)" (edit)="handleEditEvent($event)"
-     (delete)="handleOnDeleteEventSet($event)"></app-event-set-table>
+    <app-event-set-table
+      [eventSetData]="eventSetData"
+      (new)="handleOnNewEvent($event)"
+      (edit)="handleEditEvent($event)"
+      (delete)="handleOnDeleteEventSet($event)"
+    >
+    </app-event-set-table>
   </div>
 </div>
-
 
 <ng-container *ngIf="isAddEventSetModalVisible">
   <add-event-set-modal
@@ -25,12 +33,13 @@
 </ng-container>
 
 <ng-container *ngIf="isDeleteModalVisible">
-<app-delete-event-set-modal 
-  [showModal]="isDeleteModalVisible"
-  [eventSet]="deletedEventSet"
-  (onConfirm)="handleDeleteConfirmed($event)"
-  (onCancel)="onModalCancel()">
-</app-delete-event-set-modal>
+  <app-delete-event-set-modal
+    [showModal]="isDeleteModalVisible"
+    [eventSet]="deletedEventSet"
+    (onConfirm)="handleDeleteConfirmed($event)"
+    (onCancel)="onModalCancel()"
+  >
+  </app-delete-event-set-modal>
 </ng-container>
 
 <ng-container *ngIf="isEditEventSetModalVisible">
@@ -40,5 +49,6 @@
     [showModal]="isEditEventSetModalVisible"
     (onOk)="onEditEventSetModalOk($event)"
     (onCancel)="onEditEventSetModalCancel($event)"
-  ></edit-event-set-modal>
+  >
+  </edit-event-set-modal>
 </ng-container>

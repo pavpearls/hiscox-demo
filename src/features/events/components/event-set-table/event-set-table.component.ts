@@ -33,26 +33,26 @@ function dateFormatter(params: ValueFormatterParams) {
 @Component({
   selector: 'app-event-set-table',
   templateUrl: './event-set-table.component.html',
-  styleUrl: './event-set-table.component.scss',
+  styleUrls: ['./event-set-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventSetTableComponent implements OnInit, OnChanges {
-  @Input() eventSetData: any[];
-  @Output() new = new EventEmitter<Event>();
+  @Input() eventSetData: any[] = [];
+  @Output() new = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any[]>();
   @Output() edit = new EventEmitter<any>();
 
   private gridApi!: GridApi;
   public columnDefs: ColDef[] = [];
   public defaultColDef: ColDef = { flex: 1 };
-  public rowData!: any[];
+  public rowData: any[] = [];
   public tooltipShowDelay = 200;
   public rowSelection: RowSelectionOptions | 'single' | 'multiple' = {
     mode: 'singleRow',
   };
   public paginationPageSizeSelector = [10, 25, 50, 100];
   public paginationPageSize = 25;
-  
+
   public autoSizeStrategy:
     | SizeColumnsToFitGridStrategy
     | SizeColumnsToFitProvidedWidthStrategy
@@ -60,45 +60,20 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       type: 'fitCellContents',
     };
 
-  public detailCellRendererParams: any = (params: ICellRendererParams) => {
-    var res = {} as IDetailCellRendererParams;
-
-    res.getDetailRowData = function (params: any) {
-      params.successCallback(params.data.events);
-    };
-
-    if (params.data.eventTypeID === 1) {
-      res.detailGridOptions = {
-        columnDefs: this.getRDSDetailColumnDefs(),
-        defaultColDef: {
-          flex: 1,
-        },
-      };
-    } else {
-      res.detailGridOptions = {
-        columnDefs: this.getDetailColumnDefs(),
-        defaultColDef: {
-          flex: 1,
-        },
-      };
-    }
-    return res;
-  };
-
   constructor(
     private modal: NzModalService,
     private notification: NzNotificationService,
-  ) { }
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['eventSetData'].currentValue) {
-      this.rowData = this.eventSetData;
+    if (changes['eventSetData'] && changes['eventSetData'].currentValue) {
+      // Make a copy of the incoming array to avoid direct mutation
+      this.rowData = [...this.eventSetData];
     }
   }
 
   ngOnInit(): void {
     this.columnDefs = this.getColumns();
-
   }
 
   onGridReady(params: GridReadyEvent): void {
@@ -106,13 +81,18 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     this.gridApi.autoSizeAllColumns();
   }
 
-  onFirstDataRendered(params: FirstDataRenderedEvent) {
+  onFirstDataRendered(params: FirstDataRenderedEvent): void {
     setTimeout(() => {
-      var node1 = params.api.getDisplayedRowAtIndex(0)!;
-      node1.setExpanded(true);
+      const node1 = params.api.getDisplayedRowAtIndex(0);
+      if (node1) {
+        node1.setExpanded(true);
+      }
     }, 0);
   }
 
+  // ---------------------------------------
+  // Columns for the MASTER grid
+  // ---------------------------------------
   getColumns(): ColDef[] {
     return [
       {
@@ -120,20 +100,20 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         headerName: 'Set ID',
         cellRenderer: 'agGroupCellRenderer',
         sortable: true,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        cellStyle: { 'text-align': 'center' },
       },
-      { field: 'eventSetName',
-        cellStyle: {fontWeight: 'bold'},
-        headerName: 'Event Set Name', sortable: true },
+      {
+        field: 'eventSetName',
+        headerName: 'Event Set Name',
+        sortable: true,
+        cellStyle: { fontWeight: 'bold' },
+      },
       {
         field: 'createDate',
         headerName: 'Create Date',
-        sortable: true, valueFormatter: dateFormatter,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        sortable: true,
+        valueFormatter: dateFormatter,
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'createdBy',
@@ -143,6 +123,9 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     ];
   }
 
+  // ---------------------------------------
+  // Columns for the DETAIL grid (non-RDS)
+  // ---------------------------------------
   getDetailColumnDefs(): ColDef[] {
     return [
       {
@@ -151,9 +134,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         sortable: true,
         editable: true,
         cellEditor: 'agTextCellEditor',
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'eventOrder',
@@ -161,17 +142,13 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         sortable: true,
         editable: true,
         cellEditor: 'agTextCellEditor',
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'eventID',
         headerName: 'ID',
         sortable: true,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'eventType.eventTypeName',
@@ -182,7 +159,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         field: 'eventNameShort',
         headerName: 'Event Name',
         sortable: true,
-        cellStyle: {fontWeight: 'bold'},
+        cellStyle: { fontWeight: 'bold' },
         tooltipValueGetter: (p: ITooltipParams) => p.data.eventNameLong,
         headerTooltip: 'Event Description',
       },
@@ -190,7 +167,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         field: 'eventDate',
         headerName: 'Event Date',
         sortable: true,
-        valueFormatter: dateFormatter
+        valueFormatter: dateFormatter,
       },
       {
         field: 'regionPeril.regionPerilName',
@@ -201,9 +178,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         field: 'industryLossEstimate',
         headerName: 'Industry Loss',
         sortable: true,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'hiscoxLossImpactRating',
@@ -213,31 +188,32 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     ];
   }
 
+  // ---------------------------------------
+  // Columns for the DETAIL grid (RDS)
+  // ---------------------------------------
   getRDSDetailColumnDefs(): ColDef[] {
     return [
       {
         field: 'simYear',
         headerName: 'Sim Year',
         sortable: true,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        editable: true,
+        cellEditor: 'agTextCellEditor',
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'eventOrder',
         headerName: 'Order',
         sortable: true,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        editable: true,
+        cellEditor: 'agTextCellEditor',
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'eventID',
         headerName: 'ID',
         sortable: true,
-        cellStyle: () => {
-          return { 'text-align': 'center' };
-        },
+        cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'eventType.eventTypeName',
@@ -255,10 +231,79 @@ export class EventSetTableComponent implements OnInit, OnChanges {
         field: 'regionPeril.regionPerilName',
         headerName: 'Region Peril',
         sortable: true,
-      }
+      },
     ];
   }
 
+  // ---------------------------------------
+  // MASTER-DETAIL: Provide detail rows
+  // And handle onCellValueChanged in detail
+  // ---------------------------------------
+  public detailCellRendererParams: any = (masterParams: ICellRendererParams) => {
+    const res = {} as IDetailCellRendererParams;
+
+    // Supply a copy of the child "events" array to the detail grid
+    res.getDetailRowData = (detailParams: any) => {
+      // Create a fresh array (avoid read-only objects)
+      const eventsCopy = masterParams.data.events?.map((evt: any) => ({ ...evt })) || [];
+      detailParams.successCallback(eventsCopy);
+    };
+
+    // Decide which columns based on eventTypeID
+    if (masterParams.data.eventTypeID === 1) {
+      // RDS
+      res.detailGridOptions = {
+        columnDefs: this.getRDSDetailColumnDefs(),
+        defaultColDef: { flex: 1, editable: true },
+        onCellValueChanged: (e: any) => this.onDetailCellValueChanged(e, masterParams.data),
+      };
+    } else {
+      res.detailGridOptions = {
+        columnDefs: this.getDetailColumnDefs(),
+        defaultColDef: { flex: 1, editable: true },
+        onCellValueChanged: (e: any) => this.onDetailCellValueChanged(e, masterParams.data),
+      };
+    }
+
+    return res;
+  };
+
+  // This method is called whenever a cell in the detail grid changes
+  onDetailCellValueChanged(detailEvent: any, parentRowData: any): void {
+    const { data: changedChildRow, colDef, newValue, oldValue } = detailEvent;
+    if (newValue === oldValue) return;
+
+    // 1) Build a new array of child events (immutably updated)
+    const updatedEvents = parentRowData.events.map((evt: any) => {
+      if (evt.eventID === changedChildRow.eventID) {
+        // Return a fresh copy with updated field
+        return { ...evt, [colDef.field]: newValue };
+      }
+      return evt;
+    });
+
+    // 2) Create a new copy of the parent row with updated events
+    const updatedParentRow = {
+      ...parentRowData,
+      events: updatedEvents,
+    };
+
+    // 3) Replace the parent row in this.rowData
+    this.rowData = this.rowData.map((row) => {
+      // If this is the matching row by ID, replace with updated parent
+      return row.eventSetID === updatedParentRow.eventSetID ? updatedParentRow : row;
+    });
+
+    // 4) (Optional) Call your API/Facade to persist the change
+    // e.g. this.eventsFacade.actions.eventSets.updateEventSet(updatedParentRow);
+
+    console.log(`Detail column "${colDef.field}" changed from "${oldValue}" to "${newValue}".`);
+    console.log('Updated parent row with changed detail row:', updatedParentRow);
+  }
+
+  // ---------------------------------------
+  // MASTER Grid CRUD Buttons
+  // ---------------------------------------
   onDeleteClick(): void {
     const selectedRows = this.gridApi.getSelectedRows();
     if (selectedRows.length === 0) {
@@ -268,19 +313,12 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       });
       return;
     }
-
+    // Emit to parent
     this.delete.emit(selectedRows);
-
-    // this.modal.confirm({
-    //    nzTitle: 'Are you sure you want to delete the selected row?',
-    //    nzContent: `${selectedRows[0].eventSetName} will be deleted.`,
-    //    nzOnOk: () => this.delete.emit(selectedRows),
-    //  });
   }
 
   onEditClick(): void {
     const selectedRows = this.gridApi.getSelectedRows();
-
     if (selectedRows.length === 0) {
       this.modal.warning({
         nzTitle: 'No Rows Selected',
@@ -288,7 +326,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       });
       return;
     }
-
+    // Emit to parent
     this.edit.emit(selectedRows[0]);
   }
 }

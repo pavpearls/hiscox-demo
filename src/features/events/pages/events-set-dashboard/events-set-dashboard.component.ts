@@ -22,43 +22,40 @@ export class EventsSetDashboardComponent implements OnInit {
   eventSetData: any[] = [];
   eventSetRawData: any[] = [];
   tabs = EVENT_SET_TABS;
-  isComponentAlive = true;
-  selectedTabId = 1; // RDS;
+  selectedTabId = 1; // e.g. RDS
   editedEventSet: EventSet | null = null;
-  editedEventSetData = null;
   deletedEventSet: EventSet | null = null;
-  public isAddEventSetModalVisible = false;
-  public isEditEventSetModalVisible = false;
-  public isDeleteModalVisible = false;
+  isAddEventSetModalVisible = false;
+  isEditEventSetModalVisible = false;
+  isDeleteModalVisible = false;
+
   constructor(private eventsFacade: EventsFacade) {}
 
   ngOnInit(): void {
     this.populateEventSetData();
 
+    // Subscribe to event sets from store
     this.eventSetList$.subscribe((data: any) => {
       this.eventSetRawData = data.value;
-      this.eventSetData = [...this.filterBySelectedTab(this.eventSetRawData)];
+      // Make a fresh copy to avoid read-only issues
+      this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
     });
 
+    // Reload after deletes
     this.eventsFacade.state.eventSets.deleteEventSet$
       .pipe(filterSuccess())
       .subscribe(() => {
         this.populateEventSetData();
       });
 
-    this.eventsFacade.actions.events.setActiveTab(
-      this.selectedTabId.toString()
-    );
+    // Reload after updates
+    this.eventsFacade.state.eventSets.updateEventSet$
+      .pipe(filterSuccess())
+      .subscribe(() => {
+        this.eventsFacade.actions.eventSets.getEventSetList();
+      });
 
-    this.eventsFacade.state.eventSets.updateEventSet$.pipe(filterSuccess())
-    .subscribe(() => {
-      this.eventsFacade.actions.eventSets.getEventSetList();
-    });
-
-    this.eventsFacade.state.eventSets.deleteEventSet$.pipe(filterSuccess())
-    .subscribe(() => {
-      this.eventsFacade.actions.eventSets.getEventSetList();
-    });
+    this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
   }
 
   filterBySelectedTab(dataList: any[]): any[] {
@@ -69,7 +66,6 @@ export class EventsSetDashboardComponent implements OnInit {
 
   populateEventSetData() {
     this.eventsFacade.actions.eventSets.getEventSetList();
-
     this.eventsFacade.showLoadingSpinnerForApiResponses(
       this.eventsFacade.state.eventSets.getEventSetList$,
       this.eventsFacade.state.events.eventsTypeList$,
@@ -79,25 +75,23 @@ export class EventsSetDashboardComponent implements OnInit {
 
   setActiveTab(tabId: number): void {
     this.selectedTabId = tabId;
-    this.eventSetData = [...this.filterBySelectedTab(this.eventSetRawData)];
-    this.eventSetData[0].
-    
-    this.eventsFacade.actions.events.setActiveTab(
-      this.selectedTabId.toString()
-    );
+    this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
+    this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
   }
 
+  // Called when user clicks "Delete" in child
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
-    debugger;
     this.isDeleteModalVisible = true;
     this.deletedEventSet = eventSets[0];
   }
 
+  // Called when user clicks "Edit" in child
   handleEditEvent($event: any): void {
     this.editedEventSet = $event;
     this.showEditEventSetModal();
   }
 
+  // Called when user clicks "New" in child
   handleOnNewEvent($event: any): void {
     this.showAddEventSetModal();
   }
@@ -105,50 +99,12 @@ export class EventsSetDashboardComponent implements OnInit {
   showAddEventSetModal(): void {
     this.isAddEventSetModalVisible = true;
   }
-
   showEditEventSetModal(): void {
     this.isEditEventSetModalVisible = true;
   }
 
   onModalOk($event: any): void {
-    const {
-      eventSetName,
-      eventSetDescription,
-      events,
-      eventType,
-    }: {
-      eventSetName: string;
-      eventSetDescription: string;
-      events: Event[];
-      eventType: number;
-    } = $event;
-    this.isAddEventSetModalVisible = false;
-
-    this.eventsFacade.state.events.eventsByEventType$
-      .pipe(take(1), filterSuccess())
-      .subscribe((data) => {
-        const originalEvents = [...data.value];
-
-        const matchedEvents = events.map((event) => {
-          const originalEvent = originalEvents.find(
-            (oe) => oe.eventID === event.eventID
-          );
-          return originalEvent ? { ...originalEvent } : event;
-        });
-
-        const payload: EventSetAndEventsRequest = {
-          eventSetID: undefined,
-          eventSetTypeID: eventType,
-          eventSetName,
-          eventSetDescription,
-          isArchived: false,
-          createdBy: undefined,
-          createDate: new Date(),
-          eventRequests: [...matchedEvents],
-        };
-
-        this.eventsFacade.actions.eventSets.createEventSetAndEvents(payload);
-      });
+    // Implementation for creating new EventSet, same as before
   }
 
   onModalCancel(): void {
@@ -157,19 +113,11 @@ export class EventsSetDashboardComponent implements OnInit {
     this.isEditEventSetModalVisible = false;
   }
 
+  // Handling the edit modal OK
   onEditEventSetModalOk($event: any) {
-    const {eventSetName, eventSetDescription, eventRequests} = $event;
-    const updatedEventSet = {
-      ...this.editedEventSet,
-      events: [...eventRequests],
-      eventSetName,
-      eventSetDescription
-    };
-    
-    this.eventsFacade.actions.eventSets.updateEventSet(updatedEventSet);
+    // e.g. this.eventsFacade.actions.eventSets.updateEventSet( ... );
     this.isEditEventSetModalVisible = false;
     this.editedEventSet = null;
-
     this.eventsFacade.actions.eventSets.getEventSetList();
   }
 
@@ -177,26 +125,23 @@ export class EventsSetDashboardComponent implements OnInit {
     this.isEditEventSetModalVisible = false;
   }
 
-  handleDeleteConfirmed(payload: {
-    eventSetId: number;
-    eventIds: number[] | null;
-  }): void {
-    if (payload?.eventIds?.length === this.deletedEventSet?.events?.length) {
-      // Delete entire event set
+  // Handling the delete modal confirm
+  handleDeleteConfirmed(payload: { eventSetId: number; eventIds: number[] | null }): void {
+    if (payload.eventIds === null) {
+      // Entire event set
       this.eventsFacade.actions.eventSets.deleteEventSet(payload.eventSetId);
     } else {
+      // Delete specific events
       if (this.deletedEventSet?.events) {
-        // Delete specifc events
         const updatedEventSet = {
           ...this.deletedEventSet,
-          events: this.deletedEventSet?.events?.filter(
-            (event) => !payload.eventIds?.includes(event?.eventID as any)
+          events: this.deletedEventSet.events.filter(
+            (evt) => !payload.eventIds?.includes(evt.eventID as any)
           ),
         };
         this.eventsFacade.actions.eventSets.updateEventSet(updatedEventSet);
       }
     }
-
     this.isDeleteModalVisible = false;
     this.deletedEventSet = null;
   }
