@@ -25,6 +25,7 @@ export class EventsSetDashboardComponent implements OnInit {
   isComponentAlive = true;
   selectedTabId = 1; // RDS;
   editedEventSet: EventSet | null = null;
+  editedEventSetData = null;
   deletedEventSet: EventSet | null = null;
   public isAddEventSetModalVisible = false;
   public isEditEventSetModalVisible = false;
@@ -36,7 +37,7 @@ export class EventsSetDashboardComponent implements OnInit {
 
     this.eventSetList$.subscribe((data: any) => {
       this.eventSetRawData = data.value;
-      this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
+      this.eventSetData = [...this.filterBySelectedTab(this.eventSetRawData)];
     });
 
     this.eventsFacade.state.eventSets.deleteEventSet$
@@ -48,6 +49,16 @@ export class EventsSetDashboardComponent implements OnInit {
     this.eventsFacade.actions.events.setActiveTab(
       this.selectedTabId.toString()
     );
+
+    this.eventsFacade.state.eventSets.updateEventSet$.pipe(filterSuccess())
+    .subscribe(() => {
+      this.eventsFacade.actions.eventSets.getEventSetList();
+    });
+
+    this.eventsFacade.state.eventSets.deleteEventSet$.pipe(filterSuccess())
+    .subscribe(() => {
+      this.eventsFacade.actions.eventSets.getEventSetList();
+    });
   }
 
   filterBySelectedTab(dataList: any[]): any[] {
@@ -68,7 +79,9 @@ export class EventsSetDashboardComponent implements OnInit {
 
   setActiveTab(tabId: number): void {
     this.selectedTabId = tabId;
-    this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
+    this.eventSetData = [...this.filterBySelectedTab(this.eventSetRawData)];
+    this.eventSetData[0].
+    
     this.eventsFacade.actions.events.setActiveTab(
       this.selectedTabId.toString()
     );
@@ -77,10 +90,7 @@ export class EventsSetDashboardComponent implements OnInit {
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
     debugger;
     this.isDeleteModalVisible = true;
-    this.deletedEventSet =  eventSets[0];
-    // const eventSetID = eventSets[0].eventSetID as number;
-    // this.eventsFacade.actions.eventSets.deleteEventSet(eventSetID);
-    // this.populateEventSetData();
+    this.deletedEventSet = eventSets[0];
   }
 
   handleEditEvent($event: any): void {
@@ -148,43 +158,43 @@ export class EventsSetDashboardComponent implements OnInit {
   }
 
   onEditEventSetModalOk($event: any) {
+    const {eventSetName, eventSetDescription, eventRequests} = $event;
+    const updatedEventSet = {
+      ...this.editedEventSet,
+      events: [...eventRequests],
+      eventSetName,
+      eventSetDescription
+    };
+    
+    this.eventsFacade.actions.eventSets.updateEventSet(updatedEventSet);
     this.isEditEventSetModalVisible = false;
+    this.editedEventSet = null;
+
+    this.eventsFacade.actions.eventSets.getEventSetList();
   }
 
   onEditEventSetModalCancel($event: any) {
     this.isEditEventSetModalVisible = false;
   }
 
-  handleDeleteConfirmed(payload: { eventSetId: number, eventIds: number[] | null }): void {
-    debugger;
-    if (payload.eventIds === null) {
-      this.eventsFacade.actions.eventSets.deleteEventSet(payload.eventSetId);
+  handleDeleteConfirmed(payload: {
+    eventSetId: number;
+    eventIds: number[] | null;
+  }): void {
+    if (payload?.eventIds?.length === this.deletedEventSet?.events?.length) {
       // Delete entire event set
-      // this.eventsFacade.actions.eventSets.deleteEventSet(payload.eventSetId).subscribe({
-      //   next: () => {
-      //     this.notification.success('Deleted', 'Event set and all associated events have been deleted.');
-      //     this.populateEventSetData();
-      //   },
-      //   error: (error) => {
-      //     this.notification.error('Error', 'Failed to delete event set.');
-      //   }
-      // });
+      this.eventsFacade.actions.eventSets.deleteEventSet(payload.eventSetId);
     } else {
-      // Delete specific events
-      // Ideally we need an api endpoint to delete multiple events as array
-      payload.eventIds.forEach(eventId => {
-        this.eventsFacade.actions.events.deleteEvent(eventId);
-      });
-
-      // this.eventsFacade.actions.events.deleteEvents(payload.eventSetId, payload.eventIds).subscribe({
-      //   next: () => {
-      //     this.notification.success('Deleted', 'Selected events have been deleted.');
-      //     this.populateEventSetData();
-      //   },
-      //   error: (error) => {
-      //     this.notification.error('Error', 'Failed to delete selected events.');
-      //   }
-      // });
+      if (this.deletedEventSet?.events) {
+        // Delete specifc events
+        const updatedEventSet = {
+          ...this.deletedEventSet,
+          events: this.deletedEventSet?.events?.filter(
+            (event) => !payload.eventIds?.includes(event?.eventID as any)
+          ),
+        };
+        this.eventsFacade.actions.eventSets.updateEventSet(updatedEventSet);
+      }
     }
 
     this.isDeleteModalVisible = false;
