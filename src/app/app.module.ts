@@ -23,6 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PublicClientApplication, InteractionType, BrowserCacheLocation, IPublicClientApplication, LogLevel } from "@azure/msal-browser";
 import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalGuardConfiguration, MsalInterceptor, MsalInterceptorConfiguration, MsalModule, MsalRedirectComponent, MsalService } from "@azure/msal-angular";
 import { environment } from '@env/environment';
+import { eventsReducer } from '@events//store/events.reducer';
+import { EventsEffects } from '@events//store/events.effects';
 registerLocaleData(en);
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
 
@@ -70,6 +72,12 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   };
 }
 
+const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [
+  RemoteDataModule,
+  StoreModule.forFeature('events', eventsReducer),
+  EffectsModule.forFeature([EventsEffects])
+];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,7 +101,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
       connectInZone: true
     }),
     MsalModule,
-    BrowserModule    
+    BrowserModule,
+    ...GLOBAL_STATE_AND_THIRD_PARTY_MODULES,    
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

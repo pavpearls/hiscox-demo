@@ -8,6 +8,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { EventsFacade } from '@events//store/events.facade';
+import { EventSet } from '@shared/api-services/eventSet';
+import { EventSetMember } from '@shared/api-services/eventSetMember';
+import { EventSetRequest } from '@shared/api-services/eventSetRequest';
 import {
   ColDef,
   FirstDataRenderedEvent,
@@ -25,10 +29,9 @@ import {
 import moment from 'moment';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { filterSuccess, success } from 'ngx-remotedata';
+import { take } from 'rxjs';
 
-/** Interfaces for clarity (import your real ones as needed) **/
-// import { EventSet, Event } from '@shared/api-services/models'; 
-// interface EventSetMember { ... }
 
 function dateFormatter(params: ValueFormatterParams) {
   return params.value ? moment(params.value).format('DD/MM/YYYY') : '';
@@ -67,12 +70,11 @@ export class EventSetTableComponent implements OnInit, OnChanges {
   constructor(
     private modal: NzModalService,
     private notification: NzNotificationService,
-    // private eventsFacade: EventsFacade, // If you need to call the facade directly from here
+    private eventsFacade: EventsFacade,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['eventSetData'] && changes['eventSetData'].currentValue) {
-      // Make a copy of the incoming array to avoid direct mutation
       this.rowData = [...this.eventSetData];
     }
   }
@@ -95,9 +97,6 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     }, 0);
   }
 
-  // ---------------------------------------
-  // Columns for the MASTER grid
-  // ---------------------------------------
   getColumns(): ColDef[] {
     return [
       {
@@ -128,9 +127,6 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     ];
   }
 
-  // ---------------------------------------
-  // Columns for the DETAIL grid (non-RDS)
-  // ---------------------------------------
   getDetailColumnDefs(): ColDef[] {
     return [
       {
@@ -193,9 +189,6 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     ];
   }
 
-  // ---------------------------------------
-  // Columns for the DETAIL grid (RDS)
-  // ---------------------------------------
   getRDSDetailColumnDefs(): ColDef[] {
     return [
       {
@@ -240,23 +233,15 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     ];
   }
 
-  // ---------------------------------------
-  // MASTER-DETAIL: Provide detail rows
-  // And handle onCellValueChanged in detail
-  // ---------------------------------------
   public detailCellRendererParams: any = (masterParams: ICellRendererParams) => {
     const res = {} as IDetailCellRendererParams;
 
-    // Supply a copy of the child "events" array to the detail grid
     res.getDetailRowData = (detailParams: any) => {
-      // Create a fresh array (avoid read-only objects)
       const eventsCopy = masterParams.data.events?.map((evt: any) => ({ ...evt })) || [];
       detailParams.successCallback(eventsCopy);
     };
 
-    // Decide which columns based on eventTypeID
     if (masterParams.data.eventTypeID === 1) {
-      // RDS
       res.detailGridOptions = {
         columnDefs: this.getRDSDetailColumnDefs(),
         defaultColDef: { flex: 1, editable: true },
@@ -273,95 +258,42 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     return res;
   };
 
-  // This method is called whenever a cell in the detail grid changes
   onDetailCellValueChanged(detailEvent: any, parentRowData: any): void {
     const { data: changedChildRow, colDef, newValue, oldValue } = detailEvent;
     if (newValue === oldValue) return;
 
-    // 1) Build a new array of child events (immutably updated)
     const updatedEvents = parentRowData.events.map((evt: any) => {
       if (evt.eventID === changedChildRow.eventID) {
-        // Return a fresh copy with updated field
         return { ...evt, [colDef.field]: newValue };
       }
       return evt;
     });
 
-    // 2) Create a new copy of the parent row with updated events
     const updatedParentRow = {
       ...parentRowData,
       events: updatedEvents,
-      // Optionally set modifiedBy, etc.
     };
 
-    // 3) Replace the parent row in this.rowData
-    this.rowData = this.rowData.map((row) =>
-      row.eventSetID === updatedParentRow.eventSetID ? updatedParentRow : row
-    );
+    let eventSetsMembers: EventSetMember[] = [];
+    let eventSetList: EventSet[] = [];
 
-    // 4) Transform updatedParentRow into the structure your API expects
-    const payload = this.transformEventSetForUpdate(updatedParentRow);
+    this.eventsFacade.state.eventSetMemberships.membershipList$.pipe(filterSuccess()).pipe(take(1)).subscribe((data) => {
+      eventSetsMembers = data.value;
+    });
 
-    // 5) (Optional) Call your API/Facade to persist the change
-    // e.g.
-    // this.eventsFacade.actions.eventSets.updateEventSet(payload);
+    this.eventsFacade.state.eventSets.getEventSetList$.pipe(filterSuccess()).pipe(take(1)).subscribe((data) => {
+      eventSetList = data.value;
+    });
 
-    console.log(
-      `Detail column "${colDef.field}" changed from "${oldValue}" to "${newValue}".`
-    );
-    console.log('Updated parent row with changed detail row:', updatedParentRow);
-    console.log('Transformed payload for API:', payload);
+    const {eventOrder, simYear} = changedChildRow;
+    const eventSetMembers: EventSetMember[] | undefined = eventSetsMembers.filter(x =>x.eventSetID === updatedParentRow.eventSetID);
+    const eventSetMember = eventSetMembers.find(x =>x.eventID === changedChildRow.eventID);
+    const updatedEvent = updatedEvents.find((x: any) =>x.eventID ===changedChildRow.eventID);
+    const eventSet = eventSetList.find(x =>x.eventSetID === updatedParentRow?.eventSetID);
+    const mappedEventSet = {...eventSetMember, eventOrder, simYear, event: updatedEvent, eventSet};
+    this.eventsFacade.actions.eventSetMemberships.updateMembership(mappedEventSet);
   }
 
-  /**
-   * Converts the updatedParentRow (which has a "events" array)
-   * into an EventSet structure that has "eventSetMembers".
-   */
-  private transformEventSetForUpdate(updatedParentRow: any): any {
-    return {
-      eventSetID: updatedParentRow.eventSetID,
-      eventSetTypeID: updatedParentRow.eventSetTypeID,
-      eventSetName: updatedParentRow.eventSetName,
-      eventSetDescription: updatedParentRow.eventSetDescription,
-      isArchived: updatedParentRow.isArchived,
-      createdBy: updatedParentRow.createdBy,
-      modifiedBy: updatedParentRow.modifiedBy,
-      createDate: updatedParentRow.createDate,
-
-      // Convert each `event` to `EventSetMember`
-      eventSetMembers: updatedParentRow.events?.map((evt: any) => ({
-        eventSetMemberID: evt.eventSetMemberID ?? 0, // or undefined
-        eventID: evt.eventID,
-        eventSetID: updatedParentRow.eventSetID,
-        simYear: evt.simYear,
-        eventOrder: evt.eventOrder,
-        createdBy: evt.createdBy,
-        modifiedBy: evt.modifiedBy,
-
-        // If needed, nest the event object
-        event: {
-          eventID: evt.eventID,
-          eventTypeID: evt.eventTypeID,
-          regionPerilID: evt.regionPerilID,
-          eventNameShort: evt.eventNameShort,
-          eventNameLong: evt.eventNameLong,
-          eventDate: evt.eventDate,
-          industryLossEstimate: evt.industryLossEstimate,
-          hiscoxLossImpactRating: evt.hiscoxLossImpactRating,
-          createdBy: evt.createdBy,
-          modifiedBy: evt.modifiedBy,
-          createDate: evt.createDate,
-          isLossPick: evt.isLossPick,
-          isRestrictedAccess: evt.isRestrictedAccess,
-          isArchived: evt.isArchived,
-        },
-      })) ?? [],
-    };
-  }
-
-  // ---------------------------------------
-  // MASTER Grid CRUD Buttons
-  // ---------------------------------------
   onDeleteClick(): void {
     const selectedRows = this.gridApi.getSelectedRows();
     if (selectedRows.length === 0) {
@@ -371,7 +303,6 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       });
       return;
     }
-    // Emit to parent
     this.delete.emit(selectedRows);
   }
 
@@ -384,7 +315,6 @@ export class EventSetTableComponent implements OnInit, OnChanges {
       });
       return;
     }
-    // Emit to parent
     this.edit.emit(selectedRows[0]);
   }
 }

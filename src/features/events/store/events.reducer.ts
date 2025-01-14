@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { createReducer, on } from "@ngrx/store";
-import { Event, EventSet, EventSetMember, EventType, RegionPeril } from '@shared/api-services/models';
+import { DataProducer, Event, EventSet, EventSetMember, EventType, RegionPeril } from '@shared/api-services/models';
 import { failure, inProgress, notAsked, RemoteData, success } from "ngx-remotedata";
 import { EventsActions } from "./events.actions";
 
@@ -16,6 +16,8 @@ export interface EventSetMembershipState {
     deleteMembership: RemoteData<number, HttpErrorResponse>; // ID of the deleted membership
     getMembershipById: RemoteData<EventSetMember, HttpErrorResponse>;
     getMembershipList: RemoteData<EventSetMember[], HttpErrorResponse>;
+    addEventsToEventSet: RemoteData<EventSet, HttpErrorResponse>;
+    deleteEventsFromEventSet: RemoteData<EventSet, HttpErrorResponse>;
 }
 
 const initialEventSetMembershipState: EventSetMembershipState = {
@@ -24,6 +26,8 @@ const initialEventSetMembershipState: EventSetMembershipState = {
     deleteMembership: notAsked(),
     getMembershipById: notAsked(),
     getMembershipList: notAsked(),
+    addEventsToEventSet: notAsked(),
+    deleteEventsFromEventSet: notAsked()
 };
 
 const initialCombinedState: CombinedEventsState = {
@@ -32,6 +36,7 @@ const initialCombinedState: CombinedEventsState = {
         regionPerilList: notAsked(),
         hiscoxImpactList: notAsked(),
         industryLossList: notAsked(),
+        dataProducerList: notAsked(),
         eventsByEventType: notAsked(),
         addEvent: notAsked(),
         deleteEvent: notAsked(),
@@ -52,7 +57,9 @@ const initialCombinedState: CombinedEventsState = {
         updateMembership: notAsked(),
         deleteMembership: notAsked(),
         getMembershipById: notAsked(),
-        getMembershipList: notAsked()
+        getMembershipList: notAsked(),
+        addEventsToEventSet: notAsked(),
+        deleteEventsFromEventSet: notAsked(),
     }
 };
 
@@ -82,6 +89,7 @@ export interface EventsState {
     eventsByEventType: RemoteData<Event[], HttpErrorResponse>;
     hiscoxImpactList: RemoteData<string[], HttpErrorResponse>;
     industryLossList: RemoteData<number[], HttpErrorResponse>;
+    dataProducerList: RemoteData<DataProducer[], HttpErrorResponse>;
     addEvent: RemoteData<Event, HttpErrorResponse>;
     deleteEvent: RemoteData<number, HttpErrorResponse>;
     updateEvent: RemoteData<Event, HttpErrorResponse>;
@@ -93,6 +101,7 @@ const initialEventsState: EventsState = {
     regionPerilList: notAsked(),
     hiscoxImpactList: notAsked(),
     industryLossList: notAsked(),
+    dataProducerList: notAsked(),
     eventsByEventType: notAsked(),
     addEvent: notAsked(),
     deleteEvent: notAsked(),
@@ -220,6 +229,29 @@ export const eventsReducer = createReducer(
             industryLossList: failure(error) as any,
         },
     })),
+
+    on(EventsActions.EventsSharedActions.getDataProducerList, (state) => ({
+        ...state,
+        eventsState: {
+            ...state.eventsState,
+            dataProducerList: inProgress() as any,
+        },
+    })),
+    on(EventsActions.EventsSharedActions.getDataProducerListSuccess, (state, { payload }) => ({
+        ...state,
+        eventsState: {
+            ...state.eventsState,
+            dataProducerList: success(payload) as any,
+        },
+    })),
+    on(EventsActions.EventsSharedActions.getDataProducerListFailure, (state, { error }) => ({
+        ...state,
+        eventsState: {
+            ...state.eventsState,
+            dataProducerList: failure(error) as any,
+        },
+    })),
+
 
     on(EventsActions.EventsSharedActions.getHiscoxImpactList, (state) => ({
         ...state,
@@ -463,6 +495,29 @@ export const eventsReducer = createReducer(
         },
     })),
 
+
+ on(EventsActions.EventSetMembershipActions.updateMembership, (state, { membership }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            updateMembership: inProgress() as any,
+        },
+    })),
+    on(EventsActions.EventSetMembershipActions.updateMembershipSuccess, (state, { membership }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            updateMembership: success(membership) as any,
+        },
+    })),
+    on(EventsActions.EventSetMembershipActions.updateMembershipFailure, (state, { error }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            updateMembership: failure(error) as any,
+        },
+    })),
+
     on(EventsActions.EventSetMembershipActions.getMembershipList, (state) => ({
         ...state,
         eventSetMembershipState: {
@@ -482,6 +537,50 @@ export const eventsReducer = createReducer(
         eventSetMembershipState: {
             ...state.eventSetMembershipState,
             getMembershipList: failure(error) as any,
+        },
+    })),
+
+    on(EventsActions.EventSetMembershipActions.addEventsToEventSet, (state) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            addEventsToEventSet: inProgress() as any,
+        },
+    })),
+    on(EventsActions.EventSetMembershipActions.addEventsToEventSetSuccess, (state, { eventSet }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            addEventsToEventSet: success(eventSet) as any,
+        },
+    })),
+    on(EventsActions.EventSetMembershipActions.addEventsToEventSetFailure, (state, { error }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            addEventsToEventSet: failure(error) as any,
+        },
+    })),
+
+    on(EventsActions.EventSetMembershipActions.deleteEventsFromEventSet, (state) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            deleteEventsFromEventSet: inProgress() as any,
+        },
+    })),
+    on(EventsActions.EventSetMembershipActions.deleteEventsFromEventSetSuccess, (state, { eventSet }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            deleteEventsFromEventSet: success(eventSet) as any,
+        },
+    })),
+    on(EventsActions.EventSetMembershipActions.deleteEventsFromEventSetFailure, (state, { error }) => ({
+        ...state,
+        eventSetMembershipState: {
+            ...state.eventSetMembershipState,
+            deleteEventsFromEventSet: failure(error) as any,
         },
     })),
 );

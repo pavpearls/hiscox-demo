@@ -1,151 +1,291 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    SimpleChanges,
-  } from '@angular/core';
-  import { ColDef, GridApi, CellValueChangedEvent } from 'ag-grid-community';
-  import { Event } from '@shared/api-services/models';
-  
-  @Component({
-    selector: 'app-current-event-set-table',
-    templateUrl: './current-event-set-table.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-  })
-  export class CurrentEventSetTableComponent implements OnInit, OnChanges {
-    @Input() events: Event[] = [];
-    @Output() eventsChanged = new EventEmitter<Event[]>();
-  
-    private gridApi!: GridApi;
-  
-    columnDefs: ColDef[] = [
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { Event } from '@shared/api-services/models';
+import {
+  ColDef,
+  FirstDataRenderedEvent,
+  GridApi,
+  GridReadyEvent,
+  ICellRendererParams,
+  IDetailCellRendererParams,
+  ITooltipParams,
+  RowSelectionOptions,
+  SizeColumnsToContentStrategy,
+  SizeColumnsToFitGridStrategy,
+  SizeColumnsToFitProvidedWidthStrategy,
+  ValueFormatterParams,
+} from 'ag-grid-community';
+import moment from 'moment';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+
+function dateFormatter(params: ValueFormatterParams) {
+  return params.value ? moment(params.value).format('DD/MM/YYYY') : '';
+}
+
+@Component({
+  selector: 'app-current-event-set-table',
+  templateUrl: './current-event-set-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CurrentEventSetTableComponent implements OnInit, OnChanges {
+  @Input() eventSetData: any[];
+  @Output() new = new EventEmitter<Event>();
+  @Output() delete = new EventEmitter<any[]>();
+  @Output() edit = new EventEmitter<any>();
+
+  private gridApi!: GridApi;
+  public columnDefs: ColDef[] = [];
+  public defaultColDef: ColDef = { flex: 1 };
+  public rowData!: any[];
+  public tooltipShowDelay = 200;
+  public rowSelection: RowSelectionOptions | 'single' | 'multiple' = {
+    mode: 'singleRow',
+  };
+  public paginationPageSizeSelector = [10, 25, 50, 100];
+  public paginationPageSize = 25;
+
+  public autoSizeStrategy:
+    | SizeColumnsToFitGridStrategy
+    | SizeColumnsToFitProvidedWidthStrategy
+    | SizeColumnsToContentStrategy = {
+    type: 'fitCellContents',
+  };
+
+  public detailCellRendererParams: any = (params: ICellRendererParams) => {
+    var res = {} as IDetailCellRendererParams;
+
+    res.getDetailRowData = function (params: any) {
+      params.successCallback(params.data.events);
+    };
+
+    if (params.data.eventTypeID === 1) {
+      res.detailGridOptions = {
+        columnDefs: this.getRDSDetailColumnDefs(),
+        defaultColDef: {
+          flex: 1,
+        },
+      };
+    } else {
+      res.detailGridOptions = {
+        columnDefs: this.getDetailColumnDefs(),
+        defaultColDef: {
+          flex: 1,
+        },
+      };
+    }
+    return res;
+  };
+
+  constructor(
+    private modal: NzModalService,
+    private notification: NzNotificationService
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['eventSetData'].currentValue) {
+      this.rowData = this.eventSetData;
+    }
+  }
+
+  ngOnInit(): void {
+    this.columnDefs = this.getColumns();
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+    this.gridApi.autoSizeAllColumns();
+  }
+
+  onFirstDataRendered(params: FirstDataRenderedEvent) {
+    setTimeout(() => {
+      var node1 = params.api.getDisplayedRowAtIndex(0)!;
+      node1.setExpanded(true);
+    }, 0);
+  }
+
+  getColumns(): ColDef[] {
+    return [
       {
-        field: 'eventID',
-        headerName: 'Event ID',
-        checkboxSelection: true,
+        field: 'eventSetID',
+        headerName: 'Set ID',
+        cellRenderer: 'agGroupCellRenderer',
         sortable: true,
-        flex: 1,
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
       },
       {
-        field: 'eventType.eventTypeName',
-        headerName: 'Event Type',
+        field: 'eventSetName',
+        cellStyle: { fontWeight: 'bold' },
+        headerName: 'Event Set Name',
         sortable: true,
-        flex: 1,
-        editable: false,
       },
       {
-        field: 'eventNameShort',
-        headerName: 'Event Name',
+        field: 'createDate',
+        headerName: 'Create Date',
         sortable: true,
-        flex: 2,
-        editable: true,
-        tooltipField: 'eventNameLong',
+        valueFormatter: dateFormatter,
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
       },
+      {
+        field: 'createdBy',
+        headerName: 'Create User',
+        sortable: true,
+      },
+    ];
+  }
+
+  getDetailColumnDefs(): ColDef[] {
+    return [
       {
         field: 'simYear',
         headerName: 'Sim Year',
         sortable: true,
-        flex: 1,
-        editable: true, 
+        editable: true,
         cellEditor: 'agTextCellEditor',
-        cellStyle: { 'text-align': 'center' },
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
       },
       {
         field: 'eventOrder',
         headerName: 'Order',
         sortable: true,
-        flex: 1,
-        editable: true, 
+        editable: true,
         cellEditor: 'agTextCellEditor',
-        cellStyle: { 'text-align': 'center' },
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
       },
       {
-        field: 'regionPeril.regionPerilName',
-        headerName: 'Region-Peril',
+        field: 'eventID',
+        headerName: 'ID',
         sortable: true,
-        flex: 2,
-        editable: false,
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
+      },
+      {
+        field: 'eventType.eventTypeName',
+        headerName: 'Event Type',
+        sortable: true,
+      },
+      {
+        field: 'eventNameShort',
+        headerName: 'Event Name',
+        sortable: true,
+        cellStyle: { fontWeight: 'bold' },
+        tooltipValueGetter: (p: ITooltipParams) => p.data.eventNameLong,
+        headerTooltip: 'Event Description',
       },
       {
         field: 'eventDate',
         headerName: 'Event Date',
         sortable: true,
-        flex: 1,
-        editable: false,
+        valueFormatter: dateFormatter,
+      },
+      {
+        field: 'regionPeril.regionPerilName',
+        headerName: 'Region Peril',
+        sortable: true,
       },
       {
         field: 'industryLossEstimate',
-        headerName: 'Industry Loss (Billion USD)',
+        headerName: 'Industry Loss',
         sortable: true,
-        flex: 2,
-        editable: false,
-        cellStyle: { 'text-align': 'center' },
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
       },
       {
         field: 'hiscoxLossImpactRating',
-        headerName: 'Hiscox Loss Impact',
+        headerName: 'Hiscox Impact',
         sortable: true,
-        flex: 2,
-        editable: false,
-      },
-      {
-        field: 'createdBy',
-        headerName: 'Created By',
-        sortable: true,
-        flex: 1,
-        editable: false,
-      },
-      {
-        field: 'createDate',
-        headerName: 'Created Date',
-        sortable: true,
-        flex: 1,
-        editable: false,
       },
     ];
-  
-    defaultColDef: ColDef = {
-      resizable: true,
-    };
-  
-    rowData: Event[] = [];
-  
-    ngOnInit(): void {
-      this.rowData = [...this.events];
-    }
-  
-    ngOnChanges(changes: SimpleChanges): void {
-      if (changes['events'] && this.events) {
-        this.rowData = [...this.events];
-      }
-    }
-  
-    onGridReady(params: any): void {
-      this.gridApi = params.api;
-    }
-  
-    onRemoveSelected(): void {
-      const selectedRows = this.gridApi.getSelectedRows();
-      if (selectedRows.length === 0) {
-        return; 
-      }
-  
-      this.rowData = this.rowData.filter(evt => !selectedRows.includes(evt));
-      this.eventsChanged.emit(this.rowData);
-    //   this.gridApi.setRowData(this.rowData);
-    }
-  
-    onCellValueChanged(event: CellValueChangedEvent): void {
-      const updatedEvent = event.data as Event;
-      const index = this.rowData.findIndex(e => e.eventID === updatedEvent.eventID);
-      if (index > -1) {
-        this.rowData[index] = { ...updatedEvent };
-        this.eventsChanged.emit(this.rowData);
-      }
-    }
   }
-  
+
+  getRDSDetailColumnDefs(): ColDef[] {
+    return [
+      {
+        field: 'simYear',
+        headerName: 'Sim Year',
+        sortable: true,
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
+      },
+      {
+        field: 'eventOrder',
+        headerName: 'Order',
+        sortable: true,
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
+      },
+      {
+        field: 'eventID',
+        headerName: 'ID',
+        sortable: true,
+        cellStyle: () => {
+          return { 'text-align': 'center' };
+        },
+      },
+      {
+        field: 'eventType.eventTypeName',
+        headerName: 'Event Type',
+        sortable: true,
+      },
+      {
+        field: 'eventNameShort',
+        headerName: 'Event Name',
+        sortable: true,
+        tooltipValueGetter: (p: ITooltipParams) => p.data.eventNameLong,
+        headerTooltip: 'Event Description',
+      },
+      {
+        field: 'regionPeril.regionPerilName',
+        headerName: 'Region Peril',
+        sortable: true,
+      },
+    ];
+  }
+
+  onDeleteClick(): void {
+    const selectedRows = this.gridApi.getSelectedRows();
+    if (selectedRows.length === 0) {
+      this.modal.warning({
+        nzTitle: 'No Rows Selected',
+        nzContent: 'Please select rows to delete.',
+      });
+      return;
+    }
+
+    this.delete.emit(selectedRows);
+  }
+
+  onEditClick(): void {
+    const selectedRows = this.gridApi.getSelectedRows();
+
+    if (selectedRows.length === 0) {
+      this.modal.warning({
+        nzTitle: 'No Rows Selected',
+        nzContent: 'Please select rows to edit.',
+      });
+      return;
+    }
+
+    this.edit.emit(selectedRows[0]);
+  }
+}

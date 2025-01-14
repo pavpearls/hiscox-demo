@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Event, EventSet, EventSetAndEventsRequest, EventSetMember, EventSetRequest, EventType, RegionPeril } from '@shared/api-services/models';
+import { DataProducer, Event, EventSet, EventSetAndEventsRequest, EventSetMember, EventSetRequest, EventType, RegionPeril } from '@shared/api-services/models';
 
 //////////////////////////////////////////////////////
 //                  Events Actions                  //
@@ -52,6 +52,16 @@ const getIndustryLossListSuccess = createAction(
 );
 const getIndustryLossListFailure = createAction(
   '[Events Dashboard] Get Industry Loss List Failure',
+  props<{ error: HttpErrorResponse }>()
+);
+
+const getDataProducerList = createAction('[Events Dashboard] Get DataProducer List');
+const getDataProducerListSuccess = createAction(
+  '[Events Dashboard] Get DataProducer List Success',
+  props<{ payload: DataProducer[] }>()
+);
+const getDataProducerListFailure = createAction(
+  '[Events Dashboard] Get DataProducer List Failure',
   props<{ error: HttpErrorResponse }>()
 );
 
@@ -124,6 +134,10 @@ const EventsSharedActions = {
   getIndustryLossList,
   getIndustryLossListSuccess,
   getIndustryLossListFailure,
+
+  getDataProducerList,
+  getDataProducerListSuccess,
+  getDataProducerListFailure,
 
   getEventsByEventType,
   getEventsByEventTypeSuccess,
@@ -221,7 +235,7 @@ const getEventSetFlatListFailure = createAction(
 
 const updateEventSet = createAction(
   '[Event Set] Update Event Set',
-  props<{ payload: EventSetRequest }>()
+  props<{ payload: any }>()
 );
 const updateEventSetSuccess = createAction(
   '[Event Set] Update Event Set Success',
@@ -278,6 +292,36 @@ const createMembershipSuccess = createAction(
 
 const createMembershipFailure = createAction(
   '[EventSetMembership] Create Membership Failure',
+  props<{ error: HttpErrorResponse }>()
+);
+
+const addEventsToEventSet = createAction(
+  '[EventSetMembership] Add Events To EventSet',
+  props<{ eventSetMemberList: EventSetMember[], eventSetId: number,  deleteEventIdList: number[]  }>()
+);
+
+const addEventsToEventSetSuccess = createAction(
+  '[EventSetMembership] Add Events To EventSet Success',
+  props<{ eventSet: EventSet }>()
+);
+
+const addEventsToEventSetFailure = createAction(
+  '[EventSetMembership] Add Events To EventSet Failure',
+  props<{ error: HttpErrorResponse }>()
+);
+
+const deleteEventsFromEventSet = createAction(
+  '[EventSetMembership] Delete Events From EventSet',
+  props<{ eventSetId:number, deleteEventIdList: number[] }>()
+);
+
+const deleteEventsFromEventSetSuccess = createAction(
+  '[EventSetMembership] Delete Events From EventSet Success',
+  props<{ eventSet: EventSet }>()
+);
+
+const deleteEventsFromEventSetFailure = createAction(
+  '[EventSetMembership] Delete Events From EventSet Failure',
   props<{ error: HttpErrorResponse }>()
 );
 
@@ -358,6 +402,15 @@ export const EventSetMembershipActions = {
   getMembershipList,
   getMembershipListSuccess,
   getMembershipListFailure,
+
+  addEventsToEventSet,
+  addEventsToEventSetSuccess,
+  addEventsToEventSetFailure,
+
+  deleteEventsFromEventSet,
+  deleteEventsFromEventSetSuccess,
+  deleteEventsFromEventSetFailure,
+
 };
 
 //////////////////////////////////////////////////////

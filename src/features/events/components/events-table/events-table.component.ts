@@ -19,6 +19,9 @@ import {
   RowNode,
   RowSelectedEvent,
   RowSelectionOptions,
+  SizeColumnsToContentStrategy,
+  SizeColumnsToFitGridStrategy,
+  SizeColumnsToFitProvidedWidthStrategy,
 } from 'ag-grid-community';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -34,15 +37,31 @@ export class EventsTableComponent implements OnInit, OnChanges {
   @Input() set successValue(value: Event[] | undefined) {
     this._successValue = value;
     if (this._successValue) {
-      this.rowData = this._successValue.map((event) =>
+      this.inputData = this._successValue.map((event) =>
         this.transformEventDataItem(event)
       );
+      if (this.removeRowList && this.removeRowList.length > 0) {
+        for (let index = 0; index < this.removeRowList.length; index++) {
+          const eventId = this.removeRowList[index].eventID;
+          if (eventId) {
+            const removeIndex = this.inputData.findIndex(e=>e.eventID == eventId);
+            if (removeIndex > -1) {
+              this.inputData.splice(removeIndex, 1);
+            }
+          }
+        }
+      }
+      this.rowData = [...this.inputData];
     }
   }
 
   @Input({ required: true }) addEventConfig!: AddEventConfig;
 
   private _successValue: Event[] | undefined = undefined;
+
+  @Input() rowDataList:any[] = [];
+
+  @Input() removeRowList:any[] = [];
 
   @Input() enableRowSelection = true;
   @Input() enableEditMode = true;
@@ -54,6 +73,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
   @Output() archive = new EventEmitter<any[]>();
   @Output() selectedRowsChanged = new EventEmitter<any[]>();
   columnDefs: ColDef[] = [];
+  inputData: any[] = [];
   rowData: any[] = [];
   editCache: { [key: number]: { edit: boolean; form: FormGroup } } = {};
   public editType: 'fullRow' = 'fullRow';
@@ -67,13 +87,25 @@ export class EventsTableComponent implements OnInit, OnChanges {
   paginationPageSizeSelector = [10, 25, 50, 100];
   public isEditing = false;
   paginationPageSize = 25;
+
+  public autoSizeStrategy:
+  | SizeColumnsToFitGridStrategy
+  | SizeColumnsToFitProvidedWidthStrategy
+  | SizeColumnsToContentStrategy = {
+  type: "fitGridWidth",
+  defaultMinWidth: 100,
+  columnLimits: [],
+  };
+
   constructor(
     private fb: FormBuilder,
     private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+   
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['addEventConfig']) {
@@ -87,6 +119,11 @@ export class EventsTableComponent implements OnInit, OnChanges {
             mode: 'singleRow',
           });
     }
+    if (changes['rowDataList']) {
+      this.rowData = this.rowDataList.map((event) =>
+        this.transformEventDataItem(event)
+      );
+    }
   }
 
   private generateColumns(addEventConfig: AddEventConfig): ColDef[] {
@@ -99,6 +136,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
         filterParams: {
           buttons: ['reset', 'apply'],
         } as ITextFilterParams,
+        minWidth: 150,
       },
       {
         field: 'eventTypeName',
@@ -108,6 +146,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
         filterParams: {
           buttons: ['reset', 'apply'],
         } as ITextFilterParams,
+        minWidth: 200,
       },
       {
         field: 'eventNameShort',
@@ -119,6 +158,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
           buttons: ['reset', 'apply'],
         } as ITextFilterParams,
         editable: true,
+        minWidth: 200,
       },
       {
         field: 'regionPerilName',
@@ -138,6 +178,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
             (option: any) => option.displayValue
           ),
         },
+        minWidth: 200,
       },
       {
         field: 'userName',
@@ -147,6 +188,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
         filterParams: {
           buttons: ['reset', 'apply'],
         } as ITextFilterParams,
+        minWidth: 100,
       },
       {
         field: 'createDate',
@@ -159,6 +201,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
         valueFormatter: (params: any) => {
           return params?.data?.createDate || '';
         },
+        minWidth: 200,
       },
       {
         field: 'industryLossEstimate',
@@ -187,6 +230,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
           const value = params.newValue;
           return isNaN(Number(value)) ? value : Number(value);
         },
+        minWidth: 200,
       },
       {
         field: 'hiscoxLossImpactRating',
@@ -203,6 +247,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
             (option: any) => option.displayValue
           ),
         },
+        minWidth: 200,
       },
       {
         field: 'restricted',
@@ -218,6 +263,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: ['Yes', 'No'] },
         editable: true,
+        minWidth: 200,
       },
       {
         field: 'archived',
@@ -231,6 +277,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: ['Yes', 'No'] },
         editable: true,
+        minWidth: 200,
       },
     ];
   }

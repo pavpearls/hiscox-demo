@@ -2,7 +2,7 @@ import { createSelector, createFeatureSelector } from "@ngrx/store";
 import { CombinedEventsState, EventsState, EventSetState, EventSetMembershipState } from "./events.reducer";
 import { RemoteData } from "ngx-remotedata";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Event, EventSet, EventType, RegionPeril, EventSetMember } from '@shared/api-services/models';
+import { Event, EventSet, EventType, RegionPeril, EventSetMember, DataProducer } from '@shared/api-services/models';
 
 export const selectCombinedState = createFeatureSelector<CombinedEventsState>('events');
 
@@ -49,6 +49,12 @@ export const selectAddEvent = createSelector(
 export const selectIndustryLossList = createSelector(
   selectEventsState,
   (state: EventsState): RemoteData<number[], HttpErrorResponse> => state.industryLossList
+);
+
+
+export const selectDataProducerList = createSelector(
+  selectEventsState,
+  (state: EventsState): RemoteData<DataProducer[], HttpErrorResponse> => state.dataProducerList
 );
 
 export const selectHiscoxImpactList = createSelector(
@@ -126,10 +132,21 @@ export const selectMembershipList = createSelector(
   (state: EventSetMembershipState): RemoteData<EventSetMember[], HttpErrorResponse> => state.getMembershipList
 );
 
+export const selectAddEventsToEventSet = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<EventSet, HttpErrorResponse> => state.addEventsToEventSet
+);
+
+export const selectDeleteEventsFromEventSet = createSelector(
+  selectEventSetMembershipState,
+  (state: EventSetMembershipState): RemoteData<EventSet, HttpErrorResponse> => state.deleteEventsFromEventSet
+);
+
 export const EventsSelectors = {
   selectEventTypeList,
   selectRegionPerilList,
   selectIndustryLossList,
+  selectDataProducerList,
   selectHiscoxImpactList,
   selectEventsByEventType,
   selectAddEvent,
@@ -150,4 +167,6 @@ export const EventsSelectors = {
   selectDeleteMembership,
   selectMembershipById,
   selectMembershipList,
+  selectAddEventsToEventSet,
+  selectDeleteEventsFromEventSet
 };

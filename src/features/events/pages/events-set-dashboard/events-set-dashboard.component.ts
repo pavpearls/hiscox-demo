@@ -6,7 +6,9 @@ import {
   Event,
   EventSet,
   EventSetAndEventsRequest,
+  EventSetMember,
 } from '@shared/api-services/models';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { filterSuccess, RemoteData } from 'ngx-remotedata';
 import { Observable, take } from 'rxjs';
 
@@ -19,6 +21,7 @@ export class EventsSetDashboardComponent implements OnInit {
   eventSetList$: Observable<RemoteData<any[], HttpErrorResponse>> =
     this.eventsFacade.state.eventSets.getEventSetList$;
 
+
   eventSetData: any[] = [];
   eventSetRawData: any[] = [];
   tabs = EVENT_SET_TABS;
@@ -28,32 +31,42 @@ export class EventsSetDashboardComponent implements OnInit {
   isAddEventSetModalVisible = false;
   isEditEventSetModalVisible = false;
   isDeleteModalVisible = false;
+  selectedEventSetEvents: any[];
 
-  constructor(private eventsFacade: EventsFacade) {}
+  constructor(private eventsFacade: EventsFacade, private modal: NzModalService,) { }
 
   ngOnInit(): void {
+    this.eventsFacade.actions.eventSetMemberships.getMembershipList();
+    this.eventsFacade.actions.eventSets.getEventSetList();
+    
     this.populateEventSetData();
 
-    // Subscribe to event sets from store
     this.eventSetList$.subscribe((data: any) => {
       this.eventSetRawData = data.value;
-      // Make a fresh copy to avoid read-only issues
       this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
     });
 
-    // Reload after deletes
+
+
     this.eventsFacade.state.eventSets.deleteEventSet$
       .pipe(filterSuccess())
       .subscribe(() => {
         this.populateEventSetData();
       });
 
-    // Reload after updates
-    this.eventsFacade.state.eventSets.updateEventSet$
+    this.eventsFacade.state.eventSetMemberships.addEventsToEventSet$
       .pipe(filterSuccess())
       .subscribe(() => {
-        this.eventsFacade.actions.eventSets.getEventSetList();
-      });
+        this.populateEventSetData();
+     });
+
+     
+    this.eventsFacade.state.eventSetMemberships.deleteEventsFromEventSet$
+    .pipe(filterSuccess())
+    .subscribe(() => {
+      this.populateEventSetData();
+    });
+
 
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
   }
@@ -66,10 +79,16 @@ export class EventsSetDashboardComponent implements OnInit {
 
   populateEventSetData() {
     this.eventsFacade.actions.eventSets.getEventSetList();
+   
     this.eventsFacade.showLoadingSpinnerForApiResponses(
       this.eventsFacade.state.eventSets.getEventSetList$,
       this.eventsFacade.state.events.eventsTypeList$,
-      this.eventsFacade.state.eventSets.createEventSetAndEvents$
+      this.eventsFacade.state.eventSets.createEventSetAndEvents$,      
+      this.eventsFacade.state.eventSetMemberships.membershipList$,
+      this.eventsFacade.state.eventSetMemberships.updateMembership$,
+      this.eventsFacade.state.eventSetMemberships.addEventsToEventSet$,
+      this.eventsFacade.state.eventSetMemberships.deleteEventsFromEventSet$,
+      this.eventsFacade.state.eventSets.updateEventSet$,
     );
   }
 
@@ -77,21 +96,27 @@ export class EventsSetDashboardComponent implements OnInit {
     this.selectedTabId = tabId;
     this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
+    this.eventsFacade.actions.eventSets.getEventSetById(this.selectedTabId);
   }
 
-  // Called when user clicks "Delete" in child
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
-    this.isDeleteModalVisible = true;
     this.deletedEventSet = eventSets[0];
+    this.modal.confirm({
+      nzTitle: 'Are you sure you want to delete the selected Event Set?',
+      nzContent: `${eventSets[0].eventSetName}  will be deleted.`,
+      nzOnOk: () => {
+        if (eventSets[0].eventSetID) {
+          this.eventsFacade.actions.eventSets.deleteEventSet(eventSets[0].eventSetID);
+        }
+      },
+    });
   }
 
-  // Called when user clicks "Edit" in child
   handleEditEvent($event: any): void {
     this.editedEventSet = $event;
     this.showEditEventSetModal();
   }
 
-  // Called when user clicks "New" in child
   handleOnNewEvent($event: any): void {
     this.showAddEventSetModal();
   }
@@ -104,7 +129,7 @@ export class EventsSetDashboardComponent implements OnInit {
   }
 
   onModalOk($event: any): void {
-    // Implementation for creating new EventSet, same as before
+    this.eventsFacade.actions.eventSets.createEventSetAndEvents($event);
   }
 
   onModalCancel(): void {
@@ -113,36 +138,14 @@ export class EventsSetDashboardComponent implements OnInit {
     this.isEditEventSetModalVisible = false;
   }
 
-  // Handling the edit modal OK
-  onEditEventSetModalOk($event: any) {
-    // e.g. this.eventsFacade.actions.eventSets.updateEventSet( ... );
+  onEditEventSetModalOk($payload: any) {
+    this.eventsFacade.actions.eventSets.updateEventSet($payload);
     this.isEditEventSetModalVisible = false;
     this.editedEventSet = null;
-    this.eventsFacade.actions.eventSets.getEventSetList();
   }
 
   onEditEventSetModalCancel($event: any) {
     this.isEditEventSetModalVisible = false;
   }
 
-  // Handling the delete modal confirm
-  handleDeleteConfirmed(payload: { eventSetId: number; eventIds: number[] | null }): void {
-    if (payload.eventIds === null) {
-      // Entire event set
-      this.eventsFacade.actions.eventSets.deleteEventSet(payload.eventSetId);
-    } else {
-      // Delete specific events
-      if (this.deletedEventSet?.events) {
-        const updatedEventSet = {
-          ...this.deletedEventSet,
-          events: this.deletedEventSet.events.filter(
-            (evt) => !payload.eventIds?.includes(evt.eventID as any)
-          ),
-        };
-        this.eventsFacade.actions.eventSets.updateEventSet(updatedEventSet);
-      }
-    }
-    this.isDeleteModalVisible = false;
-    this.deletedEventSet = null;
-  }
 }

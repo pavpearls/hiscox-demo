@@ -21,6 +21,7 @@ export class EventsFacade {
             eventsByEventType$: this.store.pipe(select(EventsSelectors.selectEventsByEventType)),
             addEvent$: this.store.pipe(select(EventsSelectors.selectAddEvent)),
             industryLossList$: this.store.pipe(select(EventsSelectors.selectIndustryLossList)),
+            dataProducerList$: this.store.pipe(select(EventsSelectors.selectDataProducerList)),
             hiscoxImpactList$: this.store.pipe(select(EventsSelectors.selectHiscoxImpactList)),
             deleteEvent$: this.store.pipe(select(EventsSelectors.selectDeleteEvent)),
             updateEvent$: this.store.pipe(select(EventsSelectors.selectUpdateEvent)),
@@ -41,6 +42,8 @@ export class EventsFacade {
             deleteMembership$: this.store.pipe(select(EventsSelectors.selectDeleteMembership)),
             membershipById$: this.store.pipe(select(EventsSelectors.selectMembershipById)),
             membershipList$: this.store.pipe(select(EventsSelectors.selectMembershipList)),
+            addEventsToEventSet$: this.store.pipe(select(EventsSelectors.selectAddEventsToEventSet)),
+            deleteEventsFromEventSet$: this.store.pipe(select(EventsSelectors.selectDeleteEventsFromEventSet)),
         },
     };
 
@@ -60,6 +63,9 @@ export class EventsFacade {
             },
             loadIndustryLossList: (): void => {
                 this.store.dispatch(EventsActions.EventsSharedActions.getIndustryLossList());
+            },
+            loadDataProducerList: (): void => {
+                this.store.dispatch(EventsActions.EventsSharedActions.getDataProducerList());
             },
             loadHiscoxImpactList: (): void => {
                 this.store.dispatch(EventsActions.EventsSharedActions.getHiscoxImpactList());
@@ -93,7 +99,7 @@ export class EventsFacade {
             getEventSetFlatList: (): void => {
                 this.store.dispatch(EventsActions.EventsSetActions.getEventSetFlatList());
             },
-            updateEventSet: (payload: EventSet): void => {
+            updateEventSet: (payload: any): void => {
                 this.store.dispatch(EventsActions.EventsSetActions.updateEventSet({ payload }));
             },
         },
@@ -113,6 +119,7 @@ export class EventsFacade {
             getMembershipList: (): void => {
                 this.store.dispatch(EventsActions.EventSetMembershipActions.getMembershipList());
             },
+
         },
     };
 

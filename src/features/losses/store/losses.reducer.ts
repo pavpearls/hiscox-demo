@@ -27,6 +27,7 @@ export interface LossState {
     getLossSetById: RemoteData<LossSet, HttpErrorResponse>;
     getLossSetList: RemoteData<EventSet[], HttpErrorResponse>;
     updateLossSet: RemoteData<LossSetRequest, HttpErrorResponse>;
+    apiLossLoadUploadFilePost: RemoteData<any, HttpErrorResponse>;
   }
   
 
@@ -48,6 +49,7 @@ const initialState: LossState = {
     getLossSetById: notAsked(),
     getLossSetList: notAsked(),
     updateLossSet: notAsked(),
+    apiLossLoadUploadFilePost: notAsked()
 };
 
 export const lossReducer = createReducer(
@@ -111,7 +113,12 @@ export const lossReducer = createReducer(
   
     on(LossActions.updateLossSet, (state) => ({ ...state, updateLossSet: inProgress() as any })),
     on(LossActions.updateLossSetSuccess, (state, { response }) => ({ ...state, updateLossSet: success(response) as any })),
-    on(LossActions.updateLossSetFailure, (state, { error }) => ({ ...state, updateLossSet: failure(error) as any }))
+    on(LossActions.updateLossSetFailure, (state, { error }) => ({ ...state, updateLossSet: failure(error) as any })),
+
+    on(LossActions.apiLossLoadUploadFilePost, (state) => ({ ...state, apiLossLoadUploadFilePost: inProgress() as any })),
+    on(LossActions.apiLossLoadUploadFilePostSuccess, (state, { response }) => ({ ...state, apiLossLoadUploadFilePost: success(response) as any })),
+    on(LossActions.apiLossLoadUploadFilePostFailure, (state, { error }) => ({ ...state, apiLossLoadUploadFilePost: failure(error) as any }))
+  
   );
   
   

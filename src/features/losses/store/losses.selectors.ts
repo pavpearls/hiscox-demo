@@ -19,7 +19,8 @@ const selectLossFeature = createFeatureSelector<LossState>('loss');
  const selectGetLossSetByEventSetTypeId = createSelector(selectLossFeature, state => state.getLossSetByEventSetTypeId);
  const selectGetLossSetById = createSelector(selectLossFeature, state => state.getLossSetById);
  const selectGetLossSetList = createSelector(selectLossFeature, state => state.getLossSetList);
- const selectUpdateLossSet = createSelector(selectLossFeature, state => state.updateLossSet);
+ const selectUpdateLossSet = createSelector(selectLossFeature, state => state.updateLossSet); 
+ const apiLossLoadUploadFilePost = createSelector(selectLossFeature, state => state.apiLossLoadUploadFilePost);
 
 export const LossSelectors = {
     selectUploadFile,
@@ -39,4 +40,5 @@ export const LossSelectors = {
     selectGetLossSetById,
     selectGetLossSetList,
     selectUpdateLossSet,
+    apiLossLoadUploadFilePost
   };

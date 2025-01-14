@@ -78,12 +78,26 @@ export class AddEventSetModalComponent {
 
   handleOk(): void {
     if (this.eventSetForm.valid) {
-      this.onOk.emit(this.eventSetForm.value);
+      const payload = {
+        eventSetName: this.eventSetForm.get('eventSetName')?.value,
+        eventSetDescription: this.eventSetForm.get('eventSetDescription')?.value,
+        eventSetTypeId: this.eventSetForm.get('eventType')?.value,
+        eventIds:this.getEventIds(),
+      }
+      this.onOk.emit(payload);
       this.showModal = false;
     } else {
       this.eventSetForm.markAllAsTouched();
     }
   }
+
+ getEventIds() {
+   const ids: number[] = [];
+   for (let index = 0; index <  this.eventSetForm.get('events')?.value.length; index++) {
+    ids.push(this.eventSetForm.get('events')?.value[index].eventID);    
+   }
+   return ids;
+ }
 
   handleCancel(): void {
     this.onCancel.emit();

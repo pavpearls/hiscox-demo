@@ -19,8 +19,8 @@
                   <nz-form-item>
                     <nz-form-control>
                       <nz-select id="dataFormat" formControlName="dataFormat" placeholder="Select Format">
-                        <nz-option *ngFor="let option of dataFormatOptions" [nzValue]="option.value"
-                          placeholder="Select value" [nzLabel]="option.label"></nz-option>
+                        <nz-option *ngFor="let item of eventSetData" [nzValue]="item.eventSetID"
+                          placeholder="Select value" [nzLabel]="item.eventSetName"></nz-option>
                       </nz-select>
                     </nz-form-control>
                   </nz-form-item>
@@ -41,13 +41,17 @@
                   </nz-upload>
                 </div>
               </div>
-
               <nz-form-item>
                 <nz-form-label nzRequired>Data Producer</nz-form-label>
                 <nz-form-control>
                   <nz-select id="dataProducer" formControlName="dataProducer" placeholder="Select Data Producer">
-                    <nz-option nzValue="Exposure Management" nzLabel="Exposure Management"></nz-option>
-                    <nz-option nzValue="Other" nzLabel="Other"></nz-option>
+                    <nz-option
+                    *ngFor="
+                      let item of dataProducerList
+                    "
+                    [nzValue]="item?.dataProducerID"
+                    [nzLabel]="item?.dataProducerName"
+                  ></nz-option>
                   </nz-select>
                 </nz-form-control>
               </nz-form-item>

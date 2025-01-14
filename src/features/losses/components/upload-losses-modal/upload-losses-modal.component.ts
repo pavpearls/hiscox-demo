@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   EventEmitter,
@@ -17,6 +18,7 @@ import {
   isFailure,
   isInProgress,
   isSuccess,
+  RemoteData,
 } from 'ngx-remotedata';
 import {
   combineLatest,
@@ -30,6 +32,9 @@ import {
 } from 'rxjs';
 import { NdsApiServiceWrapper } from 'shared/api-services/nds-api/custom/nds-api-service-wrapper';
 import * as XLSX from 'xlsx';
+import { EventsFacade } from '@events//store/events.facade';
+import { DataProducer } from '@shared/api-services/dataProducer';
+import { LossLoadService } from 'shared/api-services/nds-api/generated';
 
 @Component({
   selector: 'upload-loss-load-modal',
@@ -40,6 +45,9 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   @Input() showModal = true;
   @Output() onOk = new EventEmitter<any>();
   @Output() onCancel = new EventEmitter<void>();
+
+  dataProducerList$: Observable<RemoteData<DataProducer[], HttpErrorResponse>> = this.eventsFacade.state.events.dataProducerList$;
+  eventSetList$: Observable<RemoteData<any[], HttpErrorResponse>> = this.eventsFacade.state.eventSets.getEventSetList$;
 
   selectAll = false;
   userDefinedFields: { name: string; selected: boolean; type: string }[] = [];
@@ -62,7 +70,8 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     { check: 'All Loss Classes Found', result: 'false' },
     { check: 'VALID FILE?', result: 'false' },
   ];
-
+  dataProducerList: any[];
+  eventSetData: any[] = [];
   dataFormatOptions = [
     { value: 'hiscox2014', label: 'Hiscox RDS 2014' },
     { value: 'otherFormat1', label: 'Other Format 1' },
@@ -71,7 +80,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
 
   vm$ = combineLatest([
     this.lossFacade.state.fileUpload.validateFile$,
-    this.lossFacade.state.fileUpload.uploadFile$,
+    this.lossFacade.state.fileUpload.uploadFile$
   ]).pipe(
     map(([validateFileState, uploadFileState]) => ({
       loading: [validateFileState, uploadFileState].some((state) =>
@@ -89,8 +98,11 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private lossFacade: LossFacade,
+    private eventsFacade: EventsFacade,
     private notification: NzNotificationService,
-    private api: NdsApiServiceWrapper
+    private lossLoadApiService: LossLoadService,
+    private api: NdsApiServiceWrapper,
+
   ) {
     this.uploadForm = this.fb.group({
       friendlyName: ['', [Validators.required, Validators.maxLength(200)]],
@@ -141,11 +153,27 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.lossFacade.showLoadingSpinnerForApiResponses(
       this.lossFacade.state.fileUpload.uploadFile$,
-      this.lossFacade.state.fileUpload.validateFile$
+      this.lossFacade.state.fileUpload.validateFile$,
+      this.eventsFacade.state.events.dataProducerList$,
+      this.eventsFacade.state.eventSets.getEventSetList$
     );
 
+    this.eventsFacade.actions.events.loadDataProducerList();
+    this.eventsFacade.actions.eventSets.getEventSetList();
+    
     this.handleFileUploadResponse();
     this.handleValidateFileResponse();
+
+    this.dataProducerList$.pipe(takeWhile(() => this.isComponentAlive))
+    .pipe(filterSuccess())
+    .subscribe((response) => { 
+      this.dataProducerList = response.value
+    });
+
+    
+    this.eventSetList$.subscribe((data: any) => {
+      this.eventSetData = data.value;
+    });
   }
 
   handleValidateFileResponse(): void {
@@ -253,25 +281,23 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
       };
 
       const uploadFileRequestPayload: UploadFileRequest = {
-        lossSetID: 7,
         lossLoadRequest: {
-          eventSetID: 16,
+          eventSetID: 15,
           dataSourceTypeID: 1,
           dataProducerID: 1,
           dataSourceName: 'test_data_source_2',
-          lossLoadName: friendlyName,
+          lossLoadName: friendlyName + new Date().toLocaleDateString(),
           lossLoadDescription: description,
           loadDate: new Date(),
           isArchived: false,
           isValid: true,
-          includeOptionalFields: false,
         }
       }
 
       this.lossFacade.actions.fileUpload.uploadFile(uploadPayload.file);
-
-      this.api.lossLoadService.uploadFileRequest(uploadFileRequestPayload).pipe(take(1)).subscribe(data => {
-        this.lossFacade.actions.fileUpload.uploadFile(uploadPayload.file);
+      this.api.lossLoadService.uploadFileRequest(uploadFileRequestPayload).pipe(take(1)).subscribe((lossLoadID: any) => {
+      
+        this.lossFacade.actions.lossSets.apiLossLoadUploadFilePost((lossLoadID?.newId), uploadPayload.file);
 
         this.notification.success(
           'Upload Started',

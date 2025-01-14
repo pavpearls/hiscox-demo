@@ -7,7 +7,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EventRequest } from './eventRequest';
 
 
 export interface EventSetAndEventsRequest { 
@@ -19,7 +18,7 @@ export interface EventSetAndEventsRequest {
     createdBy?: string | null;
     modifiedBy?: string | null;
     createDate?: Date;
-    eventRequests?: Array<EventRequest> | null;
+    eventIds?: Array<number> | null;
     existingEventSetId?: number | null;
 }
 

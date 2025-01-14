@@ -33,6 +33,7 @@ export class LossFacade {
             getLossSetById$: this.store.pipe(select(LossSelectors.selectGetLossSetById)),
             getLossSetList$: this.store.pipe(select(LossSelectors.selectGetLossSetList)),
             updateLossSet$: this.store.pipe(select(LossSelectors.selectUpdateLossSet)),
+            apiLossLoadUploadFilePost$ : this.store.pipe(select(LossSelectors.apiLossLoadUploadFilePost)),
         },
     };
 
@@ -86,6 +87,10 @@ export class LossFacade {
             },
             updateLossSet: (request: LossSetRequest): void => {
                 this.store.dispatch(LossActions.updateLossSet({ request }));
+            },
+            apiLossLoadUploadFilePost: (lossLoadID: number, file: Blob): void => {
+                debugger;
+                this.store.dispatch(LossActions.apiLossLoadUploadFilePost({ lossLoadID, file }));
             },
         },
     };

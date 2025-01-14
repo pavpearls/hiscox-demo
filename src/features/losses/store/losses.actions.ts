@@ -68,6 +68,10 @@ const updateLossSet = createAction('[LossSet] Update', props<{ request: LossSetR
 const updateLossSetSuccess = createAction('[LossSet] Update Success', props<{ response: LossSetRequest }>());
 const updateLossSetFailure = createAction('[LossSet] Update Failure', props<{ error: HttpErrorResponse }>());
 
+const apiLossLoadUploadFilePost = createAction('[LossSet] Upload File Post', props<{ lossLoadID?: number, file?: Blob }>());
+const apiLossLoadUploadFilePostSuccess = createAction('[LossSet] Upload File Post Success', props<{ response: any }>());
+const apiLossLoadUploadFilePostFailure = createAction('[LossSet] Upload File Post Failure', props<{ error: HttpErrorResponse }>());
+
 export const LossActions = {
     uploadFile,
     uploadFileSuccess,
@@ -127,5 +131,9 @@ export const LossActions = {
 
     updateLossSet,
     updateLossSetSuccess,
-    updateLossSetFailure
+    updateLossSetFailure,
+
+    apiLossLoadUploadFilePost,
+    apiLossLoadUploadFilePostSuccess,
+    apiLossLoadUploadFilePostFailure
 };

@@ -2,62 +2,31 @@
   [(nzVisible)]="showModal" 
   nzTitle="Delete Event Set" 
   (nzOnCancel)="closeModal()" 
-  nzFooter="null"
-  [nzWidth]="800"
-  [nzFooter]="null">
+  [nzWidth]="modalWidth"
+  >
   
+  <ng-container *nzModalContent style="height: 100%;">
   <div *ngIf="eventSet">
     <p>Are you sure you want to delete the event set: <strong>{{ eventSet.eventSetName }}</strong>?</p>
     
     <div class="delete-options">
-      <!-- <nz-checkbox [(ngModel)]="selectAll" (ngModelChange)="toggleSelectAll()">Select All Events</nz-checkbox> -->
+         Selecting All Events will result in entire Event Set being deleted
     </div>
     
-    <div class="ag-theme-alpine" style="height: 400px; width: 100%; margin-top: 16px;">
+    <div class="ag-theme-alpine" style="height: 600px; width: 100%; margin-top: 16px;" *ngIf="columnDefs && rowData"> 
       <ag-grid-angular
+        style="height: 100%;"
         [columnDefs]="columnDefs"
         [rowData]="rowData"
-        rowSelection="multiple"
+        [rowSelection]="rowSelection"
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
-
-      <!-- <ag-grid-angular
-      style="width: 100%; height: 100%;"
-      class="ag-theme-alpine"
-      [rowData]="rowData"
-      [columnDefs]="columnDefs"
-      [rowSelection]="rowSelection"
-      [pagination]="true"
-      [paginationPageSize]="paginationPageSize"
-      [paginationPageSizeSelector]="paginationPageSizeSelector"
-      [domLayout]="'autoHeight'"
-      [editType]="editType"
-      [getRowId]="getRowId"
-      (gridReady)="onGridReady($event)"
-      (rowSelected)="onRowSelected($event)"
-    > -->
-      <!-- <ag-grid-angular
-      class="ag-theme-alpine"
-       [columnDefs]="columnDefs"            
-       [defaultColDef]="defaultColDef"
-       [rowSelection]="rowSelection"
-       [pagination]="true"
-       [paginationPageSize]="paginationPageSize"
-       [paginationPageSizeSelector]="paginationPageSizeSelector"
-       [masterDetail]="true"
-       [detailRowAutoHeight]="true"
-       [detailCellRendererParams]="detailCellRendererParams"
-       [alwaysShowVerticalScroll]="true"   
-       (firstDataRendered)="onFirstDataRendered($event)"
-       [tooltipShowDelay]="tooltipShowDelay"
-       [rowData]="rowData"
-       (gridReady)="onGridReady($event)"
-   /> -->
-    </div>
-    
-    <div class="modal-buttons" style="margin-top: 16px; text-align: right;">
-      <button nz-button nzType="default" (click)="closeModal()">Cancel</button>
-      <button nz-button nzType="primary" nzDanger (click)="confirmDeletion()">Delete</button>
-    </div>
   </div>
+  </div>
+  </ng-container> 
+
+<ng-container *nzModalFooter style="height: 100%;">
+    <button nz-button nzType="default" (click)="closeModal()">Cancel </button>
+    <button nz-button nzType="primary" (click)="confirmDeletion()">Delete</button>
+  </ng-container>
 </nz-modal>

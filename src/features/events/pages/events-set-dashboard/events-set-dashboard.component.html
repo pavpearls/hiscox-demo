@@ -32,16 +32,6 @@
   ></add-event-set-modal>
 </ng-container>
 
-<ng-container *ngIf="isDeleteModalVisible">
-  <app-delete-event-set-modal
-    [showModal]="isDeleteModalVisible"
-    [eventSet]="deletedEventSet"
-    (onConfirm)="handleDeleteConfirmed($event)"
-    (onCancel)="onModalCancel()"
-  >
-  </app-delete-event-set-modal>
-</ng-container>
-
 <ng-container *ngIf="isEditEventSetModalVisible">
   <edit-event-set-modal
     [existingEventSet]="editedEventSet"

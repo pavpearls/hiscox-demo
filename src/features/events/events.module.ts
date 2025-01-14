@@ -39,6 +39,7 @@ import { EventSetTableComponent } from './components/event-set-table/event-set-t
 import { AddEventSetModalComponent } from './components/add-event-set-modal/add-event-set-modal.component';
 import { EditEventSetModalComponent } from './components/edit-event-set-modal/edit-event-set-modal.component';
 import { DeleteEventSetModalComponent } from './components/delete-event-set-modal/delete-event-set-modal.component';
+import { CurrentEventSetTableComponent } from './components/current-event-set-table/current-event-set-table.component';
 
 const ANGULAR_CORE_MODULES = [
     CommonModule,
@@ -70,9 +71,10 @@ const NG_ZORRO_MODULES = [
 
 const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [
     RemoteDataModule,
-    StoreModule.forFeature('events', eventsReducer),
-    EffectsModule.forFeature([EventsEffects])
+//    StoreModule.forFeature('events', eventsReducer),
+//    EffectsModule.forFeature([EventsEffects])
 ];
+
 
 const MODULE_ROUTING = [
     EventsRoutingModule,
@@ -101,7 +103,8 @@ const MODULE_REUSABLE_STANDALONE_COMPONENTS = [
         EventSetTableComponent,
         AddEventSetModalComponent,
         EditEventSetModalComponent,
-        DeleteEventSetModalComponent
+        DeleteEventSetModalComponent,
+        CurrentEventSetTableComponent
     ],
     imports: [
         AgGridModule,

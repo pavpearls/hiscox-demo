@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { filterSuccess } from 'ngx-remotedata';
-import { catchError, EMPTY, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
+import { catchError, EMPTY, map, mergeMap, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { NdsApiServiceWrapper } from '../../../shared/api-services/nds-api/custom/nds-api-service-wrapper';
 import { EventSetService } from '../pages/events-set-dashboard/services/event-set.service';
 import { EventsActions } from './events.actions';
@@ -16,7 +16,7 @@ export class EventsEffects {
     private notification: NzNotificationService,
     private eventFacade: EventsFacade,
     private eventSetService: EventSetService
-  ) {}
+  ) { }
 
   //////////////////////////////////////////////////////
   //                  Events Shared Effects           //
@@ -57,6 +57,28 @@ export class EventsEffects {
           catchError((error) =>
             of(
               EventsActions.EventsSharedActions.getRegionPerilListFailure({
+                error,
+              })
+            )
+          )
+        )
+      )
+    )
+  );
+
+  getDataProducerList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventsSharedActions.getDataProducerList),
+      mergeMap(() =>
+        this.ndsApiServiceWrapper.parameterService.getDataProducerList().pipe(
+          map((payload) =>
+            EventsActions.EventsSharedActions.getDataProducerListSuccess({
+              payload,
+            })
+          ),
+          catchError((error) =>
+            of(
+              EventsActions.EventsSharedActions.getDataProducerListFailure({
                 error,
               })
             )
@@ -168,7 +190,7 @@ export class EventsEffects {
                 this.notification.error(
                   'Delete Event Failed',
                   error?.detail ??
-                    `Cannot delete this Event as gross losses for this Event exist. Either archive this Event or delete the Gross Losses.`
+                  `Cannot delete this Event as gross losses for this Event exist. Either archive this Event or delete the Gross Losses.`
                 );
               } else {
                 this.notification.error(
@@ -442,18 +464,103 @@ export class EventsEffects {
     this.actions$.pipe(
       ofType(EventsActions.EventsSetActions.updateEventSet),
       mergeMap(({ payload }) =>
-        this.ndsApiServiceWrapper.eventSetService.updateEventSet(payload).pipe(
-          map((response) =>
+        this.ndsApiServiceWrapper.eventSetService.updateEventSet(payload.eventSet).pipe(
+          switchMap((response) => [
             EventsActions.EventsSetActions.updateEventSetSuccess({
               payload: response,
-            })
-          ),
+            }),
+               EventsActions.EventSetMembershipActions.addEventsToEventSet({eventSetMemberList: payload.addedEventSetMemberItems, eventSetId: payload.eventSet.eventSetID,  deleteEventIdList: payload.deletedEventIds})
+            ]),
           catchError((error) =>
             of(EventsActions.EventsSetActions.updateEventSetFailure({ error }))
           )
         )
       )
     )
+  );
+
+  updateEventSetSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSetActions.updateEventSetSuccess),
+        tap(() =>
+          this.notification.success(
+            'Update Event Set Successful',
+            `Event Set has been updated successfully.`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  updateEventSetFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSetActions.updateEventSetFailure),
+        tap(() =>
+          this.notification.success(
+            'Update Event Set Failure',
+            `Failed to update the Event Set`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  deleteEventSetSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSetActions.deleteEventSetSuccess),
+        tap(() =>
+          this.notification.success(
+            'Delete Event Set Successful',
+            `Event Set has been deleted successfully.`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  deleteEventSetFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventsSetActions.deleteEventSetFailure),
+        tap(() =>
+          this.notification.error(
+            'Delete Event Set Failure',
+            `Failed to delete the Event Set.`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  updateMembershipSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventSetMembershipActions.updateMembershipSuccess),
+        tap(() =>
+          this.notification.success(
+            'Update Event Set Membership Successful',
+            `Event Set membership has been updated successfully.`
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
+  updateMembershipFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EventsActions.EventSetMembershipActions.updateMembershipFailure),
+        tap(() =>
+          this.notification.error(
+            'Update Event Set Membership Failure',
+            `Failed to update the Event Set membership.`
+          )
+        )
+      ),
+    { dispatch: false }
   );
 
   //////////////////////////////////////////////////////
@@ -475,6 +582,71 @@ export class EventsEffects {
             catchError((error) =>
               of(
                 EventsActions.EventSetMembershipActions.createMembershipFailure(
+                  { error }
+                )
+              )
+            )
+          )
+      )
+    )
+  );
+
+  addEventsToEventSet$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventSetMembershipActions.addEventsToEventSet),
+      mergeMap((payload) =>
+        this.ndsApiServiceWrapper.eventSetMemberService
+          .addEventsToEventSet(payload.eventSetMemberList)
+          .pipe(
+            switchMap((eventSet) => [
+              EventsActions.EventSetMembershipActions.addEventsToEventSetSuccess({
+                eventSet,
+              }),
+              EventsActions.EventSetMembershipActions.deleteEventsFromEventSet({eventSetId: payload.eventSetId,  deleteEventIdList: payload.deleteEventIdList})
+            ]
+            ),
+            catchError((error) =>
+              of(
+                EventsActions.EventSetMembershipActions.addEventsToEventSetFailure(
+                  { error }
+                )
+              )
+            )
+          )
+      )
+    )
+  );
+
+
+  /*
+(
+          switchMap((response) => [
+            EventsActions.EventsSetActions.updateEventSetSuccess({
+              payload: response,
+            }),
+            EventsActions.EventSetMembershipActions.addEventsToEventSet({eventSetMemberList: payload.addedEventSetMemberItems}),
+            EventsActions.EventSetMembershipActions.deleteEventsFromEventSet({eventSetId: payload.eventSet.eventSetID,  deleteEventIdList: payload.deletedEventIds})
+            ]),
+          catchError((error) =>
+            of(EventsActions.EventsSetActions.updateEventSetFailure({ error }))
+          )
+        )
+  */
+  deleteEventsFromEventSet$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.EventSetMembershipActions.deleteEventsFromEventSet),
+      mergeMap((action) =>
+        this.ndsApiServiceWrapper.eventSetMemberService
+          .deleteEventsFromEventSet(action.eventSetId, action.deleteEventIdList)
+          .pipe(
+            map((eventSet) =>
+              EventsActions.EventSetMembershipActions.deleteEventsFromEventSetSuccess({
+                eventSet,
+              })
+            ),
+            catchError((error) =>
+              of(
+                EventsActions.EventSetMembershipActions.deleteEventsFromEventSetFailure(
                   { error }
                 )
               )

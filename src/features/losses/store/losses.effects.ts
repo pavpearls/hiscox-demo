@@ -81,6 +81,22 @@ export class LossEffects {
     )
   );
 
+  apiLossLoadUploadFilePost$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(LossActions.apiLossLoadUploadFilePost),
+      mergeMap(({ lossLoadID, file }) =>
+        this.apiService.lossLoadService.apiLossLoadUploadFilePost(lossLoadID, file).pipe(
+          map((response) =>
+            LossActions.apiLossLoadUploadFilePostSuccess({ response })
+          ),
+          catchError((error) =>
+            of(LossActions.apiLossLoadUploadFilePostFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
   getGrossLossByLossLoadId$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LossActions.getGrossLossByLossLoadId),

@@ -1,16 +1,20 @@
-<div class="button-panel">
-  <button nz-button nzType="default" (click)="onRemoveSelected()">
-    Remove
-  </button>
+<div class="main-panel">
+  <div class="grid-panel">
+      <ag-grid-angular
+         class="ag-theme-alpine"
+          [columnDefs]="columnDefs"            
+          [defaultColDef]="defaultColDef"
+          [rowSelection]="rowSelection"
+          [pagination]="true"
+          [paginationPageSize]="paginationPageSize"
+          [paginationPageSizeSelector]="paginationPageSizeSelector"
+          [detailRowAutoHeight]="true"
+          [detailCellRendererParams]="detailCellRendererParams"
+          [alwaysShowVerticalScroll]="true"   
+          (firstDataRendered)="onFirstDataRendered($event)"
+          [tooltipShowDelay]="tooltipShowDelay"
+          [rowData]="rowData"
+          (gridReady)="onGridReady($event)"
+      />
+  </div>
 </div>
-
-<ag-grid-angular
-  class="ag-theme-alpine"
-  [columnDefs]="columnDefs"
-  [defaultColDef]="defaultColDef"
-  [rowData]="rowData"
-  [rowSelection]="'multiple'"
-  [animateRows]="true"
-  (gridReady)="onGridReady($event)"
-  (cellValueChanged)="onCellValueChanged($event)"
-></ag-grid-angular>
