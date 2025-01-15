@@ -9,6 +9,7 @@
              
                 <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
                   <nz-form-item>
+                    <nz-form-label nzRequired>File Name</nz-form-label>
                     <nz-form-control>
                       <input nz-input id="friendlyName" formControlName="friendlyName"
                         placeholder="User friendly name instead of filename" />
@@ -17,8 +18,9 @@
                 </div>
                 <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
                   <nz-form-item>
+                    <nz-form-label nzRequired>Event Set</nz-form-label>
                     <nz-form-control>
-                      <nz-select id="dataFormat" formControlName="dataFormat" placeholder="Select Format">
+                      <nz-select id="eventSet" formControlName="eventSet" placeholder="Select Event Set">
                         <nz-option *ngFor="let item of eventSetData" [nzValue]="item.eventSetID"
                           placeholder="Select value" [nzLabel]="item.eventSetName"></nz-option>
                       </nz-select>
@@ -133,11 +135,13 @@
               style="min-height: 600px;"
               #basicTable
               [nzBordered]="true"
-              [nzSize]="'middle'"
-              [nzData]="listOfData"
+              [nzData]="listOfData.slice(1)"
               [nzScroll]="{ y: '600px' }"
-              [nzShowPagination]="false"
               [nzLoading]="isValidating"
+              [nzPagination]="true"
+              [nzPageSize]="10"
+              [nzShowSizeChanger]="true"
+              [nzShowQuickJumper]="true"
             >
               <thead>
                 <tr>

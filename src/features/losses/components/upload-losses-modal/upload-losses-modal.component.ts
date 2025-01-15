@@ -107,7 +107,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     this.uploadForm = this.fb.group({
       friendlyName: ['', [Validators.required, Validators.maxLength(200)]],
       dataProducer: ['', Validators.required],
-      dataFormat: ['', Validators.required],
+      eventSet: ['', Validators.required],
       description: ['', [Validators.maxLength(1000)]],
       file: [null, Validators.required],
     });
@@ -154,6 +154,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     this.lossFacade.showLoadingSpinnerForApiResponses(
       this.lossFacade.state.fileUpload.uploadFile$,
       this.lossFacade.state.fileUpload.validateFile$,
+      this.lossFacade.state.lossSets.apiLossLoadUploadFilePost$,
       this.eventsFacade.state.events.dataProducerList$,
       this.eventsFacade.state.eventSets.getEventSetList$
     );
@@ -262,7 +263,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   handleOk(): void {
     // ignore file valid for now && this.isFileValid
     if (this.uploadForm.valid) {
-      const { file, friendlyName, dataFormat, dataProducer, description } =
+      const { file, friendlyName, eventSet, dataProducer, description } =
         this.uploadForm.value;
 
       const renamedFile = new File([file], friendlyName || file.name, {
@@ -275,17 +276,17 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
       const uploadPayload = {
         file: renamedFile,
         friendlyName,
-        dataFormat,
+        eventSet,
         dataProducer,
         description,
       };
 
       const uploadFileRequestPayload: UploadFileRequest = {
         lossLoadRequest: {
-          eventSetID: 15,
-          dataSourceTypeID: 1,
-          dataProducerID: 1,
-          dataSourceName: 'test_data_source_2',
+          eventSetID: eventSet,
+          dataSourceTypeID: undefined,
+          dataProducerID: dataProducer,
+          dataSourceName: undefined,
           lossLoadName: friendlyName + new Date().toLocaleDateString(),
           lossLoadDescription: description,
           loadDate: new Date(),
