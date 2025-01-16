@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -22,6 +23,7 @@ import {
 } from 'ngx-remotedata';
 import {
   combineLatest,
+  filter,
   map,
   Observable,
   Observer,
@@ -40,6 +42,7 @@ import { LossLoadService } from 'shared/api-services/nds-api/generated';
   selector: 'upload-loss-load-modal',
   templateUrl: './upload-losses-modal.component.html',
   styleUrls: ['./upload-losses-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   @Input() showModal = true;
@@ -56,7 +59,15 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   fileList: NzUploadFile[] = [];
   selectedTabIndex = 0
   isFileValid = false;
-  listOfData: any[] = [];
+
+  dataSet: any[] = []; 
+  displayData: any[] = [];
+  loading = false;
+  total = 0;
+  pageIndex = 1;
+  pageSize = 10;
+
+
   totalRows = 5000;
   isValidating = false;
   uploadForm: FormGroup;
@@ -80,16 +91,17 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
 
   vm$ = combineLatest([
     this.lossFacade.state.fileUpload.validateFile$,
-    this.lossFacade.state.fileUpload.uploadFile$
+    this.lossFacade.state.fileUpload.uploadFile$,
+    this.lossFacade.state.lossSets.apiLossLoadUploadFilePost$
   ]).pipe(
-    map(([validateFileState, uploadFileState]) => ({
-      loading: [validateFileState, uploadFileState].some((state) =>
+    map(([validateFileState, uploadFileState, apiLossLoadUploadFilePostState]) => ({
+      loading: [validateFileState, uploadFileState, apiLossLoadUploadFilePostState].some((state) =>
         isInProgress(state)
       ),
-      error: [validateFileState, uploadFileState].some((state) =>
+      error: [validateFileState, uploadFileState, apiLossLoadUploadFilePostState].some((state) =>
         isFailure(state)
       ),
-      success: [validateFileState, uploadFileState].every((state) =>
+      success: [validateFileState, uploadFileState, apiLossLoadUploadFilePostState].every((state) =>
         isSuccess(state)
       ),
     }))
@@ -156,7 +168,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
       this.lossFacade.state.fileUpload.validateFile$,
       this.lossFacade.state.lossSets.apiLossLoadUploadFilePost$,
       this.eventsFacade.state.events.dataProducerList$,
-      this.eventsFacade.state.eventSets.getEventSetList$
+      this.eventsFacade.state.eventSets.getEventSetList$,
     );
 
     this.eventsFacade.actions.events.loadDataProducerList();
@@ -164,6 +176,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     
     this.handleFileUploadResponse();
     this.handleValidateFileResponse();
+    this.handleGrossLossResponse();
 
     this.dataProducerList$.pipe(takeWhile(() => this.isComponentAlive))
     .pipe(filterSuccess())
@@ -172,8 +185,23 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
     });
 
     
-    this.eventSetList$.subscribe((data: any) => {
+    this.eventSetList$
+    .pipe(takeWhile(() => this.isComponentAlive))
+    .subscribe((data: any) => {
       this.eventSetData = data.value;
+    });
+
+    this.vm$.pipe(takeWhile(() => this.isComponentAlive))  
+    .subscribe((status) => {
+      if (status.success) {
+        this.notification.success(
+          'Upload Successfull',
+          'File parsed and data saved successfully'
+        );
+        this.showModal = false;
+        this.uploadForm.reset();
+        this.dataSet = [];
+      }
     });
   }
 
@@ -197,13 +225,13 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
       this.isValidating = false;
 
       if (isValid) {
-
-      }
-
-      if (!isValid) {
         const file = this.uploadForm.value.file;
         this.parseFile(file);
         this.selectedTabIndex = 1;
+      }
+
+      if (!isValid) {
+        this.isFileValid = false;
       }
     });
 
@@ -215,36 +243,27 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
         'File Validation Failed',
         'Failed to validate the file. Please check the file and try again.'
       );
-      this.showModal = false;
-      this.uploadForm.reset();
-      this.listOfData = [];
-      this.isValidating = false;
-
-      this.fileValidationResults = [
-        { check: 'Xlsx File Type', result: 'false' },
-        { check: 'Loss Worksheet Found', result: 'false' },
-        { check: 'All Loss Fields Found', result: 'false' },
-        { check: 'All Events Found', result: 'false' },
-        { check: 'All Loss Classes Found', result: 'false' },
-        { check: 'VALID FILE?', result: 'false' },
-      ];
     });
   }
 
-  handleFileUploadResponse(): void {
-    // TODO will be refactored into the effect
-    this.lossFacade.state.fileUpload.uploadFile$
+
+
+  handleGrossLossResponse() {
+    this.lossFacade.state.lossSets.apiLossLoadUploadFilePost$
       .pipe(takeWhile(() => this.isComponentAlive))
-      .pipe(filterFailure())
+      .pipe(filterSuccess())
       .subscribe(() => {
-        this.notification.error(
-          'Upload Failed',
-          'Failed to upload the file. Please check the file and try again.'
+        this.notification.success(
+          'Upload Successfull',
+          'File parsed successfully and data saved to GrossLoss table.'
         );
         this.showModal = false;
         this.uploadForm.reset();
-        this.listOfData = [];
+        this.dataSet = [];
       });
+  }
+
+  handleFileUploadResponse(): void {
 
     this.lossFacade.state.fileUpload.uploadFile$
       .pipe(takeWhile(() => this.isComponentAlive))
@@ -254,15 +273,13 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
           'Upload Successfull',
           'File upload complete.'
         );
-        this.showModal = false;
-        this.uploadForm.reset();
-        this.listOfData = [];
+        this.dataSet = [];
       });
   }
 
   handleOk(): void {
     // ignore file valid for now && this.isFileValid
-    if (this.uploadForm.valid) {
+    if (this.uploadForm.valid && this.isFileValid) {
       const { file, friendlyName, eventSet, dataProducer, description } =
         this.uploadForm.value;
 
@@ -284,9 +301,9 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
       const uploadFileRequestPayload: UploadFileRequest = {
         lossLoadRequest: {
           eventSetID: eventSet,
-          dataSourceTypeID: undefined,
+          dataSourceTypeID: 3, // Confirm how to map it?
           dataProducerID: dataProducer,
-          dataSourceName: undefined,
+          dataSourceName: friendlyName  + new Date().toLocaleDateString(), // Confirm how to map it?
           lossLoadName: friendlyName + new Date().toLocaleDateString(),
           lossLoadDescription: description,
           loadDate: new Date(),
@@ -297,10 +314,10 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
 
       this.lossFacade.actions.fileUpload.uploadFile(uploadPayload.file);
       this.api.lossLoadService.uploadFileRequest(uploadFileRequestPayload).pipe(take(1)).subscribe((lossLoadID: any) => {
-      
-        this.lossFacade.actions.lossSets.apiLossLoadUploadFilePost((lossLoadID?.newId), uploadPayload.file);
+      this.lossFacade.actions.lossSets.apiLossLoadUploadFilePost((lossLoadID?.newId), uploadPayload.file);
+      //TO ADD LATER  this.lossFacade.actions.fileUpload.uploadFile(uploadPayload.file, lossLoadID);
 
-        this.notification.success(
+      this.notification.success(
           'Upload Started',
           `Uploading file: ${renamedFile.name}`
         );
@@ -318,7 +335,7 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   handleCancel(): void {
     this.onCancel.emit();
     this.uploadForm.reset();
-    this.listOfData = [];
+    this.dataSet = [];
   }
 
   toggleSelectAll(): void {
@@ -356,9 +373,16 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   }
 
   validateFile(): void {
-
     if (!this.uploadForm.valid) {
       this.uploadForm.markAllAsTouched();
+      if (!this.uploadForm.controls['file'].valid) {
+        this.notification.error(
+          'Form Invalid',
+          'Please select a valid file to upload.'
+        );
+        return;
+      }
+
       this.notification.error(
         'Form Invalid',
         'Please fill out all required fields.'
@@ -381,9 +405,13 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
       const sheetName = 'Gross Loss';
       if (workbook.SheetNames.includes(sheetName)) {
         const worksheet = workbook.Sheets[sheetName];
-        this.listOfData = XLSX.utils.sheet_to_json(worksheet, {
+        this.dataSet = XLSX.utils.sheet_to_json(worksheet, {
           header: 1,
         }) as any[];
+        this.total = this.dataSet.length;
+        this.refreshDisplayData();
+        this.loading = false;
+
         this.notification.success(
           'File Parsed',
           'File parsed successfully! Check the preview tab.'
@@ -399,6 +427,36 @@ export class UploadLossLoadModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.uploadForm.reset();
+    this.dataSet = [];
+    this.isValidating = false;
+
+    this.fileValidationResults = [
+      { check: 'Xlsx File Type', result: 'false' },
+      { check: 'Loss Worksheet Found', result: 'false' },
+      { check: 'All Loss Fields Found', result: 'false' },
+      { check: 'All Events Found', result: 'false' },
+      { check: 'All Loss Classes Found', result: 'false' },
+      { check: 'VALID FILE?', result: 'false' },
+    ];
+    this.isFileValid = false;
     this.isComponentAlive = false;
   }
+
+  refreshDisplayData(): void {
+    const startIndex = (this.pageIndex - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayData = this.dataSet.slice(startIndex, endIndex);
+  }
+
+  onPageIndexChange(newPageIndex: number): void {
+    this.pageIndex = newPageIndex;
+    this.refreshDisplayData();
+  }
+
+  onPageSizeChange(newPageSize: number): void {
+    this.pageSize = newPageSize;
+    this.refreshDisplayData();
+  }
+
 }

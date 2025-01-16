@@ -131,34 +131,38 @@
           <div nz-col [nzSpan]="24">
             <h3>Preview Screen</h3>
             <nz-table
-              *ngIf="listOfData.length"
+              *ngIf="displayData"
               style="min-height: 600px;"
               #basicTable
               [nzBordered]="true"
-              [nzData]="listOfData.slice(1)"
               [nzScroll]="{ y: '600px' }"
-              [nzLoading]="isValidating"
-              [nzPagination]="true"
-              [nzPageSize]="10"
-              [nzShowSizeChanger]="true"
-              [nzShowQuickJumper]="true"
+              [nzData]="displayData"
+              [nzFrontPagination]="false"
+              [nzLoading]="loading || isValidating"
+              [nzTotal]="total"
+              [nzPageIndex]="pageIndex"
+              [nzPageSize]="pageSize"
+              (nzPageIndexChange)="onPageIndexChange($event)"
+              (nzPageSizeChange)="onPageSizeChange($event)"
+            
             >
               <thead>
                 <tr>
-                  <ng-container *ngFor="let header of listOfData[0]">
+                  <ng-container *ngFor="let header of dataSet[0]">
                     <th>{{ header }}</th>
                   </ng-container>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let row of listOfData.slice(1)">
+                <tr *ngFor="let row of dataSet.slice(1)">
                   <ng-container *ngFor="let cell of row">
                     <td>{{ cell }}</td>
                   </ng-container>
                 </tr>
               </tbody>
             </nz-table>
-            <p *ngIf="!listOfData.length">No data to display. Please validate and parse the file.</p>
+            <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="dataSet.length" [nzPageSize]="10" (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)"></nz-pagination>
+            <p *ngIf="!dataSet.length">No data to display. Please validate and parse the file.</p>
           </div>
         </div>
       </nz-tab>
