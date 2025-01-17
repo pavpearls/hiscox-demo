@@ -1,28 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { EventsFacade } from '@events/store/events.facade';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { LossFacade } from 'features/losses/store/losses.facade';
+import { forkJoin } from 'rxjs';
+import { filterSuccess } from 'ngx-remotedata';
+import { takeWhile, map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-losses-dashboard',
   templateUrl: './losses-dashboard.component.html',
-  styleUrls: ['./losses-dashboard.component.scss']
+  styleUrls: ['./losses-dashboard.component.scss'],
 })
-export class LossesDashboardComponent implements OnInit {
+export class LossesDashboardComponent implements OnInit, OnDestroy {
   title = 'Losses Dashboard';
   isModalVisible = false;
+  isComponentAlive = true;
 
   public rowData: any[] = [];
   public columnDefs: ColDef[] = [];
   public defaultColDef: ColDef = { flex: 1, sortable: true, resizable: true };
   private gridApi!: GridApi;
 
+  isLoading = true;
+  grossLossListResponse$ = this.lossFacade.state.grossLoss.getGrossLossList$;
+  getEventSetListResponse$ = this.eventsFacade.state.eventSets.getEventSetList$;
+
+  constructor(private lossFacade: LossFacade, private eventsFacade: EventsFacade) {}
+
   ngOnInit(): void {
     this.initializeColumns();
-    this.loadMockData();
+    this.fetchAndTransformData();
+
+    this.lossFacade.state.lossSets.apiLossLoadUploadFilePost$
+      .pipe(takeWhile(() => this.isComponentAlive), filterSuccess())
+      .subscribe(() => {
+        this.refreshData();
+      });
   }
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    this.gridApi.autoSizeAllColumns();
+    setTimeout(() => {
+      this.gridApi.autoSizeAllColumns();
+    });
   }
 
   private initializeColumns(): void {
@@ -31,6 +51,7 @@ export class LossesDashboardComponent implements OnInit {
       { field: 'loadId', headerName: 'Load ID' },
       { field: 'lossLoadName', headerName: 'Loss Load Name', flex: 2 },
       { field: 'eventSet', headerName: 'Event Set' },
+      { field: 'eventName', headerName: 'Event Name' }, // New Column for Event Name
       { field: 'eventSetType', headerName: 'Event Set Type' },
       { field: 'dataProvider', headerName: 'Data Provider' },
       { field: 'uploadUser', headerName: 'Upload User' },
@@ -40,74 +61,96 @@ export class LossesDashboardComponent implements OnInit {
         headerName: 'Valid',
         cellStyle: (params) => ({
           color: params.value === 'Yes' ? 'green' : 'red',
-          textAlign: 'center'
+          textAlign: 'center',
         }),
       },
     ];
   }
 
-  onUploadLossFile(): void {
-    this.isModalVisible = true;
+  private fetchAndTransformData(): void {
+    this.isLoading = true;
+
+    forkJoin({
+      grossLossList: this.grossLossListResponse$.pipe(filterSuccess(), take(1)),
+      eventSetList: this.getEventSetListResponse$.pipe(filterSuccess(), take(1)),
+    }).subscribe({
+      next: ({ grossLossList, eventSetList }) => {
+        const transformedData = this.transformDataForGrid(grossLossList.value, eventSetList.value);
+        this.rowData = transformedData;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error combining data:', err);
+        this.isLoading = false;
+      },
+    });
   }
 
-  private loadMockData(): void {
-    const MOCK_DATA = [
-      {
-        eventCategory: 'Beryl',
-        events: [
-          {
-            loadId: 724,
-            lossLoadName: 'POLICY_LIST__Beryl__2024_11__Beryl Reported Losses - UK - Q4',
-            eventSet: 'Beryl',
-            eventSetType: 'Post Event',
-            dataProvider: 'Claims',
-            uploadUser: 'Tom Clements',
-            uploadDate: '2024-Nov',
-            valid: 'Yes',
-          },
-          {
-            loadId: 726,
-            lossLoadName: 'POLICY_LIST__Beryl__2024_11__Beryl Reported Losses - UK - Q3',
-            eventSet: 'Beryl',
-            eventSetType: 'Post Event',
-            dataProvider: 'Claims',
-            uploadUser: 'Michael Doyle',
-            uploadDate: '2024-Nov',
-            valid: 'Yes',
-          },
-        ],
-      },
-      {
-        eventCategory: 'COVID',
-        events: [
-          {
-            loadId: 901,
-            lossLoadName: 'POLICY_LIST__COVID__2024_02__Business Unit 1',
-            eventSet: 'COVID',
-            eventSetType: 'Post Event',
-            dataProvider: 'Claims',
-            uploadUser: 'Tom Clements',
-            uploadDate: '2024-Feb',
-            valid: 'Yes',
-          },
-        ],
-      },
-    ];
+  private transformDataForGrid(grossLossList: any[], eventSetList: any[]): any[] {
+    // Create a map for eventSetID to eventNameShort and eventSetName
+    const eventSetMapping: { [key: string]: { eventNameShort: string, eventSetName: string } } = {};
+    eventSetList.forEach((eventSet) => {
+      eventSet.events.forEach((event) => {
+        eventSetMapping[event.eventID] = {
+          eventNameShort: event.eventNameShort,
+          eventSetName: eventSet.eventSetName,
+        };
+      });
+    });
 
-    this.rowData = MOCK_DATA.flatMap((category) =>
-      category.events.map((event) => ({
+    // Transform and merge data
+    const groupedData = grossLossList.reduce((acc, obj) => {
+      const category = obj.eventSetID || 'Unknown';
+
+      if (!acc[category]) {
+        acc[category] = {
+          eventCategory: eventSetMapping[obj.eventSetID]?.eventSetName || `Event Set ${category}`,
+          events: [],
+        };
+      }
+
+      acc[category].events.push({
+        loadId: obj.lossLoadID,
+        lossLoadName: obj.lossLoadName || 'N/A',
+        eventSet: obj.eventSetID || 'N/A',
+        eventName: eventSetMapping[obj.eventSetID]?.eventNameShort || 'N/A', // Map Event Name
+        eventSetType: 'Post Event',
+        dataProvider: obj.dataProducerID || 'N/A',
+        uploadUser: obj.createdBy || 'Unknown',
+        uploadDate: obj.loadDate
+          ? new Date(obj.loadDate).toLocaleDateString()
+          : '',
+        valid: obj.isValid ? 'Yes' : 'No',
+      });
+
+      return acc;
+    }, {});
+
+    return Object.values(groupedData).flatMap((category: any) =>
+      category.events.map((event: any) => ({
         ...event,
         eventCategory: category.eventCategory,
       }))
     );
   }
 
-  handleModalOk($event: any) {
-
+  onUploadLossFile(): void {
+    this.isModalVisible = true;
   }
 
-  handleModalCancel() {
+  refreshData(): void {
+    this.fetchAndTransformData();
+  }
+
+  handleModalOk($event: any): void {
     this.isModalVisible = false;
   }
-  
+
+  handleModalCancel(): void {
+    this.isModalVisible = false;
+  }
+
+  ngOnDestroy(): void {
+    this.isComponentAlive = false;
+  }
 }
