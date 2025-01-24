@@ -56,6 +56,10 @@ const getLossSetByEventSetTypeId = createAction('[LossSet] Get By EventSetTypeId
 const getLossSetByEventSetTypeIdSuccess = createAction('[LossSet] Get By EventSetTypeId Success', props<{ eventSets: EventSet[] }>());
 const getLossSetByEventSetTypeIdFailure = createAction('[LossSet] Get By EventSetTypeId Failure', props<{ error: HttpErrorResponse }>());
 
+const getLossSetFlatList = createAction('[LossSet] Get LossSet Flat List');
+const getLossSetFlatListSuccess = createAction('[LossSet] Get LossSet Flat List Success', props<{ lossSetFlatList: any[] }>());
+const getLossSetFlatListFailure = createAction('[LossSet] Get LossSet Flat List Failure', props<{ error: HttpErrorResponse }>());
+
 const getLossSetById = createAction('[LossSet] Get By Id', props<{ id: number }>());
 const getLossSetByIdSuccess = createAction('[LossSet] Get By Id Success', props<{ lossSet: LossSet }>());
 const getLossSetByIdFailure = createAction('[LossSet] Get By Id Failure', props<{ error: HttpErrorResponse }>());
@@ -120,6 +124,10 @@ export const LossActions = {
     getLossSetByEventSetTypeId,
     getLossSetByEventSetTypeIdSuccess,
     getLossSetByEventSetTypeIdFailure,
+
+    getLossSetFlatList,
+    getLossSetFlatListSuccess,
+    getLossSetFlatListFailure, 
 
     getLossSetById,
     getLossSetByIdSuccess,

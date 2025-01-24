@@ -97,6 +97,7 @@ export class EventsSetDashboardComponent implements OnInit {
     this.eventSetData = this.filterBySelectedTab(this.eventSetRawData);
     this.eventsFacade.actions.events.setActiveTab(this.selectedTabId.toString());
     this.eventsFacade.actions.eventSets.getEventSetById(this.selectedTabId);
+    this.eventsFacade.actions.eventSets.getEventSetList();
   }
 
   handleOnDeleteEventSet(eventSets: EventSet[]): void {
@@ -130,6 +131,7 @@ export class EventsSetDashboardComponent implements OnInit {
 
   onModalOk($event: any): void {
     this.eventsFacade.actions.eventSets.createEventSetAndEvents($event);
+    this.isAddEventSetModalVisible = false;
   }
 
   onModalCancel(): void {

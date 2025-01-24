@@ -1,0 +1,30 @@
+<div class="main-panel">
+    <div class="button-panel">
+      <button nz-button nzType="default" (click)="new.emit()">New</button>
+      <button nz-button nzType="default" (click)="onEditClick()">Update</button>
+      <button nz-button nzType="default" (click)="onDeleteClick()">Delete</button>
+      <button nz-button nzType="default">Archive</button>
+    </div>
+
+    <div class="grid-panel">
+      <ag-grid-angular
+        class="ag-theme-alpine"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [rowSelection]="rowSelection"
+        [pagination]="true"
+        [paginationPageSize]="paginationPageSize"
+        [paginationPageSizeSelector]="paginationPageSizeSelector"
+        [masterDetail]="true"
+        [detailRowAutoHeight]="true"
+        [detailCellRendererParams]="detailCellRendererParams"
+        [alwaysShowVerticalScroll]="true"
+        (firstDataRendered)="onFirstDataRendered($event)"
+        [tooltipShowDelay]="tooltipShowDelay"
+        [rowData]="rowData"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+    </div>
+  </div>
+  

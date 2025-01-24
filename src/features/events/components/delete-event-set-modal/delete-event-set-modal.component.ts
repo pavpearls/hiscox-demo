@@ -96,7 +96,10 @@ export class DeleteEventSetModalComponent implements OnInit {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    this.gridApi.sizeColumnsToFit();
+    setTimeout(() => {
+      this.gridApi.autoSizeAllColumns();
+    });
+    
   }
 
   toggleSelectAll(): void {

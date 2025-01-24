@@ -161,6 +161,19 @@ export class EventsTableComponent implements OnInit, OnChanges {
         minWidth: 200,
       },
       {
+        field: 'eventDate',
+        headerName: 'Event Date',
+        sortable: true,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+        valueFormatter: (params: any) => {
+          return params?.data?.eventDate || '';
+        },
+        minWidth: 200,
+      },
+      {
         field: 'regionPerilName',
         headerName: 'Region-Peril',
         sortable: true,
@@ -268,17 +281,20 @@ export class EventsTableComponent implements OnInit, OnChanges {
       {
         field: 'archived',
         headerName: 'Archived',
-        filter: true,
+        filter: 'agSetColumnFilter',
         filterParams: {
+          values: [true, false],
+          valueFormatter: (params: any) => (params.value ? 'Yes' : 'No'),
           buttons: ['reset', 'apply'],
-        } as ITextFilterParams,
-        cellRenderer: (params: any) =>
-          params?.data?.isArchived === true ? 'Yes' : 'No',
+        },
+        cellRenderer: (params: any) => {
+           return params.value === true ? 'Yes' : 'No';
+        },
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: ['Yes', 'No'] },
         editable: true,
         minWidth: 200,
-      },
+      }
     ];
   }
 
@@ -292,10 +308,13 @@ export class EventsTableComponent implements OnInit, OnChanges {
       createDate: event?.createDate
         ? new Date(event?.createDate).toLocaleDateString('en-GB')
         : '',
+      eventDate: event?.eventDate
+        ? new Date(event?.eventDate).toLocaleDateString('en-GB')
+        : '',
       industryLossEstimate: event?.industryLossEstimate || '',
       hiscoxLossImpactRating: event?.hiscoxLossImpactRating || '',
       isRestrictedAccess: event?.isRestrictedAccess || false,
-      isArchived: event?.isArchived || false,
+      isArchived: event?.isArchived ? 'Yes' : 'No'
     };
   }
 
@@ -336,7 +355,19 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    this.gridApi.autoSizeAllColumns();
+
+    setTimeout(() => {
+      this.gridApi.autoSizeAllColumns();
+    });
+
+    const defaultFilterModel = {
+      archived: {
+        filterType: 'set',
+        values: [false]
+      }
+    };
+
+    // this.gridApi.setFilterModel(defaultFilterModel);
   }
 
   getRowId = (params: any) => params.data.eventID.toString();

@@ -24,6 +24,7 @@ export interface LossState {
     deleteLossSet: RemoteData<number, HttpErrorResponse>;
     getLossSetByEventSetId: RemoteData<EventSet[], HttpErrorResponse>;
     getLossSetByEventSetTypeId: RemoteData<EventSet[], HttpErrorResponse>;
+    getLossSetFlatList: RemoteData<any[], HttpErrorResponse>;
     getLossSetById: RemoteData<LossSet, HttpErrorResponse>;
     getLossSetList: RemoteData<EventSet[], HttpErrorResponse>;
     updateLossSet: RemoteData<LossSetRequest, HttpErrorResponse>;
@@ -46,6 +47,7 @@ const initialState: LossState = {
     deleteLossSet: notAsked(),
     getLossSetByEventSetId: notAsked(),
     getLossSetByEventSetTypeId: notAsked(),
+    getLossSetFlatList: notAsked(),
     getLossSetById: notAsked(),
     getLossSetList: notAsked(),
     updateLossSet: notAsked(),
@@ -103,6 +105,10 @@ export const lossReducer = createReducer(
     on(LossActions.getLossSetByEventSetTypeIdSuccess, (state, { eventSets }) => ({ ...state, getLossSetByEventSetTypeId: success(eventSets) as any })),
     on(LossActions.getLossSetByEventSetTypeIdFailure, (state, { error }) => ({ ...state, getLossSetByEventSetTypeId: failure(error) as any })),
   
+    on(LossActions.getLossSetFlatList, (state) => ({ ...state, getLossSetFlatList: inProgress() as any })),
+    on(LossActions.getLossSetFlatListSuccess, (state, { lossSetFlatList }) => ({ ...state, getLossSetFlatList: success(lossSetFlatList) as any })),
+    on(LossActions.getLossSetFlatListFailure, (state, { error }) => ({ ...state, getLossSetFlatList: failure(error) as any })),
+
     on(LossActions.getLossSetById, (state) => ({ ...state, getLossSetById: inProgress() as any })),
     on(LossActions.getLossSetByIdSuccess, (state, { lossSet }) => ({ ...state, getLossSetById: success(lossSet) as any })),
     on(LossActions.getLossSetByIdFailure, (state, { error }) => ({ ...state, getLossSetById: failure(error) as any })),

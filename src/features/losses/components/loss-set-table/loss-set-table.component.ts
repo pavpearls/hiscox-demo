@@ -9,9 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { EventsFacade } from '@events//store/events.facade';
-import { EventSet } from '@shared/api-services/eventSet';
-import { EventSetMember } from '@shared/api-services/eventSetMember';
-import { EventSetRequest } from '@shared/api-services/eventSetRequest';
+
 import {
   ColDef,
   FirstDataRenderedEvent,
@@ -19,6 +17,7 @@ import {
   GridReadyEvent,
   ICellRendererParams,
   IDetailCellRendererParams,
+  ITextFilterParams,
   ITooltipParams,
   RowSelectionOptions,
   SizeColumnsToContentStrategy,
@@ -38,13 +37,13 @@ function dateFormatter(params: ValueFormatterParams) {
 }
 
 @Component({
-  selector: 'app-event-set-table',
-  templateUrl: './event-set-table.component.html',
-  styleUrls: ['./event-set-table.component.scss'],
+  selector: 'app-loss-set-table',
+  templateUrl: './loss-set-table.component.html',
+  styleUrls: ['./loss-set-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventSetTableComponent implements OnInit, OnChanges {
-  @Input() eventSetData: any[] = [];
+export class LossSetTableComponent implements OnInit, OnChanges {
+  @Input() lossSetData: any[] = [];
   @Output() new = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any[]>();
   @Output() edit = new EventEmitter<any>();
@@ -71,11 +70,11 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     private modal: NzModalService,
     private notification: NzNotificationService,
     private eventsFacade: EventsFacade,
-  ) {}
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['eventSetData'] && changes['eventSetData'].currentValue) {
-      this.rowData = [...this.eventSetData];
+    if (changes['lossSetData'] && changes['lossSetData'].currentValue) {
+      this.rowData = [...this.lossSetData];
     }
   }
 
@@ -85,9 +84,7 @@ export class EventSetTableComponent implements OnInit, OnChanges {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    setTimeout(() => {
-      this.gridApi.autoSizeAllColumns();
-    });
+    this.gridApi.autoSizeAllColumns();
   }
 
   onFirstDataRendered(params: FirstDataRenderedEvent): void {
@@ -99,209 +96,175 @@ export class EventSetTableComponent implements OnInit, OnChanges {
     }, 0);
   }
 
+
   getColumns(): ColDef[] {
     return [
       {
-        field: 'eventSetID',
+        field: 'lossSetID',
         headerName: 'Set ID',
         cellRenderer: 'agGroupCellRenderer',
         sortable: true,
         cellStyle: { 'text-align': 'center' },
       },
+
       {
-        field: 'eventSetName',
-        headerName: 'Event Set Name',
+        field: 'lossSetLongName',
+        headerName: 'Set Name',
         sortable: true,
+        minWidth: 200,
         cellStyle: { fontWeight: 'bold' },
       },
       {
-        field: 'createDate',
-        headerName: 'Create Date',
+        field: 'asAtDate',
+        headerName: 'Reporting Date',
         sortable: true,
+        minWidth: 150,
+        filter: 'agDateColumnFilter',
         valueFormatter: dateFormatter,
+        cellStyle: { fontWeight: 'bold' },
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
+      {
+        field: 'eventSetName',
+        headerName: 'Event Set ',
+        sortable: true,
+        minWidth: 200,
+        filter: 'agTextColumnFilter',
+        cellStyle: { fontWeight: 'bold' },
+        filterParams: {
+          buttons: ['reset', 'apply'],
+        } as ITextFilterParams,
+      },
+      
+    ];
+  }
+
+  getEventResponseDetailColumnDefs(): ColDef[] {
+    return [
+      {
+        field: 'dataSourceName',
+        headerName: 'Load Name',
+        sortable: true,
+        editable: true,
+        cellEditor: 'agTextCellEditor',
+        cellStyle: { 'text-align': 'center' },
+      },
+      {
+        field: 'dataProducer.dataProducerName',
+        headerName: 'Data Provider',
+        sortable: true,
+        editable: true,
+        cellEditor: 'agTextCellEditor',
         cellStyle: { 'text-align': 'center' },
       },
       {
         field: 'createdBy',
-        headerName: 'Create User',
+        headerName: 'Upload User',
         sortable: true,
+        cellStyle: { 'text-align': 'center' },
       },
+      {
+        field: 'loadDate',
+        headerName: 'Upload Date',
+        sortable: true,
+        valueFormatter: dateFormatter,
+      },
+      {
+        field: 'isValid',
+        headerName: 'Valid',
+        sortable: false
+      },
+      {
+        field: 'totalRecords',
+        headerName: 'Total Records',
+        sortable: false
+      },
+      {
+        field: 'totalLoss',
+        headerName: 'Total Loss',
+        sortable: false
+      }
     ];
   }
 
   getDetailColumnDefs(): ColDef[] {
     return [
       {
-        field: 'simYear',
-        headerName: 'Sim Year',
+        field: 'dataSourceName',
+        headerName: 'Load Name',
         sortable: true,
         editable: true,
         cellEditor: 'agTextCellEditor',
         cellStyle: { 'text-align': 'center' },
       },
       {
-        field: 'eventOrder',
-        headerName: 'Order',
+        field: 'dataProducer.dataProducerName',
+        headerName: 'Data Provider',
         sortable: true,
         editable: true,
         cellEditor: 'agTextCellEditor',
         cellStyle: { 'text-align': 'center' },
       },
       {
-        field: 'eventID',
-        headerName: 'ID',
+        field: 'createdBy',
+        headerName: 'Upload User',
         sortable: true,
-        editable: false,
         cellStyle: { 'text-align': 'center' },
       },
       {
-        field: 'eventType.eventTypeName',
-        headerName: 'Event Type',
+        field: 'loadDate',
+        headerName: 'Upload Date',
         sortable: true,
-        editable: false,
-      },
-      {
-        field: 'eventNameShort',
-        headerName: 'Event Name',
-        sortable: true,
-        editable: false,
-        cellStyle: { fontWeight: 'bold' },
-        tooltipValueGetter: (p: ITooltipParams) => p.data.eventNameLong,
-        headerTooltip: 'Event Description',
-      },
-      {
-        field: 'eventDate',
-        headerName: 'Event Date',
-        sortable: true,
-        editable: false,
         valueFormatter: dateFormatter,
       },
       {
-        field: 'regionPeril.regionPerilName',
-        headerName: 'Region Peril',
-        sortable: true,
-        editable: false,
+        field: 'isValid',
+        headerName: 'Valid',
+        sortable: false
       },
       {
-        field: 'industryLossEstimate',
-        headerName: 'Industry Loss',
-        sortable: true,
-        editable: false,
-        cellStyle: { 'text-align': 'center' },
+        field: 'totalRecords',
+        headerName: 'Total Records',
+        sortable: false
       },
       {
-        field: 'hiscoxLossImpactRating',
-        headerName: 'Hiscox Impact',
-        editable: false,
-        sortable: true,
-      },
+        field: 'totalLoss',
+        headerName: 'Total Loss',
+        sortable: false
+      }
     ];
   }
 
-  getRDSDetailColumnDefs(): ColDef[] {
-    return [
-      {
-        field: 'simYear',
-        headerName: 'Sim Year',
-        sortable: true,
-        editable: true,
-        cellEditor: 'agTextCellEditor',
-        cellStyle: { 'text-align': 'center' },
-      },
-      {
-        field: 'eventOrder',
-        headerName: 'Order',
-        sortable: true,
-        editable: true,
-        cellEditor: 'agTextCellEditor',
-        cellStyle: { 'text-align': 'center' },
-      },
-      {
-        field: 'eventID',
-        headerName: 'ID',
-        sortable: true,
-        cellStyle: { 'text-align': 'center' },
-      },
-      {
-        field: 'eventType.eventTypeName',
-        headerName: 'Event Type',
-        sortable: true,
-      },
-      {
-        field: 'eventNameShort',
-        headerName: 'Event Name',
-        sortable: true,
-        tooltipValueGetter: (p: ITooltipParams) => p.data.eventNameLong,
-        headerTooltip: 'Event Description',
-      },
-      {
-        field: 'regionPeril.regionPerilName',
-        headerName: 'Region Peril',
-        sortable: true,
-      },
-    ];
-  }
+
 
   public detailCellRendererParams: any = (masterParams: ICellRendererParams) => {
     const res = {} as IDetailCellRendererParams;
 
     res.getDetailRowData = (detailParams: any) => {
-      const eventsCopy = masterParams.data.events?.map((evt: any) => ({ ...evt })) || [];
-      detailParams.successCallback(eventsCopy);
+      const lossLoadCopy = masterParams.data.lossLoads?.map((lossLoad: any) => ({ ...lossLoad })) || [];
+      detailParams.successCallback(lossLoadCopy);
     };
 
-    if (masterParams.data.eventTypeID === 1) {
+    if (masterParams.data.eventTypeID === 3) {
       res.detailGridOptions = {
-        columnDefs: this.getRDSDetailColumnDefs(),
+        columnDefs: this.getEventResponseDetailColumnDefs(),
         defaultColDef: { flex: 1, editable: true },
-        onCellValueChanged: (e: any) => this.onDetailCellValueChanged(e, masterParams.data),
+
       };
     } else {
       res.detailGridOptions = {
         columnDefs: this.getDetailColumnDefs(),
         defaultColDef: { flex: 1, editable: true },
-        onCellValueChanged: (e: any) => this.onDetailCellValueChanged(e, masterParams.data),
+
       };
     }
 
     return res;
   };
 
-  onDetailCellValueChanged(detailEvent: any, parentRowData: any): void {
-    const { data: changedChildRow, colDef, newValue, oldValue } = detailEvent;
-    if (newValue === oldValue) return;
 
-    const updatedEvents = parentRowData.events.map((evt: any) => {
-      if (evt.eventID === changedChildRow.eventID) {
-        return { ...evt, [colDef.field]: newValue };
-      }
-      return evt;
-    });
-
-    const updatedParentRow = {
-      ...parentRowData,
-      events: updatedEvents,
-    };
-
-    let eventSetsMembers: EventSetMember[] = [];
-    let eventSetList: EventSet[] = [];
-
-    this.eventsFacade.state.eventSetMemberships.membershipList$.pipe(filterSuccess()).pipe(take(1)).subscribe((data) => {
-      eventSetsMembers = data.value;
-    });
-
-    this.eventsFacade.state.eventSets.getEventSetList$.pipe(filterSuccess()).pipe(take(1)).subscribe((data) => {
-      eventSetList = data.value;
-    });
-
-    const {eventOrder, simYear} = changedChildRow;
-    const eventSetMembers: EventSetMember[] | undefined = eventSetsMembers.filter(x =>x.eventSetID === updatedParentRow.eventSetID);
-    const eventSetMember = eventSetMembers.find(x =>x.eventID === changedChildRow.eventID);
-    const updatedEvent = updatedEvents.find((x: any) =>x.eventID ===changedChildRow.eventID);
-    const eventSet = eventSetList.find(x =>x.eventSetID === updatedParentRow?.eventSetID);
-    const mappedEventSet = {...eventSetMember, eventOrder, simYear, event: updatedEvent, eventSet};
-    this.eventsFacade.actions.eventSetMemberships.updateMembership(mappedEventSet);
-  }
 
   onDeleteClick(): void {
     const selectedRows = this.gridApi.getSelectedRows();

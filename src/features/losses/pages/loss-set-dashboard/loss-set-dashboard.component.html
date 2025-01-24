@@ -1,0 +1,23 @@
+<div class="main-container">
+  <div class="tab-buttons">
+    <h2>Loss Sets</h2>
+    <nz-divider nzType="vertical"></nz-divider>
+    <button
+      nz-button
+      nzType="default"
+      *ngFor="let tab of tabs"
+      [ngClass]="{ 'active-tab': selectedTabId === tab.id }"
+      (click)="setActiveTab(tab.id)"
+    >
+      {{ tab.label }}
+    </button>
+  </div>
+
+  <div class="event-set-data">
+    <app-loss-set-table
+      [lossSetData]="lossSetData"
+    >
+    </app-loss-set-table>
+  </div>
+</div>
+

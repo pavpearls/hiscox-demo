@@ -17,6 +17,7 @@ const selectLossFeature = createFeatureSelector<LossState>('loss');
  const selectDeleteLossSet = createSelector(selectLossFeature, state => state.deleteLossSet);
  const selectGetLossSetByEventSetId = createSelector(selectLossFeature, state => state.getLossSetByEventSetId);
  const selectGetLossSetByEventSetTypeId = createSelector(selectLossFeature, state => state.getLossSetByEventSetTypeId);
+ const selectGetLossSetFlatList = createSelector(selectLossFeature, state => state.getLossSetFlatList);
  const selectGetLossSetById = createSelector(selectLossFeature, state => state.getLossSetById);
  const selectGetLossSetList = createSelector(selectLossFeature, state => state.getLossSetList);
  const selectUpdateLossSet = createSelector(selectLossFeature, state => state.updateLossSet); 
@@ -37,6 +38,7 @@ export const LossSelectors = {
     selectDeleteLossSet,
     selectGetLossSetByEventSetId,
     selectGetLossSetByEventSetTypeId,
+    selectGetLossSetFlatList,
     selectGetLossSetById,
     selectGetLossSetList,
     selectUpdateLossSet,

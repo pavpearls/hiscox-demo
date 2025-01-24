@@ -1,0 +1,31 @@
+.main-container {
+
+  .tab-buttons {
+    display: flex;
+    align-items: center;
+    .ant-divider-vertical {
+      height: 25px;
+      border-left: 1px solid rgba(187, 185, 185, 0.322);
+    } 
+
+    .active-tab {
+      background-color: #1890ff;
+      color: #fff;
+      border-color: #1890ff;
+    }
+
+    button {
+      border: 1px solid #d9d9d9;
+      background-color: #f0f0f0;
+    }
+
+    display: flex;
+    gap: 8px;
+  }
+
+  .event-loss-data {
+ 
+    height: 100%;
+
+  }
+}

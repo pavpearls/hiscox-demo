@@ -28,10 +28,11 @@ import { RemoteDataModule } from 'ngx-remotedata';
 import { AddNewLossSetModalComponent } from './components/add-new-loss-set-modal/add-new-loss-set-modal.component';
 import { UploadLossLoadModalComponent } from './components/upload-losses-modal/upload-losses-modal.component';
 import { LossesRoutingModule } from './losses-routing.module';
-import { LossSetsDashboardComponent } from './pages/loss-sets-dashboard/loss-sets-dashboard.component';
+import { LossSetDashboardComponent } from './pages/loss-set-dashboard/loss-set-dashboard.component';
 import { LossesDashboardComponent } from './pages/losses-dashboard/losses-dashboard.component';
 import { LossEffects } from './store/losses.effects';
 import { lossReducer } from './store/losses.reducer';
+import { LossSetTableComponent } from './components/loss-set-table/loss-set-table.component';
 
 const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [
   RemoteDataModule,
@@ -66,19 +67,19 @@ const NG_ZORRO_MODULES = [
 
 const ANGULAR_CORE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
-const AG_GRID = [AgGridModule];
 
 const MODULE_COMPONENTS = [
   LossesDashboardComponent,
   UploadLossLoadModalComponent,
-  LossSetsDashboardComponent,
+  LossSetDashboardComponent,
   AddNewLossSetModalComponent,
+  LossSetTableComponent
 ];
 
 @NgModule({
   declarations: [...MODULE_COMPONENTS],
   imports: [
-    ...AG_GRID,
+      AgGridModule,
     ...ANGULAR_CORE_MODULES,
     ...NG_ZORRO_MODULES,
     ...GLOBAL_STATE_AND_THIRD_PARTY_MODULES,

@@ -8,7 +8,6 @@
  * Do not edit the class manually.
  */
 
-
 export interface EventSetAndEventsRequest { 
     eventSetID?: number;
     eventSetTypeID?: number;

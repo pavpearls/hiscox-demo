@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EventsFacade } from '@events/store/events.facade';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { LossFacade } from 'features/losses/store/losses.facade';
 import { forkJoin } from 'rxjs';
 import { filterSuccess } from 'ngx-remotedata';
 import { takeWhile, map, take } from 'rxjs/operators';
+import { EventsFacade } from '@events//store/events.facade';
 
 @Component({
   selector: 'app-losses-dashboard',
@@ -24,10 +24,15 @@ export class LossesDashboardComponent implements OnInit, OnDestroy {
   isLoading = true;
   grossLossListResponse$ = this.lossFacade.state.grossLoss.getGrossLossList$;
   getEventSetListResponse$ = this.eventsFacade.state.eventSets.getEventSetList$;
-
+  autoGroupColumnDef = {
+    headerName: 'Event Set',
+  }
   constructor(private lossFacade: LossFacade, private eventsFacade: EventsFacade) {}
 
   ngOnInit(): void {
+    this.lossFacade.actions.grossLoss.loadGrossLossList();
+    this.eventsFacade.actions.eventSets.getEventSetList();
+
     this.initializeColumns();
     this.fetchAndTransformData();
 
@@ -51,7 +56,6 @@ export class LossesDashboardComponent implements OnInit, OnDestroy {
       { field: 'loadId', headerName: 'Load ID' },
       { field: 'lossLoadName', headerName: 'Loss Load Name', flex: 2 },
       { field: 'eventSet', headerName: 'Event Set' },
-      { field: 'eventName', headerName: 'Event Name' }, // New Column for Event Name
       { field: 'eventSetType', headerName: 'Event Set Type' },
       { field: 'dataProvider', headerName: 'Data Provider' },
       { field: 'uploadUser', headerName: 'Upload User' },
@@ -87,18 +91,13 @@ export class LossesDashboardComponent implements OnInit, OnDestroy {
   }
 
   private transformDataForGrid(grossLossList: any[], eventSetList: any[]): any[] {
-    // Create a map for eventSetID to eventNameShort and eventSetName
-    const eventSetMapping: { [key: string]: { eventNameShort: string, eventSetName: string } } = {};
+    const eventSetMapping: { [key: string]: { eventSetName: string } } = {};
     eventSetList.forEach((eventSet) => {
-      eventSet.events.forEach((event) => {
-        eventSetMapping[event.eventID] = {
-          eventNameShort: event.eventNameShort,
+        eventSetMapping[eventSet.eventSetID] = {
           eventSetName: eventSet.eventSetName,
         };
       });
-    });
 
-    // Transform and merge data
     const groupedData = grossLossList.reduce((acc, obj) => {
       const category = obj.eventSetID || 'Unknown';
 
@@ -113,7 +112,6 @@ export class LossesDashboardComponent implements OnInit, OnDestroy {
         loadId: obj.lossLoadID,
         lossLoadName: obj.lossLoadName || 'N/A',
         eventSet: obj.eventSetID || 'N/A',
-        eventName: eventSetMapping[obj.eventSetID]?.eventNameShort || 'N/A', // Map Event Name
         eventSetType: 'Post Event',
         dataProvider: obj.dataProducerID || 'N/A',
         uploadUser: obj.createdBy || 'Unknown',

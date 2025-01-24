@@ -30,6 +30,7 @@ export class LossFacade {
             deleteLossSet$: this.store.pipe(select(LossSelectors.selectDeleteLossSet)),
             getLossSetByEventSetId$: this.store.pipe(select(LossSelectors.selectGetLossSetByEventSetId)),
             getLossSetByEventSetTypeId$: this.store.pipe(select(LossSelectors.selectGetLossSetByEventSetTypeId)),
+            getLossSetFlatList$: this.store.pipe(select(LossSelectors.selectGetLossSetFlatList)),
             getLossSetById$: this.store.pipe(select(LossSelectors.selectGetLossSetById)),
             getLossSetList$: this.store.pipe(select(LossSelectors.selectGetLossSetList)),
             updateLossSet$: this.store.pipe(select(LossSelectors.selectUpdateLossSet)),
@@ -79,6 +80,9 @@ export class LossFacade {
             loadLossSetByEventSetTypeId: (eventSetTypeId: number): void => {
                 this.store.dispatch(LossActions.getLossSetByEventSetTypeId({ eventSetTypeId }));
             },
+            loadLossSetFlatList: (): void => {
+                this.store.dispatch(LossActions.getLossSetFlatList());
+            },            
             loadLossSetById: (id: number): void => {
                 this.store.dispatch(LossActions.getLossSetById({ id }));
             },
@@ -89,7 +93,6 @@ export class LossFacade {
                 this.store.dispatch(LossActions.updateLossSet({ request }));
             },
             apiLossLoadUploadFilePost: (lossLoadID: number, file: Blob): void => {
-                debugger;
                 this.store.dispatch(LossActions.apiLossLoadUploadFilePost({ lossLoadID, file }));
             },
         },

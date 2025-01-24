@@ -3,12 +3,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { NdsApiServiceWrapper } from 'shared/api-services/nds-api/custom/nds-api-service-wrapper';
 import { LossActions } from './losses.actions';
+import { LossSetService } from '../pages/loss-set-dashboard/services/loss-set.service';
 
 @Injectable()
 export class LossEffects {
   constructor(
     private actions$: Actions,
-    private apiService: NdsApiServiceWrapper
+    private apiService: NdsApiServiceWrapper,
+    private lossSetService: LossSetService
   ) {}
 
   uploadFile$ = createEffect(() =>
@@ -197,6 +199,23 @@ export class LossEffects {
             ),
             catchError((error) =>
               of(LossActions.getLossSetByEventSetTypeIdFailure({ error }))
+            )
+          )
+      )
+    )
+  );
+
+  getLossSetFlatList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(LossActions.getLossSetFlatList),
+      mergeMap(() =>
+        this.lossSetService.getLossSetFlatList()
+          .pipe(
+            map((lossSetFlatList) =>
+              LossActions.getLossSetFlatListSuccess({ lossSetFlatList })
+            ),
+            catchError((error) =>
+              of(LossActions.getLossSetFlatListFailure({ error }))
             )
           )
       )

@@ -21,7 +21,7 @@
                 [nzXl]="12"
               >
                 <nz-form-item>
-                  <nz-form-label nzRequired>File Name</nz-form-label>
+                  <nz-form-label>File Name</nz-form-label>
                   <nz-form-control>
                     <input
                       nz-input
@@ -63,7 +63,7 @@
 
             <div nz-row [nzGutter]="16">
               <div nz-col [nzSpan]="12">
-                <div nz-row [nzGutter]="16" style="margin-bottom: 2rem;">
+                <div nz-row [nzGutter]="16" style="margin-bottom: 2rem">
                   <div nz-col [nzSpan]="12">
                     <nz-upload
                       nzAction="#"
@@ -127,19 +127,21 @@
                     padding-bottom: 1rem;
                   "
                 >
-                  <button nz-button (click)="validateFile()">Validate</button>
-                  <div *ngIf="isValidating" style="margin-left: 8px;">
-                    <nz-spin
-                      [nzTip]="'Validating...'"
-                      [nzSize]="'small'"
-                    ></nz-spin>
-                  </div>
+                  <button
+                    nz-button
+                    (click)="validateFile()"
+                    [nzLoading]="isValidating"
+                  >
+                    <span *ngIf="!isValidating">Validate</span>
+                    <span *ngIf="isValidating">Validating...</span>
+                  </button>
                 </div>
                 <nz-table
                   [nzData]="fileValidationResults"
                   [nzBordered]="true"
                   [nzSize]="'small'"
                   [nzScroll]="{ x: '300px' }"
+                  [nzShowPagination]="false"
                 >
                   <thead>
                     <tr>
@@ -155,17 +157,47 @@
                           result.result === 'true' ? '#d4edda' : '#f8d7da'
                         "
                       >
-                        {{ result.result }}
+                        {{ result?.result }}
                       </td>
                     </tr>
                   </tbody>
                 </nz-table>
+              </div>
+            </div>
 
-                <!-- Show server validation errors below the table -->
-                <div style="margin-top: 1rem" *ngIf="validationErrors">
-                  <h4>Validation Errors:</h4>
-                  <pre>{{ validationErrors | json }}</pre>
-                </div>
+            <div nz-row [nzGutter]="16">
+              <div
+                style="margin-top: 1rem; width: 100%"
+                *ngIf="validationErrors?.length > 0"
+              >
+                <h4>
+                  Detailed Validation Errors ({{ validationErrors.length }}
+                  total):
+                </h4>
+                <nz-table
+                  [nzData]="validationErrors"
+                  [nzBordered]="true"
+                  [nzSize]="'small'"
+                  [nzScroll]="{ x: '600px', y: '300px' }"
+                  [nzShowPagination]="false"
+                >
+                  <thead>
+                    <tr>
+                      <th>Row #</th>
+                      <th>Error(s)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of validationErrors">
+                      <td>{{ row.rowNumber }}</td>
+                      <td>
+                        <ul style="margin: 0; padding-left: 1.5rem">
+                          <li *ngFor="let e of row.errors">{{ e }}</li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </nz-table>
               </div>
             </div>
           </div>
@@ -183,7 +215,7 @@
 
             <nz-table
               *ngIf="tableHeaders?.length"
-              style="min-height: 600px;"
+              style="min-height: 600px"
               #basicTable
               [nzBordered]="true"
               [nzFrontPagination]="false"
@@ -208,20 +240,6 @@
                 </tr>
               </tbody>
             </nz-table>
-
-            <!-- Separate pagination control if desired -->
-            <div
-              style="text-align: right; margin-top: 1rem;"
-              *ngIf="tableHeaders?.length"
-            >
-              <nz-pagination
-                [nzPageIndex]="pageIndex"
-                [nzTotal]="total"
-                [nzPageSize]="pageSize"
-                (nzPageIndexChange)="onPageIndexChange($event)"
-                (nzPageSizeChange)="onPageSizeChange($event)"
-              ></nz-pagination>
-            </div>
           </div>
         </div>
       </nz-tab>

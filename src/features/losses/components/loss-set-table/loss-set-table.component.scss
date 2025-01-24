@@ -1,0 +1,40 @@
+.main-panel {
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #d9d9d9;
+    width: 100%;
+    height: 100%;
+
+    .button-panel {
+        padding: 5px 5px 5px 0;
+        height: 45px;
+        width: 100%;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        button {
+            border: 1px solid #d9d9d9;
+            background-color: #f0f0f0;
+        }
+
+    }
+
+    .grid-panel {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        ag-grid-angular {
+            width: 100%;
+            height: 74vh;
+        }
+
+        ::ng-deep .ag-header-cell-label {
+            justify-content: center !important;
+        }
+
+    }
+}
