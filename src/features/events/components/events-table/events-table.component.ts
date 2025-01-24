@@ -265,36 +265,42 @@ export class EventsTableComponent implements OnInit, OnChanges {
       {
         field: 'restricted',
         headerName: 'Restricted',
-        filter: 'agTextColumnFilter',
+        filter: 'agSetColumnFilter',
         filterParams: {
-          buttons: ['clear', 'apply'],
-        } as ITextFilterParams,
-
+          values: [true, false],
+          valueFormatter: (params: any) => params.value ? 'Yes' : 'No',
+          buttons: ['reset', 'apply'],
+        },
         cellRenderer: (params: any) => {
-          return params?.data?.isRestrictedAccess === true ? 'Yes' : 'No';
+          return params.value ? 'Yes' : 'No';
         },
         cellEditor: 'agSelectCellEditor',
-        cellEditorParams: { values: ['Yes', 'No'] },
+        cellEditorParams: {
+          values: [true, false],
+        },
         editable: true,
         minWidth: 200,
       },
+      
       {
-        field: 'archived',
+        field: 'isArchived',
         headerName: 'Archived',
         filter: 'agSetColumnFilter',
         filterParams: {
           values: [true, false],
-          valueFormatter: (params: any) => (params.value ? 'Yes' : 'No'),
+          valueFormatter: (params: any) => params.value ? 'Yes' : 'No',
           buttons: ['reset', 'apply'],
         },
         cellRenderer: (params: any) => {
-           return params.value === true ? 'Yes' : 'No';
+          return params.value ? 'Yes' : 'No';
         },
         cellEditor: 'agSelectCellEditor',
-        cellEditorParams: { values: ['Yes', 'No'] },
+        cellEditorParams: {
+          values: [true, false]
+        },
         editable: true,
         minWidth: 200,
-      }
+      },
     ];
   }
 
@@ -313,8 +319,8 @@ export class EventsTableComponent implements OnInit, OnChanges {
         : '',
       industryLossEstimate: event?.industryLossEstimate || '',
       hiscoxLossImpactRating: event?.hiscoxLossImpactRating || '',
-      isRestrictedAccess: event?.isRestrictedAccess || false,
-      isArchived: event?.isArchived ? 'Yes' : 'No'
+      isRestrictedAccess: event?.isRestrictedAccess ?? false,
+      isArchived: event?.isArchived ?? false
     };
   }
 
@@ -355,19 +361,19 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-
+  
     setTimeout(() => {
       this.gridApi.autoSizeAllColumns();
     });
-
+  
     const defaultFilterModel = {
-      archived: {
+      isArchived: {
         filterType: 'set',
-        values: [false]
+        values: [false],
       }
     };
-
-    // this.gridApi.setFilterModel(defaultFilterModel);
+  
+    this.gridApi.setFilterModel(defaultFilterModel);
   }
 
   getRowId = (params: any) => params.data.eventID.toString();
