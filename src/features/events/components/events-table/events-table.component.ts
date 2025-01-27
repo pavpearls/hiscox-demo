@@ -287,20 +287,28 @@ export class EventsTableComponent implements OnInit, OnChanges {
         headerName: 'Archived',
         filter: 'agSetColumnFilter',
         filterParams: {
+          // Default filter values
           values: [true, false],
-          valueFormatter: (params: any) => params.value ? 'Yes' : 'No',
+          valueFormatter: (params: any) => (params.value ? 'Yes' : 'No'), // Format values as Yes/No
           buttons: ['reset', 'apply'],
+          filterCallback: (params: any) => {
+            debugger;
+            // Custom filter logic
+            const filterValue = params.values;
+            const isArchived = params.data.isArchived;
+      
+            // Return true if no filter is applied or if the row matches the filter
+            return !filterValue || filterValue.includes(isArchived);
+          },
         },
-        cellRenderer: (params: any) => {
-          return params.value ? 'Yes' : 'No';
-        },
+        cellRenderer: (params: any) => (params.value ? 'Yes' : 'No'),
+        editable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: {
-          values: [true, false]
+          values: [true, false], // Allow Yes/No editing
         },
-        editable: true,
         minWidth: 200,
-      },
+      }
     ];
   }
 
@@ -370,7 +378,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
       isArchived: {
         filterType: 'set',
         values: [false],
-      }
+      },
     };
   
     this.gridApi.setFilterModel(defaultFilterModel);
