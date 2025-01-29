@@ -33,6 +33,7 @@ import { LossesDashboardComponent } from './pages/losses-dashboard/losses-dashbo
 import { LossEffects } from './store/losses.effects';
 import { lossReducer } from './store/losses.reducer';
 import { LossSetTableComponent } from './components/loss-set-table/loss-set-table.component';
+import { EditLossSetModalComponent } from './components/edit-loss-set-modal/edit-loss-set-modal.component';
 
 const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [
   RemoteDataModule,
@@ -73,7 +74,8 @@ const MODULE_COMPONENTS = [
   UploadLossLoadModalComponent,
   LossSetDashboardComponent,
   AddNewLossSetModalComponent,
-  LossSetTableComponent
+  LossSetTableComponent,
+  EditLossSetModalComponent
 ];
 
 @NgModule({
