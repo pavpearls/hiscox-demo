@@ -14,7 +14,7 @@ import {
     LossSetLoadMember,
   } from '@shared/api-services/models';
   import { Subscription } from 'rxjs';
-import { filterSuccess } from 'ngx-remotedata';
+  import { filterSuccess } from 'ngx-remotedata';
   
   @Component({
     selector: 'app-edit-loss-set-modal',
@@ -22,7 +22,7 @@ import { filterSuccess } from 'ngx-remotedata';
     styleUrls: ['./edit-loss-set-modal.component.scss']
   })
   export class EditLossSetModalComponent implements OnInit, OnDestroy {
-    /** Controls modal visibility */
+    /** Controls modal visibility (bound in the parent) */
     @Input() nzVisible = false;
   
     /**
@@ -31,124 +31,169 @@ import { filterSuccess } from 'ngx-remotedata';
      */
     @Input() lossSetId: number | null = null;
   
-    /** Emit an event if the user clicks Cancel or after we save successfully */
+    /** Emit an event when user closes (Cancel or after Save) */
     @Output() closed = new EventEmitter<void>();
   
-    /** The request object we will update and send to the facade on Save */
+    /**
+     * The request object we will update and send to the facade on Save.
+     * This holds the top-level fields for the Loss Set.
+     */
     lossSetRequest: LossSetRequest = {
-      // Fields like lossSetName, lossSetDescription, etc.
+      // e.g. lossSetName, lossSetDescription, asAtDate, etc.
     };
   
-    /** Table setup */
-    columnDefs: ColDef[] = [
-      { field: 'lossLoadID', headerName: 'Load ID', checkboxSelection: true },
-      { field: 'lossLoadName', headerName: 'Loss Name' },
-      { field: 'dataSourceName', headerName: 'Data Source' },
-      // add more columns as needed
-    ];
-    rowData: Partial<LossSetLoadMember>[] = [];
+    /**
+     * We’ll use two separate arrays for demonstration:
+     * - attachData: "available" loads that user can attach
+     * - detachData: "currently attached" loads that user can detach
+     */
+    attachData: any[] = [];
+    detachData: any[] = [];
   
-    private gridApi!: GridApi;
+    /** Each tab has its own GridApi */
+    private attachGridApi!: GridApi;
+    private detachGridApi!: GridApi;
+  
+    /**
+     * Example column definitions for both grids.
+     * Adjust or expand as needed.
+     */
+    columnDefs: ColDef[] = [
+      {
+        field: 'lossLoadID',
+        headerName: 'Load ID',
+        checkboxSelection: true
+      },
+      { field: 'lossLoadName', headerName: 'Loss Name' },
+      { field: 'dataSourceName', headerName: 'Data Source' }
+      // add more columns as needed, e.g. eventSet, valid, etc.
+    ];
+  
     private subscriptions: Subscription[] = [];
   
     constructor(private lossFacade: LossFacade) {}
   
     ngOnInit(): void {
+      // -----------------------------------------
+      // 1) If you have a lossSetId, you can load
+      //    it from the store. We'll keep it commented
+      //    if focusing on mock data:
+      // -----------------------------------------
       if (this.lossSetId) {
-        // 1) Dispatch an action to load the existing Loss Set by ID
         this.lossFacade.actions.lossSets.loadLossSetList();
-
-        
         this.lossFacade.actions.lossSets.loadLossSetById(this.lossSetId);
   
-        // 2) Subscribe to the result
         const sub = this.lossFacade.state.lossSets.getLossSetById$
-        .pipe(filterSuccess())
-        .subscribe(res => {
-          if (res.value) {
-            const existing: LossSet = res.value;
-            // Populate our request object from the existing LossSet
-            this.lossSetRequest = {
-              lossSetID: existing.lossSetID,
-              lossSetName: existing.lossSetName ?? '',
-              lossSetDescription: existing.lossSetDescription ?? '',
-              asAtDate: existing.asAtDate,
-              versionNum: existing.versionNum,
-              isArchived: existing.isArchived,
-              isLocked: existing.isLocked,
-              isApproved: existing.isApproved,
-              approvedComments: existing.approvedComments
-            };
-            // Put the existing members into rowData for the grid
-            if (existing.lossSetLoadMembers) {
-              this.rowData = existing.lossSetLoadMembers.map(m => ({
-                ...m
-                // e.g. lossLoadID, dataSourceName, etc.
-              }));
+          .pipe(filterSuccess())
+          .subscribe((res) => {
+            if (res.value) {
+              const existing: LossSet = res.value;
+              // Populate top fields
+              this.lossSetRequest = {
+                lossSetID: existing.lossSetID,
+                lossSetName: existing.lossSetName ?? '',
+                lossSetDescription: existing.lossSetDescription ?? '',
+                asAtDate: existing.asAtDate,
+                versionNum: existing.versionNum,
+                isArchived: existing.isArchived,
+                isLocked: existing.isLocked,
+                isApproved: existing.isApproved,
+                approvedComments: existing.approvedComments
+              };
+  
+              // For demonstration, you might see which members are
+              // "attached" vs. "unattached" if you have that logic.
+              // We'll just load them all into "detachData" for example:
+              if (existing.lossSetLoadMembers) {
+                this.detachData = existing.lossSetLoadMembers.map((m) => ({
+                  ...m
+                }));
+              }
             }
-          }
-        });
+          });
         this.subscriptions.push(sub);
-      } else {
-        // Possibly new Loss Set scenario, rowData = []
-        this.rowData = [];
       }
+  
+      // -----------------------------------------
+      // 2) For mock data, we can populate attachData & detachData directly:
+      //    Suppose we put some rows in each tab for demonstration:
+      // -----------------------------------------
+      this.attachData = [
+        {
+          lossLoadID: 1001,
+          lossLoadName: 'Mock Load 1001',
+          dataSourceName: 'Claims DB'
+        },
+        {
+          lossLoadID: 1002,
+          lossLoadName: 'Mock Load 1002',
+          dataSourceName: 'Policy DB'
+        }
+      ];
+  
+      this.detachData = [
+        {
+          lossLoadID: 2001,
+          lossLoadName: 'Mock Attached 2001',
+          dataSourceName: 'UW Estimates'
+        },
+        {
+          lossLoadID: 2002,
+          lossLoadName: 'Mock Attached 2002',
+          dataSourceName: 'UW Estimates'
+        }
+      ];
     }
   
     ngOnDestroy(): void {
-      // Clean up subscriptions
-      this.subscriptions.forEach(s => s.unsubscribe());
+      // Clean up any subscriptions
+      this.subscriptions.forEach((s) => s.unsubscribe());
     }
   
-    onGridReady(params: GridReadyEvent): void {
-      this.gridApi = params.api;
+    /** Called when the Attach tab's grid is ready */
+    onAttachGridReady(params: GridReadyEvent): void {
+      this.attachGridApi = params.api;
+      this.attachGridApi.sizeColumnsToFit();
     }
   
-    /** Called by the "Add Loss" button */
-    addLoss(): void {
-      // You could open another modal to pick from available loads
-      // For simplicity, we'll just push a dummy row:
-      const newMember: Partial<LossSetLoadMember> = {
-        lossLoadID: Date.now(), // Dummy ID or 0 if new
-      };
-      // Insert into rowData
-      this.rowData = [...this.rowData, newMember];
-      // Optionally refresh the grid
-    //   this.gridApi.setRow(this.rowData);
+    /** Called when the Detach tab's grid is ready */
+    onDetachGridReady(params: GridReadyEvent): void {
+      this.detachGridApi = params.api;
+      this.detachGridApi.sizeColumnsToFit();
     }
   
-    /** Called by the "Remove Loss" button */
-    removeLoss(): void {
-      // Get selected rows from the grid
-      const selectedNodes = this.gridApi.getSelectedNodes();
-      if (selectedNodes.length === 0) return;
+    /** Example attach method */
+    attachSelected(): void {
+      if (!this.attachGridApi) return;
+      const selectedNodes = this.attachGridApi.getSelectedNodes();
+      if (!selectedNodes.length) return;
   
-      // Filter them out of rowData
-      const selectedData = selectedNodes.map(node => node.data);
-      this.rowData = this.rowData.filter(item => !selectedData.includes(item));
-    //   this.gridApi.setRowData(this.rowData);
+      // For now, just alert how many were selected
+      alert(`Attach ${selectedNodes.length} selected row(s).`);
+      // Real logic might: move them into "detachData" or update store
     }
   
-    /** "OK" button in the modal’s footer */
+    /** Example detach method */
+    detachSelected(): void {
+      if (!this.detachGridApi) return;
+      const selectedNodes = this.detachGridApi.getSelectedNodes();
+      if (!selectedNodes.length) return;
+  
+      alert(`Detach ${selectedNodes.length} selected row(s).`);
+      // Real logic might: remove them from "detachData" or update store
+    }
+  
+    /** "Save" button in modal’s footer */
     save(): void {
-      // Build final request
-      // 1) Copy or merge the rowData as `lossSetLoadMembers` into lossSetRequest
-    //   this.lossSetRequest.lossSetLoadMembers = this.rowData.map((row) => ({
-    //     // Convert partial row to the real model fields
-    //     lossLoadID: row.lossLoadID,
-    //     // ...
-    //   })) as LossSetLoadMember[];
-  
-      // 2) Dispatch updateLossSet to facade
-      this.lossFacade.actions.lossSets.updateLossSet(this.lossSetRequest);
-  
-      // 3) Optionally close the modal or wait for success
+      // You might gather combined data, e.g. what's attached vs. not.
+      // Then dispatch updateLossSet(...) to facade, or just close:
+      alert(`Saving Loss Set: ${this.lossSetRequest.lossSetName}`);
       this.closed.emit();
     }
   
-    /** "Cancel" button in the modal’s footer */
+    /** "Cancel" button in modal’s footer */
     cancel(): void {
-      // Just close without saving
+      // Just emit the "closed" event so parent can hide the modal
       this.closed.emit();
     }
   }
