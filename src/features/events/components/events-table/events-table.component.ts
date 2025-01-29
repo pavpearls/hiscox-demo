@@ -44,7 +44,9 @@ export class EventsTableComponent implements OnInit, OnChanges {
         for (let index = 0; index < this.removeRowList.length; index++) {
           const eventId = this.removeRowList[index].eventID;
           if (eventId) {
-            const removeIndex = this.inputData.findIndex(e=>e.eventID == eventId);
+            const removeIndex = this.inputData.findIndex(
+              (e) => e.eventID == eventId
+            );
             if (removeIndex > -1) {
               this.inputData.splice(removeIndex, 1);
             }
@@ -59,9 +61,9 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
   private _successValue: Event[] | undefined = undefined;
 
-  @Input() rowDataList:any[] = [];
+  @Input() rowDataList: any[] = [];
 
-  @Input() removeRowList:any[] = [];
+  @Input() removeRowList: any[] = [];
 
   @Input() enableRowSelection = true;
   @Input() enableEditMode = true;
@@ -89,12 +91,12 @@ export class EventsTableComponent implements OnInit, OnChanges {
   paginationPageSize = 25;
 
   public autoSizeStrategy:
-  | SizeColumnsToFitGridStrategy
-  | SizeColumnsToFitProvidedWidthStrategy
-  | SizeColumnsToContentStrategy = {
-  type: "fitGridWidth",
-  defaultMinWidth: 100,
-  columnLimits: [],
+    | SizeColumnsToFitGridStrategy
+    | SizeColumnsToFitProvidedWidthStrategy
+    | SizeColumnsToContentStrategy = {
+    type: 'fitGridWidth',
+    defaultMinWidth: 100,
+    columnLimits: [],
   };
 
   constructor(
@@ -103,9 +105,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
     private notification: NzNotificationService
   ) {}
 
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['addEventConfig']) {
@@ -268,22 +268,18 @@ export class EventsTableComponent implements OnInit, OnChanges {
         filter: 'agSetColumnFilter',
         filterParams: {
           values: [true, false],
-          valueFormatter: (params: any) => params.value ? 'Yes' : 'No',
+          valueFormatter: (params: any) => (params.value ? 'Yes' : 'No'),
           buttons: ['reset', 'apply'],
         },
-        cellRenderer: (params: any) => {
-          return params.value ? 'Yes' : 'No';
-        },
+        cellRenderer: (params: any) => (params.value ? 'Yes' : 'No'),
+        editable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: {
           values: [true, false],
         },
-        editable: true,
-        minWidth: 200,
       },
-      
       {
-        field: 'isArchived',
+        field: 'archived',
         headerName: 'Archived',
         filter: 'agSetColumnFilter',
         filterParams: {
@@ -298,7 +294,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
           values: [true, false],
         },
         minWidth: 200,
-      }
+      },
     ];
   }
 
@@ -318,7 +314,7 @@ export class EventsTableComponent implements OnInit, OnChanges {
       industryLossEstimate: event?.industryLossEstimate || '',
       hiscoxLossImpactRating: event?.hiscoxLossImpactRating || '',
       isRestrictedAccess: event?.isRestrictedAccess ?? false,
-      isArchived: event?.isArchived ?? false
+      isArchived: event?.isArchived ?? false,
     };
   }
 
@@ -359,18 +355,10 @@ export class EventsTableComponent implements OnInit, OnChanges {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-  
+
     setTimeout(() => {
       this.gridApi.autoSizeAllColumns();
     });
-  
-    const defaultFilterModel = {
-      isArchived: {
-        filterType: 'set',
-        values: [false],
-      },
-    };
-    this.gridApi.setFilterModel(defaultFilterModel);
   }
 
   getRowId = (params: any) => params.data.eventID.toString();

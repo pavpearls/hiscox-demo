@@ -45,9 +45,14 @@ export class LossesDashboardComponent implements OnInit, OnDestroy {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    setTimeout(() => {
+    // setTimeout(() => {
+    //   this.gridApi.sizeColumnsToFit();
+    // });
+
+     setTimeout(() => {
+      this.gridApi.sizeColumnsToFit();
       this.gridApi.autoSizeAllColumns();
-    });
+    }, 5000);
   }
 
   private initializeColumns(): void {

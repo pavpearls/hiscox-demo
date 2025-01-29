@@ -84,7 +84,13 @@ export class LossSetTableComponent implements OnInit, OnChanges {
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
-    this.gridApi.autoSizeAllColumns();
+    // setTimeout(() => {
+    //   this.gridApi.autoSizeAllColumns();
+    // });
+
+    setTimeout(() => {
+      this.gridApi.sizeColumnsToFit();
+    });
   }
 
   onFirstDataRendered(params: FirstDataRenderedEvent): void {

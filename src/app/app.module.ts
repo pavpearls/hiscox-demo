@@ -128,16 +128,15 @@ const GLOBAL_STATE_AND_THIRD_PARTY_MODULES = [
     MsalService,
     MsalGuard,
     MsalBroadcastService,
-      {
-        provide: 'AG_GRID_DEFAULT_OPTIONS',
-        useValue: {
-          defaultColDef: {
-            flex: 1,
-            minWidth: 100,
-            maxWidth: 500,
-          },
+    {
+      provide: 'AG_GRID_DEFAULT_OPTIONS',
+      useValue: {
+        defaultColDef: {
+          flex: 1,
+          maxWidth: 1000,
         },
       },
+    },
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
