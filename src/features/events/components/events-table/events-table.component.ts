@@ -356,9 +356,39 @@ export class EventsTableComponent implements OnInit, OnChanges {
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
 
+    // Listen for the first data rendered event
+    params.api.addEventListener('firstDataRendered', () => {
+      this.setDefaultArchiveFilter();
+    });
+
     setTimeout(() => {
       this.gridApi.autoSizeAllColumns();
     });
+  }
+
+  private setDefaultArchiveFilter(): void {
+    if (this.gridApi) {
+      console.log('Setting default filter for archived column:', {
+        archived: {
+          filterType: 'set',
+          values: ['false'],
+        },
+      });
+
+      this.gridApi.setFilterModel({
+        archived: {
+          filterType: 'set',
+          values: ['false'],
+        },
+      });
+
+      console.log('Filter model after setting:', this.gridApi.getFilterModel());
+
+      // Refresh the grid to apply the filter
+      this.gridApi.onFilterChanged();
+    } else {
+      console.error('Grid API is not available.');
+    }
   }
 
   getRowId = (params: any) => params.data.eventID.toString();
@@ -408,12 +438,6 @@ export class EventsTableComponent implements OnInit, OnChanges {
     }
 
     this.delete.emit(selectedRows);
-
-    // this.modal.confirm({
-    //   nzTitle: 'Are you sure you want to delete the selected rows?',
-    //   nzContent: `${selectedRows.length} rows will be deleted.`,
-    //   nzOnOk: () => this.delete.emit(selectedRows),
-    // });
   }
 
   onEditClick(): void {
