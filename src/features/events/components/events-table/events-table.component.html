@@ -19,21 +19,21 @@
   </div>
 
   <ag-grid-angular
-    style="width: 100%; height: 100%;"
-    class="ag-theme-alpine"
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
-    [rowSelection]="rowSelection"
-    [pagination]="true"
-    [paginationPageSize]="paginationPageSize"
-    [paginationPageSizeSelector]="paginationPageSizeSelector"
-    [domLayout]="'autoHeight'"
-    [editType]="editType"
-    [getRowId]="getRowId"
-    [autoSizeStrategy]="autoSizeStrategy"
-    (gridReady)="onGridReady($event)"
-    (cellDoubleClicked)="onCellDoubleClicked($event)"
-    (rowSelected)="onRowSelected($event)"
-  >
-  </ag-grid-angular>
+  style="width: 100%; height: 100%;"
+  class="ag-theme-alpine"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  [gridOptions]="gridOptions"
+  [rowSelection]="rowSelection"
+  [pagination]="true"
+  [paginationPageSize]="paginationPageSize"
+  [paginationPageSizeSelector]="paginationPageSizeSelector"
+  [domLayout]="'autoHeight'"
+  [editType]="editType"
+  [getRowId]="getRowId"
+  [autoSizeStrategy]="autoSizeStrategy"
+  (cellDoubleClicked)="onCellDoubleClicked($event)"
+  (rowSelected)="onRowSelected($event)"
+>
+</ag-grid-angular>
 </section>

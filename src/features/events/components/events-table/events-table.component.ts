@@ -13,7 +13,9 @@ import { AddEventConfig } from '@events//interfaces/events.interfaces';
 import { Event } from '@shared/api-services/models';
 import {
   ColDef,
+  FirstDataRenderedEvent,
   GridApi,
+  GridOptions,
   GridReadyEvent,
   ITextFilterParams,
   RowNode,
@@ -77,6 +79,35 @@ export class EventsTableComponent implements OnInit, OnChanges {
   columnDefs: ColDef[] = [];
   inputData: any[] = [];
   rowData: any[] = [];
+
+  gridOptions: GridOptions = {
+    columnDefs: this.generateColumns(this.addEventConfig),
+    defaultColDef: {
+      sortable: true,
+      filter: true,
+      resizable: true,
+    },
+    pagination: true,
+    paginationPageSize: 25,
+    rowSelection: this.isMultipleAddMode ? 'multiple' : 'single',
+    onFirstDataRendered: (event: FirstDataRenderedEvent) => {
+      console.log('First Data Rendered');
+  
+      // Apply default filter for 'Archived' column
+      event.api.setFilterModel({
+        archived: {
+          filterType: 'set',
+          values: [false], // Only show non-archived rows by default
+        },
+      });
+  
+      console.log('Default filter model applied:', event.api.getFilterModel());
+  
+      // Ensure the filter is applied immediately
+      event.api.onFilterChanged();
+    },
+  };
+  
   editCache: { [key: number]: { edit: boolean; form: FormGroup } } = {};
   public editType: 'fullRow' = 'fullRow';
   private editingRowData: any | null = null;
